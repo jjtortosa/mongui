@@ -1,0 +1,18 @@
+form
+	if op
+		input(name="op",type="hidden",value=op)
+
+	input#p-all(type="radio",name="all",value="1",checked=all,onchange="this.form.submit()")
+	label(for="p-all") Todos
+	input#p-active(type="radio",name="all",value="0",checked=!all,onchange="this.form.submit()")
+	label(for="p-active") Sólo activos
+	
+
+table.lcaption
+	thead
+		tr
+			th(colspan="3") currentOp (db.$cmd.sys.inprog.find({$all:1}))
+	tbody
+		each i in processlist
+			tr
+				td: pre=JSON.stringify(i, null, '\t')

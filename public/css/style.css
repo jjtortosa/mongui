@@ -1,0 +1,129 @@
+body {
+  padding: 0px;
+  margin: 0;
+  font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+pre{
+	margin: 0;
+}
+a {
+  color: #004499;
+  text-decoration: none;
+}
+a:hover{
+	color: #0099FF;
+}
+li.active>a, a.active{
+	font-weight: bold;
+}
+
+table{
+	border-collapse: collapse;
+}
+
+td{
+	vertical-align: top;
+	padding: 4px 8px;
+}
+
+ul{
+	list-style: none;
+	padding: 0;
+}
+
+thead th{
+	background-color: #eee;
+}
+.result-box{
+	padding: 0 4px;
+	border: 2px solid gray;
+	margin: 5px 0;
+}
+.actions{
+	border-bottom: 1px solid;
+	padding: 4px;
+	margin: 4px;
+}
+.result{
+	max-height: 162px;
+	overflow-y: hidden;
+	white-space: pre-wrap;
+}
+.result a.selected{
+	font-weight: bold;
+}
+.expanded{
+	max-height: none;
+}
+#main-t{
+	width: 100%;
+}
+#leftC{
+	background-color: #eeefff;
+	border-right: 1px solid;
+	padding: 0;
+}
+#rightC{
+	width: 85%;
+	padding: 0;
+}
+.auto-height{
+	overflow-y: auto;
+	overflow-x: hidden;
+	padding: 0 8px;
+}
+textarea{
+	height: 100px;
+}
+.lcaption th, .lcaption td{
+	border: 1px solid #ddd;
+}
+.lcaption td, .lcaption tbody th{
+	background-color: #fbf2ed;
+	padding: 2px 8px;
+}
+.lcaption tbody th{
+	text-align: right;
+}
+.lcaption tbody th:after{
+	content: ': ';
+}
+#query-form{
+	padding: 8px;
+	background-color: #eeefff;
+}
+#field_menu{
+	display: none;
+	position: absolute;
+	background-color: #eee;
+	border: 2px solid #ccc;
+	padding: 0 4px;
+	min-width: 100px;
+}
+#field_menu a{
+	display: block;
+}
+.paginator{
+	padding: 6px 12px;
+	margin: 4px;
+	font-size: 1.2em;
+}
+#update-dialog{
+	padding: 0;
+}
+#update-dialog th, #update-dialog td{
+	background-color: transparent;
+	border: 0 none;
+}
+#db-content{
+	padding: 4px 8px;
+}
+#command-result{
+	display: none;
+	margin-top: 14px;
+	background-color: #eeefff;
+	border: 1px solid gray;
+}
+#command-result pre{
+	
+}

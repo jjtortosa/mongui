@@ -1,0 +1,73 @@
+extends collection
+
+block collection-content
+	form#query-form
+		input(type="hidden",name="db",value=db)
+		input(type="hidden",name="col",value=collection)
+		textarea#criteria(name="criteria",rows="5",cols="70")=criteria
+		br
+		input(type="submit")
+
+	if result
+		.paginator
+			if(count>10)
+				a(href=url+"&page=1") «
+
+				- var n = paginator.first
+
+				while n<= paginator.last
+					|  &nbsp; 
+					a(href="?page="+n,class={active:n===paginator.page})=n++
+
+				|  &nbsp; 
+				a(href=url+"&page="+paginator.total) »
+				|  &nbsp; 
+
+			if count
+				span="Records found: "+count
+
+		#results
+			each r,id in result
+				.result-box(id=id)
+					.actions
+						a(href="", data-action="delete-row") Eliminar
+						|  | 
+						a(href="", data-action="new-field") Nuevo campo
+						|  | 
+						a(href="") Duplicar
+						|  | 
+						a(href="") Refrescar
+						|  | 
+						a(href="", class="exp") Expandir
+					.result!=r
+
+		#field_menu
+			a(href="#fieldUpdate") Update
+			a(href="#fieldSortAsc") SortASC
+			a(href="#fieldSortDesc") SortDESC
+			span ------
+			a(href="#fieldRename") Rename
+			a(href="#fieldRemove") Remove
+			a(href="#fieldClear") Clear
+			span ------
+			a(href="#fieldHide") Hide
+			a(href="#fieldShow") Show
+
+	#update-dialog
+		table(class="lcaption")
+			tr#dialog-field-name
+				th Field&nbsp;name
+				td: input#data_key
+			tr
+				th Data&nbsp;Type
+				td
+					select#data_type
+						option(value="number") Number
+						option(value="string") String
+						option(value="boolean") Boolean
+						option(value="binary") Binary
+						option(value="null") NULL
+						option(value="mixed") Mixed
+			tr
+				th Value
+				td#data_value

@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	#db-content
+		form(action="/post",method="post")
+			br
+			span Nombre de la nueva base de datos: 
+			input(name="db")
+			br
+			br
+			input(type="submit")
+			input(type="hidden",name="op",value="createdb")
+			

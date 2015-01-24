@@ -1,0 +1,20 @@
+extends collection
+
+block collection-content
+	table(style="width:auto").lcaption
+		thead
+			tr
+				th(colspan="2") db.comments.stats()
+		tbody
+			each i,k in stats
+				tr
+					th=k
+					td: pre=JSON.stringify(i, null, '\t')
+		thead
+			tr
+				th(colspan="2") {top:1}
+		tbody
+			each i,k in top
+				tr
+					th=k
+					td=i.count

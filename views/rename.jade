@@ -1,0 +1,17 @@
+extends collection
+
+block collection-content
+	form(method="post",action="/post")
+		br
+		label Renombrar 
+			span='"'+collection+'"'
+		br
+		br
+		label Nombre: 
+			input(name="name",required)
+		br
+		br
+		input(type="hidden",name="op",value="renameCollection")
+		input(type="hidden",name="db",value=dbname)
+		input(type="hidden",name="collection",value=collection)
+		input(type="submit")

@@ -1,0 +1,15 @@
+extends db
+
+block dbbody
+	#db-content
+		form#command(action="/post",method="post")
+			textarea(name="command",cols="60",rows="6") {listCommands: 1}
+			br
+			
+			input(type="hidden",name="op",value="command")
+			input(type="hidden",name="db",value=db)
+			input(type="hidden",name="collection",value=collection)
+			input(type="submit")
+		
+		#command-result Respuesta del servidor:
+			pre

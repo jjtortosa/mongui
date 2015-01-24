@@ -1,0 +1,25 @@
+doctype html
+html
+	head
+		title="Mongui - MongoDB ui"
+		link(rel="stylesheet", href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css")
+		link(rel='stylesheet', href='/css/style.css')
+		script(src="//code.jquery.com/jquery-1.11.2.min.js")
+		script(src="//code.jquery.com/ui/1.11.2/jquery-ui.js")
+		script(src="/js/mongui.js")
+	body
+		if(!dbname && reqpath !== "/login")
+			.actions
+				a(href="/",class={active: path===reqpath}) Bases de datos
+				|  | 
+				a(href="/serverinfo",class={active: path==="/serverinfo"}) Servidor
+				|  | 
+				a(href="/serverstatus",class={active: path==="/serverstatus"}) Estados
+				|  | 
+				a(href="/processlist",class={active: path==="/processlist"}) Processlist
+				|  | 
+				a(href="/command",class={active: path==="/command"}) Comando
+				|  | 
+				a(href="/replication",class={active: path==="/replication"}) Replication
+
+		block content

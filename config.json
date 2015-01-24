@@ -1,0 +1,8 @@
+{
+	"name": "Mongui",
+	"host": "localhost:27017",
+	"mongouser": "",
+	"mongopass": "",
+	"users": {},
+	"port": 3101
+}

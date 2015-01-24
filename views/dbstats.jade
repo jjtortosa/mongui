@@ -1,0 +1,8 @@
+extends db
+
+block dbbody
+	table#db-stats(class="lcaption")
+		each s, k in dbStats
+			tr
+				th=k
+				td=s

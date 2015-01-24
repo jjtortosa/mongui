@@ -1,0 +1,10 @@
+extends collection
+
+block collection-content
+	if msg
+		h3=msg
+	form(method="post",action=path)
+		textarea(name="json",cols="70",rows="20",style="height:auto")!=json
+		br
+		input(type="hidden",name="action",value="insert")
+		input(type="submit")

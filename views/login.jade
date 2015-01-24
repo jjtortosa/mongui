@@ -1,0 +1,19 @@
+extends layout
+
+block content
+	form(method="post",style="text-align:center;padding:80px")
+		fieldset(style="display:inline-block")
+			legend Log-in
+			table
+				tr
+					td User
+					td
+						input(type="text", name="user")
+				tr
+					td Pass
+					td
+						input(type="password", name="pass")
+				tr
+					td
+					td
+						input(type="submit")

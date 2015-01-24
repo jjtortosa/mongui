@@ -1,0 +1,12 @@
+extends db
+
+block dbbody
+	form(method="post",action="/post")
+		br
+		label Nombre: 
+			input(name="colname")
+		br
+		br
+		input(type="hidden",name="op",value="createCollection")
+		input(type="hidden",name="db",value=db)
+		input(type="submit")

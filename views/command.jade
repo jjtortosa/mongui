@@ -1,0 +1,17 @@
+extends layout
+
+block content
+	#db-content
+		form#command(action="/post",method="post")
+			textarea(name="command",cols="60",rows="6") {listCommands: 1}
+			br
+			| DB: 
+			select(name="db")
+				each db in dbs
+					option=db.name
+			
+			input(type="hidden",name="op",value="command")
+			input(type="submit")
+		
+		#command-result Respuesta del servidor:
+			pre

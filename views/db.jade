@@ -1,0 +1,45 @@
+extends layout
+
+block content
+	input#db(type="hidden",value=dbname)
+	table#main-t
+		tr
+			td#leftC
+				.auto-height
+					h3
+						a(href="/") DB's
+						|  · 
+						select(onchange="location.href='/db/'+this.value")
+							each db in dbs
+								option(selected=dbname===db)=db
+					ul#collections
+						each col in collections
+							li(class={active:col.name===collection})
+								a(href="/db/"+dbname+"/"+col.name)=col.name
+								if col.count
+									span=" ("+col.count+")"
+			td#rightC
+				.auto-height
+					if collection
+						block collection
+					else
+						.actions
+							a(href="/db/"+dbname,class={active:op==="stats"}) Estadística
+							|  | 
+							a(href="/db/"+dbname+"?op=processlist",class={active:op==="processlist"}) Procesos
+							|  | 
+							a(href="/db/"+dbname+"?op=newcollection",class={active:op==="newcollection"}) Nueva colección
+							|  | 
+							a(href="/db/"+dbname+"?op=command",class={active:op==="command"}) Comando
+							|  | 
+							a(href="/db/"+dbname+"?op=export",class={active:op==="export"}) Exportar
+							|  | 
+							a(href="/db/"+dbname+"?op=import",class={active:op==="import"}) Importar
+							|  | 
+							a(href="/db/"+dbname+"?op=repair",class={active:op==="repair"}) Reparar
+							|  | 
+							a(href="/db/"+dbname+"?op=auth",class={active:op==="auth"}) Autenticación
+							|  | 
+							a(href="/db/"+dbname+"?action=dropdb",onclick="return confirm('Seguro que quieres eliminar toda la base de datos \""+dbname+"\"?')") Eliminar
+
+						block dbbody

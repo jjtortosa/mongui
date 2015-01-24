@@ -1,0 +1,17 @@
+extends layout
+
+block content
+	table.lcaption(style="width:100%")
+		tbody
+			tr
+				th(style="width:18%") profilingLevel
+				td=level
+	table.lcaption(style="width:100%")
+		thead
+			tr
+				th(colspan="3") Información de compilación ({buildinfo:1})
+		tbody
+			each i,k in info
+				tr
+					th(style="width:18%")=k
+					td=i

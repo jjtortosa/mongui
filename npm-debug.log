@@ -1,0 +1,386 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/home/jj/.nvm/v0.10.33/bin/node',
+1 verbose cli   '/home/jj/.nvm/v0.10.33/bin/npm',
+1 verbose cli   'install',
+1 verbose cli   '--save',
+1 verbose cli   'mongodb' ]
+2 info using npm@1.4.28
+3 info using node@v0.10.33
+4 warn package.json mongui@0.0.4 No repository field.
+5 warn package.json mongui@0.0.4 bugs.url field must be a string url. Deleted.
+6 warn package.json mongui@0.0.4 Normalized value of bugs field is an empty object. Deleted.
+7 verbose readDependencies using package.json deps
+8 verbose cache add [ 'mongodb', null ]
+9 verbose cache add name=undefined spec="mongodb" args=["mongodb",null]
+10 verbose parsed url { protocol: null,
+10 verbose parsed url   slashes: null,
+10 verbose parsed url   auth: null,
+10 verbose parsed url   host: null,
+10 verbose parsed url   port: null,
+10 verbose parsed url   hostname: null,
+10 verbose parsed url   hash: null,
+10 verbose parsed url   search: null,
+10 verbose parsed url   query: null,
+10 verbose parsed url   pathname: 'mongodb',
+10 verbose parsed url   path: 'mongodb',
+10 verbose parsed url   href: 'mongodb' }
+11 silly lockFile 7f1c982e-mongodb mongodb
+12 verbose lock mongodb /home/jj/.npm/7f1c982e-mongodb.lock
+13 silly lockFile 7f1c982e-mongodb mongodb
+14 silly lockFile 7f1c982e-mongodb mongodb
+15 verbose addNamed [ 'mongodb', '' ]
+16 verbose addNamed [ null, '*' ]
+17 silly lockFile 886df635-mongodb mongodb@
+18 verbose lock mongodb@ /home/jj/.npm/886df635-mongodb.lock
+19 silly addNameRange { name: 'mongodb', range: '*', hasData: false }
+20 verbose request where is /mongodb
+21 verbose request registry https://registry.npmjs.org/
+22 verbose request id 1db9cb934857ef13
+23 verbose url raw /mongodb
+24 verbose url resolving [ 'https://registry.npmjs.org/', './mongodb' ]
+25 verbose url resolved https://registry.npmjs.org/mongodb
+26 verbose request where is https://registry.npmjs.org/mongodb
+27 info trying registry request attempt 1 at 10:40:01
+28 verbose etag "GOF3MVOU5H42PMFBX2FXA6FK"
+29 http GET https://registry.npmjs.org/mongodb
+30 http 200 https://registry.npmjs.org/mongodb
+31 silly registry.get cb [ 200,
+31 silly registry.get   { date: 'Thu, 22 Jan 2015 09:40:01 GMT',
+31 silly registry.get     server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+31 silly registry.get     etag: '"72YIW3Q7GQVWW6O0SAQUOLZMV"',
+31 silly registry.get     'content-type': 'application/json',
+31 silly registry.get     'cache-control': 'max-age=60',
+31 silly registry.get     'content-length': '415730',
+31 silly registry.get     'accept-ranges': 'bytes',
+31 silly registry.get     via: '1.1 varnish',
+31 silly registry.get     age: '0',
+31 silly registry.get     'x-served-by': 'cache-ams4138-AMS',
+31 silly registry.get     'x-cache': 'HIT',
+31 silly registry.get     'x-cache-hits': '1',
+31 silly registry.get     'x-timer': 'S1421919601.696705,VS0,VE170',
+31 silly registry.get     vary: 'Accept',
+31 silly registry.get     'keep-alive': 'timeout=10, max=50',
+31 silly registry.get     connection: 'Keep-Alive' } ]
+32 silly addNameRange number 2 { name: 'mongodb', range: '*', hasData: true }
+33 silly addNameRange versions [ 'mongodb',
+33 silly addNameRange   [ '0.9.4',
+33 silly addNameRange     '0.9.4-4',
+33 silly addNameRange     '0.9.3',
+33 silly addNameRange     '0.9.1',
+33 silly addNameRange     '0.9.2',
+33 silly addNameRange     '0.9.6-7',
+33 silly addNameRange     '0.9.6-8',
+33 silly addNameRange     '0.9.6-9',
+33 silly addNameRange     '0.9.6-10',
+33 silly addNameRange     '0.9.6-11',
+33 silly addNameRange     '0.9.6-12',
+33 silly addNameRange     '0.9.6-13',
+33 silly addNameRange     '0.9.6-14',
+33 silly addNameRange     '0.9.6-15',
+33 silly addNameRange     '0.9.6-16',
+33 silly addNameRange     '0.9.6-17',
+33 silly addNameRange     '0.9.6-18',
+33 silly addNameRange     '0.9.6-19',
+33 silly addNameRange     '0.9.6-20',
+33 silly addNameRange     '0.9.6-21',
+33 silly addNameRange     '0.9.6-22',
+33 silly addNameRange     '0.9.6-23',
+33 silly addNameRange     '0.9.7',
+33 silly addNameRange     '0.9.7-0',
+33 silly addNameRange     '0.9.7-1',
+33 silly addNameRange     '0.9.7-1.1',
+33 silly addNameRange     '0.9.7-1.2',
+33 silly addNameRange     '0.9.7-1.3',
+33 silly addNameRange     '0.9.7-1.4',
+33 silly addNameRange     '0.9.7-2',
+33 silly addNameRange     '0.9.7-2-1',
+33 silly addNameRange     '0.9.7-2-2',
+33 silly addNameRange     '0.9.7-2-3',
+33 silly addNameRange     '0.9.7-2-4',
+33 silly addNameRange     '0.9.7-2-5',
+33 silly addNameRange     '0.9.7-3',
+33 silly addNameRange     '0.9.7-3-1',
+33 silly addNameRange     '0.9.7-3-2',
+33 silly addNameRange     '0.9.7-3-3',
+33 silly addNameRange     '0.9.7-3-4',
+33 silly addNameRange     '0.9.7-3-5',
+33 silly addNameRange     '0.9.8',
+33 silly addNameRange     '0.9.8-1',
+33 silly addNameRange     '0.9.8-2',
+33 silly addNameRange     '0.9.8-3',
+33 silly addNameRange     '0.9.8-4',
+33 silly addNameRange     '0.9.8-5',
+33 silly addNameRange     '0.9.8-6',
+33 silly addNameRange     '0.9.8-7',
+33 silly addNameRange     '0.9.9',
+33 silly addNameRange     '0.9.9-1',
+33 silly addNameRange     '0.9.9-2',
+33 silly addNameRange     '0.9.9-3',
+33 silly addNameRange     '0.9.9-4',
+33 silly addNameRange     '0.9.9-5',
+33 silly addNameRange     '0.9.9-6',
+33 silly addNameRange     '0.9.9-7',
+33 silly addNameRange     '0.9.9-8',
+33 silly addNameRange     '1.0.0',
+33 silly addNameRange     '1.0.1',
+33 silly addNameRange     '1.0.2',
+33 silly addNameRange     '1.1.0-beta',
+33 silly addNameRange     '1.1.0',
+33 silly addNameRange     '1.1.1',
+33 silly addNameRange     '1.1.2',
+33 silly addNameRange     '1.1.3',
+33 silly addNameRange     '1.1.4',
+33 silly addNameRange     '1.1.5',
+33 silly addNameRange     '1.1.6',
+33 silly addNameRange     '1.1.7',
+33 silly addNameRange     '1.1.8',
+33 silly addNameRange     '1.1.9',
+33 silly addNameRange     '1.1.10',
+33 silly addNameRange     '1.1.11',
+33 silly addNameRange     '1.2.0',
+33 silly addNameRange     '1.2.1',
+33 silly addNameRange     '1.2.2',
+33 silly addNameRange     '1.2.3',
+33 silly addNameRange     '1.2.4',
+33 silly addNameRange     '1.2.5',
+33 silly addNameRange     '1.2.6',
+33 silly addNameRange     '1.2.7',
+33 silly addNameRange     '1.2.8',
+33 silly addNameRange     '1.2.9',
+33 silly addNameRange     '1.2.10',
+33 silly addNameRange     '1.2.11',
+33 silly addNameRange     '1.2.12',
+33 silly addNameRange     '1.2.13',
+33 silly addNameRange     '1.2.14',
+33 silly addNameRange     '1.3.0',
+33 silly addNameRange     '1.3.1',
+33 silly addNameRange     '1.3.2',
+33 silly addNameRange     '1.3.3',
+33 silly addNameRange     '1.3.4',
+33 silly addNameRange     '1.3.5',
+33 silly addNameRange     '1.3.6',
+33 silly addNameRange     '1.3.7',
+33 silly addNameRange     '1.3.8',
+33 silly addNameRange     '1.3.9',
+33 silly addNameRange     '1.3.10',
+33 silly addNameRange     '1.3.11',
+33 silly addNameRange     '1.3.12',
+33 silly addNameRange     '1.3.14',
+33 silly addNameRange     '1.3.15',
+33 silly addNameRange     '1.3.17',
+33 silly addNameRange     '1.3.18',
+33 silly addNameRange     '1.3.19',
+33 silly addNameRange     '1.4.0-rc2',
+33 silly addNameRange     '1.3.20',
+33 silly addNameRange     '1.4.0-rc3',
+33 silly addNameRange     '1.3.21',
+33 silly addNameRange     '1.3.22',
+33 silly addNameRange     '1.3.23',
+33 silly addNameRange     '1.4.0-rc4',
+33 silly addNameRange     '1.4.0-rc5',
+33 silly addNameRange     '1.4.0-rc6',
+33 silly addNameRange     '1.4.0-rc7',
+33 silly addNameRange     '1.4.0-rc8',
+33 silly addNameRange     '1.4.0-rc9',
+33 silly addNameRange     '1.4.0-rc10',
+33 silly addNameRange     '1.4.0',
+33 silly addNameRange     '1.4.1',
+33 silly addNameRange     '1.4.2',
+33 silly addNameRange     '1.4.3',
+33 silly addNameRange     '1.4.4',
+33 silly addNameRange     '1.4.5',
+33 silly addNameRange     '1.4.6',
+33 silly addNameRange     '1.4.7',
+33 silly addNameRange     '1.4.8',
+33 silly addNameRange     '1.4.9',
+33 silly addNameRange     '1.4.10',
+33 silly addNameRange     '2.0.0-alpha1',
+33 silly addNameRange     '1.4.11',
+33 silly addNameRange     '1.4.12',
+33 silly addNameRange     '1.4.14',
+33 silly addNameRange     '1.4.15',
+33 silly addNameRange     '1.4.16',
+33 silly addNameRange     '1.4.17',
+33 silly addNameRange     '2.0.0-alpha2',
+33 silly addNameRange     '1.4.18',
+33 silly addNameRange     '2.0.0',
+33 silly addNameRange     '2.0.1',
+33 silly addNameRange     '2.0.2',
+33 silly addNameRange     '1.4.19',
+33 silly addNameRange     '2.0.3',
+33 silly addNameRange     '2.0.4',
+33 silly addNameRange     '2.0.5',
+33 silly addNameRange     '2.0.6',
+33 silly addNameRange     '1.4.20',
+33 silly addNameRange     '1.4.22',
+33 silly addNameRange     '2.0.7',
+33 silly addNameRange     '2.0.8',
+33 silly addNameRange     '2.0.9',
+33 silly addNameRange     '1.4.23',
+33 silly addNameRange     '2.0.10',
+33 silly addNameRange     '1.4.24',
+33 silly addNameRange     '2.0.11',
+33 silly addNameRange     '1.4.25',
+33 silly addNameRange     '2.0.12',
+33 silly addNameRange     '1.4.26',
+33 silly addNameRange     '1.4.27',
+33 silly addNameRange     '1.4.28',
+33 silly addNameRange     '2.0.13',
+33 silly addNameRange     '2.0.14',
+33 silly addNameRange     '1.4.29' ] ]
+34 verbose addNamed [ 'mongodb', '1.4.29' ]
+35 verbose addNamed [ '1.4.29', '1.4.29' ]
+36 silly lockFile 2563398f-mongodb-1-4-29 mongodb@1.4.29
+37 verbose lock mongodb@1.4.29 /home/jj/.npm/2563398f-mongodb-1-4-29.lock
+38 silly lockFile 0ceb3f57-s-org-mongodb-mongodb-1-4-29-tgz https://registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz
+39 verbose lock https://registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz /home/jj/.npm/0ceb3f57-s-org-mongodb-mongodb-1-4-29-tgz.lock
+40 verbose addRemoteTarball [ 'https://registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz',
+40 verbose addRemoteTarball   '0f1fc8b665e39c9bef0f54d941cad54cd3e3e60e' ]
+41 info retry fetch attempt 1 at 10:40:02
+42 verbose fetch to= /tmp/npm-14160-9WWx_Pno/registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz
+43 http GET https://registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz
+44 http 200 https://registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz
+45 silly lockFile 0ceb3f57-s-org-mongodb-mongodb-1-4-29-tgz https://registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz
+46 silly lockFile 0ceb3f57-s-org-mongodb-mongodb-1-4-29-tgz https://registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz
+47 silly lockFile 2563398f-mongodb-1-4-29 mongodb@1.4.29
+48 silly lockFile 2563398f-mongodb-1-4-29 mongodb@1.4.29
+49 silly lockFile 886df635-mongodb mongodb@
+50 silly lockFile 886df635-mongodb mongodb@
+51 silly resolved [ { name: 'mongodb',
+51 silly resolved     description: 'A node.js driver for MongoDB',
+51 silly resolved     keywords: [ 'mongodb', 'mongo', 'driver', 'db' ],
+51 silly resolved     version: '1.4.29',
+51 silly resolved     author: { name: 'Christian Amor Kvalheim', email: 'christkv@gmail.com' },
+51 silly resolved     contributors:
+51 silly resolved      [ [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object],
+51 silly resolved        [Object] ],
+51 silly resolved     repository:
+51 silly resolved      { type: 'git',
+51 silly resolved        url: 'http://github.com/mongodb/node-mongodb-native.git' },
+51 silly resolved     bugs: { url: 'http://github.com/mongodb/node-mongodb-native/issues' },
+51 silly resolved     dependencies: { bson: '~0.2', kerberos: '0.0.8', 'readable-stream': 'latest' },
+51 silly resolved     devDependencies:
+51 silly resolved      { dox: '0.4.4',
+51 silly resolved        'uglify-js': '1.2.5',
+51 silly resolved        ejs: '0.6.1',
+51 silly resolved        request: '2.12.0',
+51 silly resolved        nodeunit: '0.7.3',
+51 silly resolved        markdown: '0.3.1',
+51 silly resolved        gleak: '0.5.0',
+51 silly resolved        step: '0.0.5',
+51 silly resolved        async: '0.1.22',
+51 silly resolved        integra: '0.1.8',
+51 silly resolved        optimist: 'latest',
+51 silly resolved        rimraf: '2.2.6',
+51 silly resolved        semver: '4.1.0',
+51 silly resolved        'mongodb-core': '1.1.9',
+51 silly resolved        'mongodb-version-manager': '0.5.0' },
+51 silly resolved     optionalDependencies: { kerberos: '0.0.8', 'readable-stream': 'latest' },
+51 silly resolved     config: { native: false },
+51 silly resolved     main: './lib/mongodb/index',
+51 silly resolved     homepage: 'http://mongodb.github.com/node-mongodb-native/',
+51 silly resolved     directories: { lib: './lib/mongodb' },
+51 silly resolved     engines: { node: '>=0.6.19' },
+51 silly resolved     scripts: { test: 'node test/runner.js -t functional' },
+51 silly resolved     licenses: [ [Object] ],
+51 silly resolved     gitHead: '7428ea1143e5432a026ecc04a661457a7996794b',
+51 silly resolved     _id: 'mongodb@1.4.29',
+51 silly resolved     _shasum: '0f1fc8b665e39c9bef0f54d941cad54cd3e3e60e',
+51 silly resolved     _from: 'mongodb@',
+51 silly resolved     _npmVersion: '1.4.28',
+51 silly resolved     _npmUser: { name: 'christkv', email: 'christkv@gmail.com' },
+51 silly resolved     maintainers: [ [Object] ],
+51 silly resolved     dist:
+51 silly resolved      { shasum: '0f1fc8b665e39c9bef0f54d941cad54cd3e3e60e',
+51 silly resolved        tarball: 'http://registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz' },
+51 silly resolved     _resolved: 'https://registry.npmjs.org/mongodb/-/mongodb-1.4.29.tgz' } ]
+52 info install mongodb@1.4.29 into /var/js/vhosts/mongui
+53 info installOne mongodb@1.4.29
+54 verbose node_modules/mongodb unbuild
+55 verbose tar unpack /home/jj/.npm/mongodb/1.4.29/package.tgz
+56 silly lockFile ad653475-osts-mongui-node-modules-mongodb tar:///var/js/vhosts/mongui/node_modules/mongodb
+57 verbose lock tar:///var/js/vhosts/mongui/node_modules/mongodb /home/jj/.npm/ad653475-osts-mongui-node-modules-mongodb.lock
+58 silly lockFile 0cecdf23-j-npm-mongodb-1-4-29-package-tgz tar:///home/jj/.npm/mongodb/1.4.29/package.tgz
+59 verbose lock tar:///home/jj/.npm/mongodb/1.4.29/package.tgz /home/jj/.npm/0cecdf23-j-npm-mongodb-1-4-29-package-tgz.lock
+60 silly gunzTarPerm modes [ '775', '664' ]
+61 error Error: EACCES, mkdir '/var/js/vhosts/mongui/node_modules/mongodb'
+61 error  { [Error: EACCES, mkdir '/var/js/vhosts/mongui/node_modules/mongodb']
+61 error   errno: 3,
+61 error   code: 'EACCES',
+61 error   path: '/var/js/vhosts/mongui/node_modules/mongodb',
+61 error   fstream_type: 'Directory',
+61 error   fstream_path: '/var/js/vhosts/mongui/node_modules/mongodb',
+61 error   fstream_class: 'DirWriter',
+61 error   fstream_stack:
+61 error    [ '/home/jj/.nvm/v0.10.33/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23',
+61 error      '/home/jj/.nvm/v0.10.33/lib/node_modules/npm/node_modules/mkdirp/index.js:46:53',
+61 error      'Object.oncomplete (fs.js:107:15)' ] }
+62 error Please try running this command again as root/Administrator.
+63 error System Linux 3.16.0-29-generic
+64 error command "/home/jj/.nvm/v0.10.33/bin/node" "/home/jj/.nvm/v0.10.33/bin/npm" "install" "--save" "mongodb"
+65 error cwd /var/js/vhosts/mongui
+66 error node -v v0.10.33
+67 error npm -v 1.4.28
+68 error path /var/js/vhosts/mongui/node_modules/mongodb
+69 error fstream_path /var/js/vhosts/mongui/node_modules/mongodb
+70 error fstream_type Directory
+71 error fstream_class DirWriter
+72 error code EACCES
+73 error errno 3
+74 error stack Error: EACCES, mkdir '/var/js/vhosts/mongui/node_modules/mongodb'
+75 error fstream_stack /home/jj/.nvm/v0.10.33/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:36:23
+75 error fstream_stack /home/jj/.nvm/v0.10.33/lib/node_modules/npm/node_modules/mkdirp/index.js:46:53
+75 error fstream_stack Object.oncomplete (fs.js:107:15)
+76 verbose exit [ 3, true ]

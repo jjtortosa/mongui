@@ -1,0 +1,12 @@
+extends collection
+
+block collection-content
+	table(style="width:auto").lcaption
+		thead
+			tr
+				th(colspan="2") Validate
+		tbody
+			each i,k in validate
+				tr
+					th=k
+					td: pre=JSON.stringify(i, null, '\t')

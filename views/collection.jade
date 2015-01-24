@@ -1,0 +1,25 @@
+extends db
+
+block collection
+	input#collection(type="hidden",value=collection)
+	.actions
+		a(href="?op=insert",class={active:op==="insert"}) Insertar
+		|  | 
+		a(href="?action=truncate",onclick!="return confirm('Are you sure to delete all records in collection \\'"+collection+"\\'?');") Limpiar
+		|  | 
+		a(href="?op=stats",class={active:op==="stats"}) Estadística
+		|  | 
+		a(href="?op=indexes",class={active:op==="indexes"}) Índices
+		|  | 
+		a(href="?op=rename",class={active:op==="rename"}) Renombrar
+		|  | 
+		a(href="?op=dup",class={active:op==="dup"}) Duplicar
+		|  | 
+		a(href="?op=validate",class={active:op==="validate"}) Validar
+		|  | 
+		a(href="?action=drop",onclick!="return confirm('Are you sure to drop collection \\'"+collection+"\\'?');") Eliminar
+
+	if err
+		p(style="color:red")=err
+
+	block collection-content
