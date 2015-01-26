@@ -22,7 +22,7 @@ default port: 3101
 
 [http://localhost:3101/](http://localhost:3101/)
 
-![screenshot1](https://raw.githubusercontent.com/jjtortosa/mongui/master/screenshots/mongui_screenshot1.png =200x)
+<img src="https://raw.githubusercontent.com/jjtortosa/mongui/master/screenshots/mongui_screenshot1.png" alt="screenshot1" width=500"/>
 
 ## Dependencies
 
