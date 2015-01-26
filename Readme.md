@@ -1,6 +1,6 @@
 # mongui 
 
-MongoDB user interface
+MongoDB user interface inspired on [RockMongo](https://github.com/iwind/rockmongo)
 
 ## Installation
 
@@ -10,7 +10,17 @@ Download node at [nodejs.org](http://nodejs.org) and install it, if you haven't 
 npm install mongui --global
 ```
 
+## Start mongui
 
+```bash
+$ mongui [port]
+```
+
+default port: 3101
+
+## Usage
+
+[http://localhost:3101/](http://localhost:3101/)
 
 ## Dependencies
 
