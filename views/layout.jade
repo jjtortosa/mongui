@@ -10,7 +10,7 @@ html
 	body
 		if(!dbname && reqpath !== "/login")
 			.actions
-				a(href="/",class={active: path===reqpath}) Bases de datos
+				a(href="/",class={active: path==="/"}) Bases de datos
 				|  | 
 				a(href="/serverinfo",class={active: path==="/serverinfo"}) Servidor
 				|  | 

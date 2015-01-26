@@ -2,10 +2,13 @@ extends layout
 
 block content
 	#db-content
-		form(action="/post",method="post")
+		if err
+			h4(style="color:red")=err
+
+		form(action="/createdb",method="post")
 			br
 			span Nombre de la nueva base de datos: 
-			input(name="db")
+			input(name="db",required,value=db)
 			br
 			br
 			input(type="submit")

@@ -22,7 +22,6 @@ $(function(){
 			return;
 		
 		$.ajax({
-			url: '/post',
 			data: {
 				op: 'deleteRow',
 				id: id,

@@ -2,10 +2,17 @@ extends db
 
 block collection
 	input#collection(type="hidden",value=collection)
+	form#post(style="display:none",method="post")
+		input#op(type="hidden",name="op")
 	.actions
+		b Collection: 
+		span=op
+		br
+		a(href="/db/"+dbname+"/"+collection,class={active:!op}) Consultar
+		|  | 
 		a(href="?op=insert",class={active:op==="insert"}) Insertar
 		|  | 
-		a(href="?action=truncate",onclick!="return confirm('Are you sure to delete all records in collection \\'"+collection+"\\'?');") Limpiar
+		a(href="truncate",onclick!="if(confirm('Are you sure to delete all records in collection \\'"+collection+"\\'?')){op.value='truncate';$('#post').submit();}return false") Limpiar
 		|  | 
 		a(href="?op=stats",class={active:op==="stats"}) Estadística
 		|  | 
@@ -17,7 +24,7 @@ block collection
 		|  | 
 		a(href="?op=validate",class={active:op==="validate"}) Validar
 		|  | 
-		a(href="?action=drop",onclick!="return confirm('Are you sure to drop collection \\'"+collection+"\\'?');") Eliminar
+		a(href="?action=drop",onclick!="if(confirm('Are you sure to drop collection \\'"+collection+"\\'?')){op.value='drop';$('#post').submit();}return false") Eliminar
 
 	if err
 		p(style="color:red")=err

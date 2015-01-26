@@ -8,7 +8,7 @@ function MongoMng(db) {
 
 MongoMng.prototype.__proto__ = events.EventEmitter.prototype;
 
-MongoMng.prototype.dbsInfo = function(cb){
+MongoMng.prototype.dbsInfo = function(full, cb){
 	var self = this;
 	
 	this.listDbs(function(err, databases){
@@ -18,11 +18,13 @@ MongoMng.prototype.dbsInfo = function(cb){
 		var count = 0;
 		
 		databases.forEach(function(db){
-			self.useDb(db.name).stats(function(err, stats){
+			db.sizeOnDisk = human(db.sizeOnDisk);
+			
+			full && self.useDb(db.name).stats(function(err, stats){
 				for(var i in stats)
 					db[i] = stats[i];
 				
-				['sizeOnDisk', 'storageSize', 'dataSize', 'indexSize', ''].forEach(function(k){
+				['storageSize', 'dataSize', 'indexSize', ''].forEach(function(k){
 					db[k] = human(db[k]);
 				});
 				
@@ -33,6 +35,9 @@ MongoMng.prototype.dbsInfo = function(cb){
 				}
 			});
 		});
+		
+		if(!full || !databases.length)
+			cb.call(self, null, databases);
 	});
 };
 
@@ -96,6 +101,10 @@ MongoMng.prototype.currentOp = function(q, cb){
 	});
 };
 
+MongoMng.prototype.setCollection = function(colname, cb){
+	this.collection = this.db.collection(colname);
+};
+
 
 module.exports = function(req, res, next){
 	res.locals.reqpath = req.path;
@@ -106,10 +115,14 @@ module.exports = function(req, res, next){
 	if(conf.mongouser && conf.mongopass)
 		uri += conf.mongouser + ':' + conf.mongopass + '@';
 
-	var match = req.path.match(/^\/db\/([^\/]+)/)
-	,	dbname = match && match[1];
+	var match = decodeURI(req.path).match(/^\/db\/([^\/]+)\/?([^\/]*)/);
 	
-	uri += (conf.host || 'localhost') + (dbname ? '/' + dbname : '');
+	if(match){
+		res.locals.dbname = match && match[1];
+		res.locals.collection = match && match[2];
+	}
+	
+	uri += (conf.host || 'localhost') + (res.locals.dbname ? '/' + res.locals.dbname : '');
 	
 	MongoClient.connect(uri, function(err, db){
 		if(err)
@@ -117,7 +130,12 @@ module.exports = function(req, res, next){
 		
 		req.mongoMng = new MongoMng(db);
 		
-		console.info('MongoDb - Connected' + (dbname ? ' to db "' + dbname + '"' : ''))	;
+		if(res.locals.collection)
+			req.mongoMng.setCollection(res.locals.collection);
+		
+		res.locals.path = req.path;
+		
+		console.info('MongoDb - Connected' + (res.locals.dbname ? ' to db "' + res.locals.dbname + '"' : ''))	;
 		
 		next();
 	});

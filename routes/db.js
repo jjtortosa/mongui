@@ -1,9 +1,9 @@
 "use strict";
 
-var mongodb = require('mongodb')
-,	ObjectId = mongodb.ObjectID
+var ObjectId = require('mongodb').ObjectID
 ,	assert = require('assert')
-,	Entities = require('html-entities').AllHtmlEntities;
+,	Entities = require('html-entities').AllHtmlEntities
+,	merge = require('merge-descriptors');
 
 function EMongo(req){
 	Object.defineProperties(this, {
@@ -13,19 +13,16 @@ function EMongo(req){
 	
 	this.view = 'results';
 	
-	this.locals = {
+	this.locals = req.res.locals;
+
+	merge(this.locals, {
 		title: 'EucaMongo',
-		path: req.path,
-		dbname: req.param('db'),
-		collection: req.param('collection'),
 		action: req.param('action'),
 		op: req.param('op'),
 		err: req.param('err')
-	};
+	});
 
-	if(this.locals.collection){
-		this.collection = this.mng.db.collection(this.locals.collection);
-	} else if(!this.locals.op)
+	if(!this.locals.collection && !this.locals.op)
 		this.locals.op = 'stats';
 	
 	this.locals.opText = {
@@ -87,28 +84,8 @@ EMongo.prototype.action = function(){
 	var req = this.req;
 	
 	switch(this.locals.action){
-		case 'truncate':
-			this.collection.remove({}, function(err, a){
-				req.res.redirect(req.path);
-			});
-			break;
-		case 'drop':
-			this.collection.drop(function(err){
-				var red = req.path;
-				
-				if(err)
-					red += '?err=' + err.message;
-				
-				req.res.redirect(red);
-			});
-			break;
-		case 'dropdb':
-			this.db.dropDatabase(function(err, a){
-				req.res.redirect('/');
-			});
-			break;
 		case 'delete':
-			this.collection.remove({_id: req.param('id')}, function(err, a){
+			this.mng.collection.remove({_id: req.param('id')}, function(err, a){
 				req.res.send(err || a);
 			});
 			break;
@@ -122,15 +99,13 @@ EMongo.prototype.action = function(){
 				if(!Object.keys(json).length)
 					return req.res.redirect(req.path);
 
-				this.collection.insert(json, function(err, doc){
+				this.mng.collection.insert(json, function(err, doc){
 					req.res.redirect(redirect + '&msg=ok');
 				});
 			} catch(e){
 				req.res.redirect(redirect + '&msg=parseError');
 			}
 			break;
-		default:
-			req.res.status(404).send('Action "' + req.param('action') + '" not defined');
 	}
 };
 
@@ -193,11 +168,11 @@ EMongo.prototype.colStats = function(next){
 	switch(this.locals.op){
 		case 'stats':
 			this.view = 'colstats';
-			this.collection.stats(function(err, stats){
+			this.mng.collection.stats(function(err, stats){
 				self.locals.stats = stats;
 				
 				self.mng.admin().command({top:1}, function(err, top){
-					self.locals.top = top.documents[0].totals[self.mng.db.databaseName + '.' + self.collection.collectionName];
+					self.locals.top = top.documents[0].totals[self.mng.db.databaseName + '.' + self.mng.collection.collectionName];
 					
 					next.call(self);
 				});
@@ -205,7 +180,7 @@ EMongo.prototype.colStats = function(next){
 			break;
 		case 'validate':
 			this.view = 'validate';
-			this.db.command({validate: this.collection.collectionName, full: true}, function(err, validate){
+			this.mng.db.command({validate: this.mng.collection.collectionName, full: true}, function(err, validate){
 				self.locals.validate = validate;
 				next.call(self);
 			});
@@ -297,7 +272,7 @@ EMongo.prototype.processCollection = function(next){
 	
 	var page = parseInt(req.query.page) || 1;
 	
-	var cursor = this.collection
+	var cursor = this.mng.collection
 		.find(query, fields)
 		.sort(sort).limit(10)
 		.skip((page -1) * EMongo.limit);
