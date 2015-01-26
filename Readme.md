@@ -22,6 +22,8 @@ default port: 3101
 
 [http://localhost:3101/](http://localhost:3101/)
 
+![screenshot1](https://raw.githubusercontent.com/jjtortosa/mongui/master/screenshots/mongui_screenshot1.png =200x)
+
 ## Dependencies
 
 - [body-parser](https://github.com/expressjs/body-parser): Node.js body parsing middleware
