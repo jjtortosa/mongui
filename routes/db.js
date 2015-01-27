@@ -248,9 +248,7 @@ EMongo.prototype.processCollection = function(next){
 		try{
 			eval('query=' + req.query.criteria.replace(/[\t\n\r]/g, ''));
 		} catch(e){
-			self.locals.err = 'Invalid query';
-			
-			return next.call(self);
+			return next.call(self, new Error('Invalid query'));
 		}
 	}
 	
@@ -260,25 +258,28 @@ EMongo.prototype.processCollection = function(next){
 		.find(query, fields)
 		.sort(sort).limit(10)
 		.skip((page -1) * EMongo.limit);
+		
+	cursor.each(function(err, r){
+		if(err)
+			return next.call(self, err);
+		
+		if(r)
+			return self.locals.result[r._id] = sanitize(r).html;
 	
-	cursor.count(function(err, count){
-		var pagesCount = Math.floor(count/EMongo.limit) + 1;
-		
-		self.locals.paginator = {
-			page: page,
-			first: Math.max(1, page-6),
-			last: Math.min(pagesCount, page+6),
-			total: pagesCount
-		};
-	
-		self.locals.count = count;
-		self.locals.url = req.url.replace(/&page=\d*/, '');
-		
-		cursor.each(function(err, r){
-			if(!r)
-				return next.call(self);
-		
-			self.locals.result[r._id] = sanitize(r).html;
+		cursor.count(function(err, count){
+			var pagesCount = Math.floor(count/EMongo.limit) + 1;
+
+			self.locals.paginator = {
+				page: page,
+				first: Math.max(1, page-6),
+				last: Math.min(pagesCount, page+6),
+				total: pagesCount
+			};
+
+			self.locals.count = count;
+			self.locals.url = req.url.replace(/&page=\d*/, '');
+			
+			next.call(self);
 		});
 	});
 };
@@ -287,8 +288,11 @@ EMongo.prototype.render = function(){
 	this.req.res.render(this.view, this.locals);
 };
 
-module.exports = function(req){
-	new EMongo(req).process(function(){
+module.exports = function(req, res){
+	new EMongo(req).process(function(err){
+		if(err)
+			res.locals.err = err.message;
+		
 		this.render();
 	});
 };
