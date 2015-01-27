@@ -20,27 +20,27 @@
 8 verbose parsed url   href: '.' }
 9 silly lockFile 3a52ce78- .
 10 verbose lock . /home/jj/.npm/3a52ce78-.lock
-11 verbose tar pack [ '/home/jj/.npm/mongui/0.0.8/package.tgz', '.' ]
-12 verbose tarball /home/jj/.npm/mongui/0.0.8/package.tgz
+11 verbose tar pack [ '/home/jj/.npm/mongui/0.0.9/package.tgz', '.' ]
+12 verbose tarball /home/jj/.npm/mongui/0.0.9/package.tgz
 13 verbose folder .
-14 info prepublish mongui@0.0.8
+14 info prepublish mongui@0.0.9
 15 silly lockFile 1f1177db-tar tar://.
 16 verbose lock tar://. /home/jj/.npm/1f1177db-tar.lock
-17 silly lockFile c520002e--jj-npm-mongui-0-0-8-package-tgz tar:///home/jj/.npm/mongui/0.0.8/package.tgz
-18 verbose lock tar:///home/jj/.npm/mongui/0.0.8/package.tgz /home/jj/.npm/c520002e--jj-npm-mongui-0-0-8-package-tgz.lock
+17 silly lockFile e31c8574--jj-npm-mongui-0-0-9-package-tgz tar:///home/jj/.npm/mongui/0.0.9/package.tgz
+18 verbose lock tar:///home/jj/.npm/mongui/0.0.9/package.tgz /home/jj/.npm/e31c8574--jj-npm-mongui-0-0-9-package-tgz.lock
 19 silly lockFile 1f1177db-tar tar://.
 20 silly lockFile 1f1177db-tar tar://.
-21 silly lockFile c520002e--jj-npm-mongui-0-0-8-package-tgz tar:///home/jj/.npm/mongui/0.0.8/package.tgz
-22 silly lockFile c520002e--jj-npm-mongui-0-0-8-package-tgz tar:///home/jj/.npm/mongui/0.0.8/package.tgz
-23 silly lockFile 021fc4d4-home-jj-npm-mongui-0-0-8-package /home/jj/.npm/mongui/0.0.8/package
-24 verbose lock /home/jj/.npm/mongui/0.0.8/package /home/jj/.npm/021fc4d4-home-jj-npm-mongui-0-0-8-package.lock
-25 silly lockFile 021fc4d4-home-jj-npm-mongui-0-0-8-package /home/jj/.npm/mongui/0.0.8/package
-26 silly lockFile 021fc4d4-home-jj-npm-mongui-0-0-8-package /home/jj/.npm/mongui/0.0.8/package
+21 silly lockFile e31c8574--jj-npm-mongui-0-0-9-package-tgz tar:///home/jj/.npm/mongui/0.0.9/package.tgz
+22 silly lockFile e31c8574--jj-npm-mongui-0-0-9-package-tgz tar:///home/jj/.npm/mongui/0.0.9/package.tgz
+23 silly lockFile caea60a3-home-jj-npm-mongui-0-0-9-package /home/jj/.npm/mongui/0.0.9/package
+24 verbose lock /home/jj/.npm/mongui/0.0.9/package /home/jj/.npm/caea60a3-home-jj-npm-mongui-0-0-9-package.lock
+25 silly lockFile caea60a3-home-jj-npm-mongui-0-0-9-package /home/jj/.npm/mongui/0.0.9/package
+26 silly lockFile caea60a3-home-jj-npm-mongui-0-0-9-package /home/jj/.npm/mongui/0.0.9/package
 27 silly lockFile 3a52ce78- .
 28 silly lockFile 3a52ce78- .
 29 silly publish { name: 'mongui',
 29 silly publish   description: 'MongoDB user interface',
-29 silly publish   version: '0.0.8',
+29 silly publish   version: '0.0.9',
 29 silly publish   scripts: { start: 'node ./bin/www' },
 29 silly publish   main: './bin/www',
 29 silly publish   dependencies:
@@ -58,37 +58,37 @@
 29 silly publish   keywords: [],
 29 silly publish   readme: '# mongui \n\nMongoDB user interface inspired on [RockMongo](https://github.com/iwind/rockmongo)\n\n## Installation\n\nDownload node at [nodejs.org](http://nodejs.org) and install it, if you haven\'t already.\n\n```sh\nnpm install mongui --global\n```\n\n## Start mongui\n\n```bash\n$ mongui [port]\n```\n\ndefault port: 3101\n\n## Usage\n\n[http://localhost:3101/](http://localhost:3101/)\n\n<img src="https://raw.githubusercontent.com/jjtortosa/mongui/master/screenshots/mongui_screenshot1.png" alt="screenshot1" width=500"/>\n\n## Features\n\n- Multilang. Language detected from browser.\n  Currently only english & spanish. Default: english.\n- Server statistics\n- List processes\n- Validate collection\n- Field editor\n- ...\n\n## Dependencies\n\n- [body-parser](https://github.com/expressjs/body-parser): Node.js body parsing middleware\n- [cookie-parser](https://github.com/expressjs/cookie-parser): cookie parsing with signatures\n- [debug](https://github.com/visionmedia/debug): small debugging utility\n- [express](https://github.com/strongloop/express): Fast, unopinionated, minimalist web framework\n- [express-session](https://github.com/expressjs/session): Simple session middleware for Express\n- [html-entities](https://github.com/mdevils/node-html-entities): Faster HTML entities encode/decode library.\n- [jade](https://github.com/jadejs/jade): A clean, whitespace-sensitive template language for writing HTML\n- [mongodb](http://mongodb.github.io/node-mongodb-native/): MongoDB\n- [morgan](https://github.com/expressjs/morgan): http request logger middleware for node.js\n- [serve-favicon](https://github.com/expressjs/serve-favicon): favicon serving middleware with caching\n\n## Dev Dependencies\n\n\nNone\n\n\n## License\n\nMIT\n\n',
 29 silly publish   readmeFilename: 'Readme.md',
-29 silly publish   gitHead: 'aa85806a09a66e480540456c1aca06c0d18ec90b',
-29 silly publish   _id: 'mongui@0.0.8',
-29 silly publish   _shasum: 'ea0eaf25970be33f2854757121785e1d0b3b292f',
+29 silly publish   gitHead: 'fc7a4756074be09f11f0d59d2ad505e1eaa98345',
+29 silly publish   _id: 'mongui@0.0.9',
+29 silly publish   _shasum: '350e14dcaf84991ff60bcd462fdd1c653541c1b1',
 29 silly publish   _from: '.' }
 30 verbose request where is /mongui
 31 verbose request registry https://registry.npmjs.org/
-32 verbose request id 0ed309cbf97f2f9b
+32 verbose request id 7b5e96a2d0994b61
 33 verbose url raw /mongui
 34 verbose url resolving [ 'https://registry.npmjs.org/', './mongui' ]
 35 verbose url resolved https://registry.npmjs.org/mongui
 36 verbose request where is https://registry.npmjs.org/mongui
-37 info trying registry request attempt 1 at 10:24:40
+37 info trying registry request attempt 1 at 10:25:43
 38 http PUT https://registry.npmjs.org/mongui
 39 http 403 https://registry.npmjs.org/mongui
-40 verbose headers { date: 'Tue, 27 Jan 2015 09:24:41 GMT',
+40 verbose headers { date: 'Tue, 27 Jan 2015 09:25:45 GMT',
 40 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
 40 verbose headers   'content-type': 'application/json',
 40 verbose headers   'cache-control': 'max-age=60',
 40 verbose headers   'content-length': '4110',
 40 verbose headers   'accept-ranges': 'bytes',
 40 verbose headers   via: '1.1 varnish',
-40 verbose headers   'x-served-by': 'cache-lhr6322-LHR',
+40 verbose headers   'x-served-by': 'cache-fra1220-FRA',
 40 verbose headers   'x-cache': 'MISS',
 40 verbose headers   'x-cache-hits': '0',
-40 verbose headers   'x-timer': 'S1422350680.332693,VS0,VE1333',
+40 verbose headers   'x-timer': 'S1422350744.058597,VS0,VE1923',
 40 verbose headers   'keep-alive': 'timeout=10, max=50',
 40 verbose headers   connection: 'Keep-Alive' }
 41 error publish Failed PUT 403
-42 error Error: forbidden cannot modify pre-existing version: 0.0.8
-42 error old={"name":"mongui","description":"MongoDB user interface","version":"0.0.8","scripts":{"start":"node ./bin/www"},"main":"./bin/www","dependencies":{"body-parser":"~1.10.1","cookie-parser":"~1.3.3","debug":"~2.1.1","express":"~4.10.6","express-session":"^1.10.1","html-entities":"^1.1.2","jade":"~1.9.1","mongodb":"^1.4.29","morgan":"~1.5.1","serve-favicon":"~2.2.0"},"bin":{"mongui":"./bin/www"},"keywords":[],"gitHead":"c58a64e95e06a1c36eb3e2694c2d3bb6ee6e91f8","_id":"mongui@0.0.8","_shasum":"1e00c4c88cf3bf93d6c6ebb5f210b6086f102e5b","_from":".","_npmVersion":"1.4.28","_npmUser":{"name":"jjtortosa","email":"juanjo.tortosa@gmail.com"},"maintainers":[{"name":"jjtortosa","email":"juanjo.tortosa@gmail.com"}],"dist":{"shasum":"1e00c4c88cf3bf93d6c6ebb5f210b6086f102e5b","tarball":"http://registry.npmjs.org/mongui/-/mongui-0.0.8.tgz"}}
-42 error new={"name":"mongui","description":"MongoDB user interface","version":"0.0.8","scripts":{"start":"node ./bin/www"},"main":"./bin/www","dependencies":{"body-parser":"~1.10.1","cookie-parser":"~1.3.3","debug":"~2.1.1","express":"~4.10.6","express-session":"^1.10.1","html-entities":"^1.1.2","jade":"~1.9.1","mongodb":"^1.4.29","morgan":"~1.5.1","serve-favicon":"~2.2.0"},"bin":{"mongui":"./bin/www"},"keywords":[],"readme":"# mongui \u000a\u000aMongoDB user interface inspired on [RockMongo](https://github.com/iwind/rockmongo)\u000a\u000a## Installation\u000a\u000aDownload node at [nodejs.org](http://nodejs.org) and install it, if you haven't already.\u000a\u000a```sh\u000anpm install mongui --global\u000a```\u000a\u000a## Start mongui\u000a\u000a```bash\u000a$ mongui [port]\u000a```\u000a\u000adefault port: 3101\u000a\u000a## Usage\u000a\u000a[http://localhost:3101/](http://localhost:3101/)\u000a\u000a<img src=\"https://raw.githubusercontent.com/jjtortosa/mongui/master/screenshots/mongui_screenshot1.png\" alt=\"screenshot1\" width=500\"/>\u000a\u000a## Features\u000a\u000a- Multilang. Language detected from browser.\u000a  Currently only english & spanish. Default: english.\u000a- Server statistics\u000a- List processes\u000a- Validate collection\u000a- Field editor\u000a- ...\u000a\u000a## Dependencies\u000a\u000a- [body-parser](https://github.com/expressjs/body-parser): Node.js body parsing middleware\u000a- [cookie-parser](https://github.com/expressjs/cookie-parser): cookie parsing with signatures\u000a- [debug](https://github.com/visionmedia/debug): small debugging utility\u000a- [express](https://github.com/strongloop/express): Fast, unopinionated, minimalist web framework\u000a- [express-session](https://github.com/expressjs/session): Simple session middleware for Express\u000a- [html-entities](https://github.com/mdevils/node-html-entities): Faster HTML entities encode/decode library.\u000a- [jade](https://github.com/jadejs/jade): A clean, whitespace-sensitive template language for writing HTML\u000a- [mongodb](http://mongodb.github.io/node-mongodb-native/): MongoDB\u000a- [morgan](https://github.com/expressjs/morgan): http request logger middleware for node.js\u000a- [serve-favicon](https://github.com/expressjs/serve-favicon): favicon serving middleware with caching\u000a\u000a## Dev Dependencies\u000a\u000a\u000aNone\u000a\u000a\u000a## License\u000a\u000aMIT\u000a\u000a","readmeFilename":"Readme.md","gitHead":"aa85806a09a66e480540456c1aca06c0d18ec90b","_id":"mongui@0.0.8","_shasum":"ea0eaf25970be33f2854757121785e1d0b3b292f","_from":".","_npmVersion":"1.4.28","_npmUser":{"name":"jjtortosa","email":"juanjo.tortosa@gmail.com"},"maintainers":[{"name":"jjtortosa","email":"juanjo.tortosa@gmail.com"}],"dist":{"shasum":"ea0eaf25970be33f2854757121785e1d0b3b292f","tarball":"http://registry.npmjs.org/mongui/-/mongui-0.0.8.tgz"}}: mongui
+42 error Error: forbidden cannot modify pre-existing version: 0.0.9
+42 error old={"name":"mongui","description":"MongoDB user interface","version":"0.0.9","scripts":{"start":"node ./bin/www"},"main":"./bin/www","dependencies":{"body-parser":"~1.10.1","cookie-parser":"~1.3.3","debug":"~2.1.1","express":"~4.10.6","express-session":"^1.10.1","html-entities":"^1.1.2","jade":"~1.9.1","mongodb":"^1.4.29","morgan":"~1.5.1","serve-favicon":"~2.2.0"},"bin":{"mongui":"./bin/www"},"keywords":[],"gitHead":"aa85806a09a66e480540456c1aca06c0d18ec90b","_id":"mongui@0.0.9","_shasum":"350e14dcaf84991ff60bcd462fdd1c653541c1b1","_from":".","_npmVersion":"1.4.28","_npmUser":{"name":"jjtortosa","email":"juanjo.tortosa@gmail.com"},"maintainers":[{"name":"jjtortosa","email":"juanjo.tortosa@gmail.com"}],"dist":{"shasum":"350e14dcaf84991ff60bcd462fdd1c653541c1b1","tarball":"http://registry.npmjs.org/mongui/-/mongui-0.0.9.tgz"}}
+42 error new={"name":"mongui","description":"MongoDB user interface","version":"0.0.9","scripts":{"start":"node ./bin/www"},"main":"./bin/www","dependencies":{"body-parser":"~1.10.1","cookie-parser":"~1.3.3","debug":"~2.1.1","express":"~4.10.6","express-session":"^1.10.1","html-entities":"^1.1.2","jade":"~1.9.1","mongodb":"^1.4.29","morgan":"~1.5.1","serve-favicon":"~2.2.0"},"bin":{"mongui":"./bin/www"},"keywords":[],"readme":"# mongui \u000a\u000aMongoDB user interface inspired on [RockMongo](https://github.com/iwind/rockmongo)\u000a\u000a## Installation\u000a\u000aDownload node at [nodejs.org](http://nodejs.org) and install it, if you haven't already.\u000a\u000a```sh\u000anpm install mongui --global\u000a```\u000a\u000a## Start mongui\u000a\u000a```bash\u000a$ mongui [port]\u000a```\u000a\u000adefault port: 3101\u000a\u000a## Usage\u000a\u000a[http://localhost:3101/](http://localhost:3101/)\u000a\u000a<img src=\"https://raw.githubusercontent.com/jjtortosa/mongui/master/screenshots/mongui_screenshot1.png\" alt=\"screenshot1\" width=500\"/>\u000a\u000a## Features\u000a\u000a- Multilang. Language detected from browser.\u000a  Currently only english & spanish. Default: english.\u000a- Server statistics\u000a- List processes\u000a- Validate collection\u000a- Field editor\u000a- ...\u000a\u000a## Dependencies\u000a\u000a- [body-parser](https://github.com/expressjs/body-parser): Node.js body parsing middleware\u000a- [cookie-parser](https://github.com/expressjs/cookie-parser): cookie parsing with signatures\u000a- [debug](https://github.com/visionmedia/debug): small debugging utility\u000a- [express](https://github.com/strongloop/express): Fast, unopinionated, minimalist web framework\u000a- [express-session](https://github.com/expressjs/session): Simple session middleware for Express\u000a- [html-entities](https://github.com/mdevils/node-html-entities): Faster HTML entities encode/decode library.\u000a- [jade](https://github.com/jadejs/jade): A clean, whitespace-sensitive template language for writing HTML\u000a- [mongodb](http://mongodb.github.io/node-mongodb-native/): MongoDB\u000a- [morgan](https://github.com/expressjs/morgan): http request logger middleware for node.js\u000a- [serve-favicon](https://github.com/expressjs/serve-favicon): favicon serving middleware with caching\u000a\u000a## Dev Dependencies\u000a\u000a\u000aNone\u000a\u000a\u000a## License\u000a\u000aMIT\u000a\u000a","readmeFilename":"Readme.md","gitHead":"fc7a4756074be09f11f0d59d2ad505e1eaa98345","_id":"mongui@0.0.9","_shasum":"350e14dcaf84991ff60bcd462fdd1c653541c1b1","_from":".","_npmVersion":"1.4.28","_npmUser":{"name":"jjtortosa","email":"juanjo.tortosa@gmail.com"},"maintainers":[{"name":"jjtortosa","email":"juanjo.tortosa@gmail.com"}],"dist":{"shasum":"350e14dcaf84991ff60bcd462fdd1c653541c1b1","tarball":"http://registry.npmjs.org/mongui/-/mongui-0.0.9.tgz"}}: mongui
 42 error     at RegClient.<anonymous> (/usr/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:308:14)
 42 error     at Request._callback (/usr/lib/node_modules/npm/node_modules/npm-registry-client/lib/request.js:246:65)
 42 error     at Request.self.callback (/usr/lib/node_modules/npm/node_modules/request/request.js:236:22)
