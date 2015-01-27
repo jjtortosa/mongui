@@ -31,6 +31,16 @@ ul{
 	padding: 0;
 }
 
+footer{
+	position: fixed;
+	bottom: 0;
+	padding: 2px 0;
+	width: 100%;
+	text-align: center;
+	border-top: 1px solid #ccc;
+	background-color: #eeefff;
+}
+
 thead th{
 	background-color: #eee;
 }
@@ -43,6 +53,17 @@ thead th{
 	border-bottom: 1px solid;
 	padding: 4px;
 	margin: 4px;
+}
+.header{
+	position: fixed;
+	background-color: whitesmoke;
+	margin-top: 0;
+	width: 100%;
+	padding: 4px;
+	border-bottom: 1px solid #ccc;
+}
+#header-sep{
+	height: 30px;
 }
 .result{
 	max-height: 162px;

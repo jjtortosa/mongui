@@ -2,6 +2,9 @@
 
 MongoDB user interface inspired on [RockMongo](https://github.com/iwind/rockmongo)
 
+[![npm version](https://badge.fury.io/js/mongui.png)](http://badge.fury.io/js/mongui)
+[![GitHub version](https://badge.fury.io/gh/jjtortosa%2Fmongui.png)](http://badge.fury.io/gh/jjtortosa%2Fmongui)
+
 ## Installation
 
 Download node at [nodejs.org](http://nodejs.org) and install it, if you haven't already.
@@ -22,7 +25,7 @@ default port: 3101
 
 [http://localhost:3101/](http://localhost:3101/)
 
-<img src="https://raw.githubusercontent.com/jjtortosa/mongui/master/screenshots/mongui_screenshot1.png" alt="screenshot1" width=500"/>
+[screenshot1](https://raw.githubusercontent.com/jjtortosa/mongui/master/screenshots/mongui_screenshot1.png)
 
 ## Features
 

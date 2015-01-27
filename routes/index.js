@@ -25,4 +25,6 @@ router.get('/:sec', function(req, res, next){
 	}
 });
 
+router.get('readme.md', require('./readme.md'));
+
 module.exports = router;

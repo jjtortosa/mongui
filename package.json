@@ -1,7 +1,7 @@
 {
   "name": "mongui",
   "description": "MongoDB user interface",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "scripts": {
     "start": "node ./bin/www"
   },
@@ -14,6 +14,7 @@
     "express-session": "^1.10.1",
     "html-entities": "^1.1.2",
     "jade": "~1.9.1",
+    "marked": "^0.3.3",
     "mongodb": "^1.4.29",
     "morgan": "~1.5.1",
     "serve-favicon": "~2.2.0"
