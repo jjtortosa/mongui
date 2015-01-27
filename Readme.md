@@ -5,6 +5,8 @@ MongoDB user interface inspired on [RockMongo](https://github.com/iwind/rockmong
 [![npm version](https://badge.fury.io/js/mongui.png)](http://badge.fury.io/js/mongui)
 [![GitHub version](https://badge.fury.io/gh/jjtortosa%2Fmongui.png)](http://badge.fury.io/gh/jjtortosa%2Fmongui)
 
+[![NPM](https://nodei.co/npm/mongui.png?downloads=true&downloadRank=true)](https://nodei.co/npm/mongui/)
+
 ## Installation
 
 Download node at [nodejs.org](http://nodejs.org) and install it, if you haven't already.
