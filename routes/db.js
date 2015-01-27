@@ -24,22 +24,6 @@ function EMongo(req){
 
 	if(!this.locals.collection && !this.locals.op)
 		this.locals.op = 'stats';
-	
-	this.locals.opText = {
-		insert: 'Insertar',
-		stats: 'Estadística',
-		validate: 'Validat',
-		indexes: 'Índices',
-		rename: 'Renombrar',
-		dup: 'Duplicar',
-		processlist: 'Procesos',
-		newcollection: 'Nueva Colección',
-		command: 'Comando',
-		export: 'Exportar',
-		import: 'Importar',
-		repair: 'Reparar',
-		auth: 'Autenticar'
-	}[this.locals.op];
 }
 
 EMongo.limit = 10;

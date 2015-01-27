@@ -24,6 +24,7 @@ app.use(session({
 
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(require('./modules/access'));
+app.use(require('./modules/multilang'));
 app.use(require('./modules/mongomng'));
 
 // uncomment after placing your favicon in /public

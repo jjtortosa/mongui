@@ -1,5 +1,5 @@
 
-module.exports = function(req,res,next){
+module.exports = function access(req,res,next){
 	var allowed = ['login', 'favicon.ico', 'robots.txt'];
 	
 	if(allowed.indexOf(req.path.substr(1)>-1))

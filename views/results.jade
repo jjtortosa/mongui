@@ -30,28 +30,28 @@ block collection-content
 			each r,id in result
 				.result-box(id=id)
 					.actions
-						a(href="#delete-row", data-action="delete-row") Eliminar
+						a(href="#delete-row", data-action="delete-row")=ml.remove
 						|  | 
-						a(href="", data-action="new-field") Nuevo campo
+						a(href="", data-action="new-field")=ml.newField
 						|  | 
-						a(href="") Duplicar
+						a(href="")=ml.duplicate
 						|  | 
-						a(href="") Refrescar
+						a(href="")=ml.refresh
 						|  | 
-						a(href="", class="exp") Expandir
+						a(href="", class="exp")=ml.expand
 					.result!=r
 
 		#field_menu
-			a(href="#fieldUpdate") Update
-			a(href="#fieldSortAsc") SortASC
-			a(href="#fieldSortDesc") SortDESC
+			a(href="#fieldUpdate")=ml.update
+			a(href="#fieldSortAsc")=ml.sortAsc
+			a(href="#fieldSortDesc")=ml.sortDesc
 			span ------
-			a(href="#fieldRename") Rename
-			a(href="#fieldRemove") Remove
-			a(href="#fieldClear") Clear
+			a(href="#fieldRename")=ml.rename
+			a(href="#fieldRemove")=ml.remove
+			a(href="#fieldClear")=ml.clear
 			span ------
-			a(href="#fieldHide") Hide
-			a(href="#fieldShow") Show
+			a(href="#fieldHide")=ml.hide
+			a(href="#fieldShow")=ml.show
 
 	#update-dialog
 		table(class="lcaption")

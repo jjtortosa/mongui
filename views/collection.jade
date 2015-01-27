@@ -8,23 +8,23 @@ block collection
 		b Collection: 
 		span=op
 		br
-		a(href="/db/"+dbname+"/"+collection,class={active:!op}) Consultar
+		a(href="/db/"+dbname+"/"+collection,class={active:!op})=ml.browse
 		|  | 
-		a(href="?op=insert",class={active:op==="insert"}) Insertar
+		a(href="?op=insert",class={active:op==="insert"})=ml.insert
 		|  | 
-		a(href="truncate",onclick!="if(confirm('Are you sure to delete all records in collection \\'"+collection+"\\'?')){op.value='truncate';$('#post').submit();}return false") Limpiar
+		a(href="truncate",onclick!="if(confirm('"+collection+" - "+delAllRecordsMsg+"')){op.value='truncate';$('#post').submit();}return false")=ml.clear
 		|  | 
-		a(href="?op=stats",class={active:op==="stats"}) Estadística
+		a(href="?op=stats",class={active:op==="stats"})=ml.statistics
 		|  | 
-		a(href="?op=indexes",class={active:op==="indexes"}) Índices
+		a(href="?op=indexes",class={active:op==="indexes"})=ml.indexes
 		|  | 
-		a(href="?op=rename",class={active:op==="rename"}) Renombrar
+		a(href="?op=rename",class={active:op==="rename"})=ml.rename
 		|  | 
-		a(href="?op=dup",class={active:op==="dup"}) Duplicar
+		a(href="?op=dup",class={active:op==="dup"})=ml.duplicate
 		|  | 
-		a(href="?op=validate",class={active:op==="validate"}) Validar
+		a(href="?op=validate",class={active:op==="validate"})=ml.validate
 		|  | 
-		a(href="?action=drop",onclick!="if(confirm('Are you sure to drop collection \\'"+collection+"\\'?')){op.value='drop';$('#post').submit();}return false") Eliminar
+		a(href="?action=drop",onclick!="if(confirm('"+collection+" - "+dropCollectionMsg+"')){op.value='drop';$('#post').submit();}return false")=ml.remove
 
 	if err
 		p(style="color:red")=err

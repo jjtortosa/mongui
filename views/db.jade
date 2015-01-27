@@ -26,23 +26,23 @@ block content
 						b DB: 
 						span=dbname
 						br
-						a(href="/db/"+dbname,class={active:op==="stats"}) Estadística
+						a(href="/db/"+dbname,class={active:op==="stats"})=ml.statistics
 						|  | 
-						a(href="/db/"+dbname+"?op=processlist",class={active:op==="processlist"}) Procesos
+						a(href="/db/"+dbname+"?op=processlist",class={active:op==="processlist"})=ml.processes
 						|  | 
-						a(href="/db/"+dbname+"?op=newcollection",class={active:op==="newcollection"}) Nueva colección
+						a(href="/db/"+dbname+"?op=newcollection",class={active:op==="newcollection"})=ml.newCollection
 						|  | 
-						a(href="/db/"+dbname+"?op=command",class={active:op==="command"}) Comando
+						a(href="/db/"+dbname+"?op=command",class={active:op==="command"})=ml.command
 						|  | 
-						a(href="/db/"+dbname+"?op=export",class={active:op==="export"}) Exportar
+						a(href="/db/"+dbname+"?op=export",class={active:op==="export"})=ml.export
 						|  | 
-						a(href="/db/"+dbname+"?op=import",class={active:op==="import"}) Importar
+						a(href="/db/"+dbname+"?op=import",class={active:op==="import"})=ml.import
 						|  | 
-						a(href="/db/"+dbname+"?op=repair",class={active:op==="repair"}) Reparar
+						a(href="/db/"+dbname+"?op=repair",class={active:op==="repair"})=ml.repair
 						|  | 
-						a(href="/db/"+dbname+"?op=auth",class={active:op==="auth"}) Autenticación
+						a(href="/db/"+dbname+"?op=auth",class={active:op==="auth"})=ml.auth
 						|  | 
-						a(href="dropdb",onclick="if(confirm('Seguro que quieres eliminar toda la base de datos \""+dbname+"\"?')){op.value='dropdb';$('#post').submit()}return false") Eliminar
+						a(href="dropdb",onclick="if(confirm('"+dbname+" - "+dropDbMsg+"')){op.value='dropdb';$('#post').submit()}return false")=ml.remove
 
 						block dbbody
 
