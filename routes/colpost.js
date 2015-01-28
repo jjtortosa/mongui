@@ -56,8 +56,8 @@ module.exports = function(req, res, next){
 					value = req.body.value;
 			}
 			
-			update.$set[req.body.key] = value;
-			
+			update.$set[req.body.field] = value;
+			l(query, update)
 			col.update(query, update, function(err, r){
 				res.send({error: err && err.message, affected: r});
 			});

@@ -178,7 +178,7 @@ $(function(){
 				return;
 			
 			$.ajax({
-				url: '/post',
+				url: '/db/' + db + '/' + collection,
 				data: {
 					op: 'deleteField',
 					key: o.field,
@@ -229,8 +229,8 @@ $(function(){
 				return alert('No name');
 			
 			$.ajax({
-				url: '/post',
-				data: {p: JSON.stringify(data)},
+				url: '/db/' + db + '/' + collection,
+				data: data,
 				type: 'POST'
 			}).done(function(d){
 				if(d.error)
