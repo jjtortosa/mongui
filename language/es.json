@@ -23,7 +23,7 @@
 	"sortDesc": "OrdDesc",
 	"hide": "Ocultar",
 	"show": "Mostrar",
-	"delAllRecordsMsg": "¿Estás seguro de eliminar todos los registros?",
-	"dropCollectionMsg": "¿Estás seguro de eliminar la colección?",
-	"dropDbMsg": "¿Seguro que quieres eliminar toda la base de datos?"
+	"delAllRecordsMsg": "¿Estás seguro de eliminar todos los registros de '%s'?",
+	"dropCollectionMsg": "¿Estás seguro de eliminar la colección '%s'?",
+	"dropDbMsg": "¿Seguro que quieres eliminar toda la base de datos '%s'?"
 }

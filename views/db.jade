@@ -23,8 +23,8 @@ block content
 			td#rightC
 				.auto-height
 					.actions
-						b DB: 
-						span=dbname
+						span DB: 
+						b=dbname
 						br
 						a(href="/db/"+dbname,class={active:op==="stats"})=ml.statistics
 						|  | 
@@ -42,7 +42,7 @@ block content
 						|  | 
 						a(href="/db/"+dbname+"?op=auth",class={active:op==="auth"})=ml.auth
 						|  | 
-						a(href="dropdb",onclick="if(confirm('"+dbname+" - "+dropDbMsg+"')){op.value='dropdb';$('#post').submit()}return false")=ml.remove
+						a(href="dropdb",onclick="if(confirm('"+dbname+" - "+ml.dropDbMsg+"')){op.value='dropdb';$('#post').submit()}return false")=ml.remove
 
 						block dbbody
 

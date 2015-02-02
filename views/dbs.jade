@@ -17,6 +17,9 @@ block content
 						th Colecciones
 						th Objetos
 						th Ok
+					else
+						th(rowspan=databases.length+1)
+							a.dbplus(href="/dbs") +
 			tbody(style="text-align:right")
 				each db in databases
 					tr

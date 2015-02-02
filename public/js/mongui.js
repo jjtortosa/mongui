@@ -1,3 +1,4 @@
+var l = console.log;
 $(function(){
 	var db = $('#db').val(),
 		collection = $('#collection').val();
@@ -219,7 +220,7 @@ $(function(){
 					op: 'setField',
 					db: db,
 					collection: collection,
-					id: ddata.id,
+					id: ddata.field.id,
 					field: $.trim($('#data_key').val()),
 					value: $('#data_value').find('>*').val(),
 					type: $('#data_type').val()
@@ -285,6 +286,22 @@ $(function(){
 			$('#command-result').show().find('pre').text(JSON.stringify(d, null, '\t'));
 		});
 		
+		return false;
+	});
+	
+	$('[href="truncate"]').click(function(){
+		if(confirm($(this).attr('data-msg').replace('%s', collection))){
+			op.value='truncate';
+			$('#post').submit();
+		}
+		return false;
+	});
+	
+	$('[href="drop"]').click(function(){
+		if(confirm($(this).attr('data-msg').replace('%s', collection))){
+			op.value='drop';
+			$('#post').submit();
+		}
 		return false;
 	});
 	

@@ -41,8 +41,12 @@ footer{
 	background-color: #eeefff;
 }
 
-thead th{
+thead th, .lcaption .thead th{
 	background-color: #eee;
+}
+.dbplus{
+	display: block;
+	width: 4em;
 }
 .result-box{
 	padding: 0 4px;

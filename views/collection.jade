@@ -5,14 +5,14 @@ block collection
 	form#post(style="display:none",method="post")
 		input#op(type="hidden",name="op")
 	.actions
-		b Collection: 
-		span=op
+		span Collection: 
+		b=collection
 		br
 		a(href="/db/"+dbname+"/"+collection,class={active:!op})=ml.browse
 		|  | 
 		a(href="?op=insert",class={active:op==="insert"})=ml.insert
 		|  | 
-		a(href="truncate",onclick!="if(confirm('"+collection+" - "+delAllRecordsMsg+"')){op.value='truncate';$('#post').submit();}return false")=ml.clear
+		a(href="truncate",data-msg=ml.delAllRecordsMsg)=ml.clear
 		|  | 
 		a(href="?op=stats",class={active:op==="stats"})=ml.statistics
 		|  | 
@@ -24,7 +24,7 @@ block collection
 		|  | 
 		a(href="?op=validate",class={active:op==="validate"})=ml.validate
 		|  | 
-		a(href="?action=drop",onclick!="if(confirm('"+collection+" - "+dropCollectionMsg+"')){op.value='drop';$('#post').submit();}return false")=ml.remove
+		a(href="drop",data-msg=ml.dropCollectionMsg)=ml.remove
 
 	if err
 		p(style="color:red")=err
