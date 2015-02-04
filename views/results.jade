@@ -7,7 +7,14 @@ block collection-content
 		textarea#criteria(name="criteria",rows="5",cols="70")=criteria
 		br
 		input(type="submit")
-
+		|  | 
+		input#explain(type="button",value=ml.explain)
+		|  | 
+		label(for="actsel")=ml.action+": "
+		select#actsel(name="q-action")
+			option find
+			option remove
+			option update
 	if result
 		.paginator
 			if(count>10)

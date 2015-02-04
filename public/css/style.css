@@ -82,6 +82,7 @@ thead th, .lcaption .thead th{
 }
 #main-t{
 	width: 100%;
+	margin: -19px 0;
 }
 #leftC{
 	background-color: #eeefff;

@@ -90,6 +90,18 @@ EMongo.prototype.action = function(){
 				req.res.redirect(redirect + '&msg=parseError');
 			}
 			break;
+		case 'explain':
+			var query = this.getQuery();
+			
+			if(!query)
+				return req.res.json({error: 'Invalid query'});
+			
+			this.mng.collection.find(query).explain(function(err, r){
+				req.res.json(err || r);
+			});
+			break;
+		default:
+			req.res.send('Action not found');
 	}
 };
 
@@ -233,6 +245,18 @@ EMongo.prototype.getCollections = function(next){
 	});
 };
 
+EMongo.prototype.getQuery = function(){
+	var query;
+	
+	try{
+		eval('query=' + this.req.query.criteria.replace(/[\t\n\r]/g, ''));
+		
+		return query;
+	} catch(e){
+		return;
+	}
+};
+
 EMongo.prototype.processCollection = function(next){
 	var self = this
 	,	req = this.req
@@ -245,11 +269,10 @@ EMongo.prototype.processCollection = function(next){
 	this.locals.page = req.query.page || 1;
 
 	if(req.query.criteria){
-		try{
-			eval('query=' + req.query.criteria.replace(/[\t\n\r]/g, ''));
-		} catch(e){
+		query = this.getQuery();
+		
+		if(!query)
 			return next.call(self, new Error('Invalid query'));
-		}
 	}
 	
 	var page = parseInt(req.query.page) || 1;

@@ -1,4 +1,5 @@
 var l = console.log;
+
 $(function(){
 	var db = $('#db').val(),
 		collection = $('#collection').val();
@@ -132,7 +133,7 @@ $(function(){
 		},
 		getField: function(id, k, cb){
 			$.ajax({
-				url: location.href + '/' + id + '/' + k
+				url: location.pathname + '/' + id + '/' + k
 			}).done(cb);
 		},
 		fieldUpdate: function(o){
@@ -220,7 +221,7 @@ $(function(){
 					op: 'setField',
 					db: db,
 					collection: collection,
-					id: ddata.field.id,
+					id: ddata.id || ddata.field.id,
 					field: $.trim($('#data_key').val()),
 					value: $('#data_value').find('>*').val(),
 					type: $('#data_type').val()
@@ -307,6 +308,29 @@ $(function(){
 	
 	if($('.result-box').size() === 1)
 		$('.exp').click();
+	
+	$('#explain').click(function(){
+		$.ajax({
+			url: location.pathname,
+			data: {
+				action: 'explain',
+				criteria: $('#criteria').val()
+			}
+		}).done(function(d){
+			if(d.error)
+				return alert(d.error);
+			
+			$('.paginator').remove();
+			
+			var $r = $('#results').empty()
+			,	$t = $('<table style="width:auto" class="lcaption"><thead><tr><th colspan="2">explain()</th></tr></thead><tbody></tbody></table>')
+					.appendTo($r).find('tbody');
+			
+			$.each(d, function(k){
+				$t.append('<tr><th>' + k + '</td><td><pre>' + JSON.stringify(this, null, '\t') + '</pre></td></tr>');
+			});
+		});
+	});
 	
 	$(window).resize(function(){
 		$('.auto-height').height($(this).height());
