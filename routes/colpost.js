@@ -1,3 +1,5 @@
+/* global module, require */
+
 var ObjectId = require('mongodb').ObjectID
 ,	MongoDoc = require('../modules/mongodoc');
 
@@ -5,7 +7,7 @@ function ISODate(d){
 	return new Date(d);
 }
 
-module.exports = function(req, res, next){
+module.exports = function(req, res){
 	var col = req.mongoMng.collection
 	,	dbpath = '/db/' + req.mongoMng.db.databaseName + '/';
 	
@@ -59,7 +61,11 @@ module.exports = function(req, res, next){
 					break;
 				case 'boolean':
 				case 'mixed':
-					eval('value=' + req.body.value);
+					try {
+						eval('value=' + req.body.value);
+					} catch(err){
+						res.send({error: err.message});
+					}
 					break;
 				default:
 					value = req.body.value;
