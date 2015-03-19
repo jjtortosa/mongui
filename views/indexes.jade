@@ -1,4 +1,22 @@
 extends collection
 
 block collection-content
-	p TODO
+	table#indexes.lcaption(style="width:auto")
+		thead
+			tr
+				th=ml.name
+				th=ml.key
+				th=ml.unique
+				th=ml.operation
+		tbody
+			each i in indexes
+				tr
+					th=i.name
+					td
+						ul
+							each v,k in i.key
+								li=k+': '+v
+					td=i.unique&&"✓"
+					td
+						a(href="#drop-todo")=ml.drop
+								

@@ -1,3 +1,5 @@
+/* global require */
+
 "use strict";
 
 var ObjectId = require('mongodb').ObjectID
@@ -17,9 +19,9 @@ function EMongo(req){
 
 	merge(this.locals, {
 		title: 'EucaMongo',
-		action: req.param('action'),
-		op: req.param('op'),
-		err: req.param('err')
+		action: req.params.action,
+		op: req.params.op,
+		err: req.params.err
 	});
 
 	if(!this.locals.collection && !this.locals.op)
@@ -34,33 +36,14 @@ EMongo.prototype.process = function(next){
 	if(this.locals.action)
 		return this.action();
 	
-	this.listDbs(function(){
-		this.getCollections(function(){
-			if(!this.locals.collection)
-				return this.dbStats(next);
+	this.getCollections(function(){
+		if(!this.locals.collection)
+			return this.dbStats(next);
 
-			if(this.locals.op)
-				return this.colStats(next);
+		if(this.locals.op)
+			return this.colStats(next);
 
-			this.processCollection(next);
-		});
-	});
-};
-
-EMongo.prototype.listDbs = function(cb){
-	var self = this;
-	
-	this.mng.listDbs(function(err, d){
-		if(err)
-			return cb.call(self, err);
-		
-		self.locals.dbs = [];
-		
-		d.forEach(function(n){
-			self.locals.dbs.push(n.name);
-		});
-		
-		cb.call(self, null, self.locals.dbs);
+		this.processCollection(next);
 	});
 };
 
@@ -168,6 +151,9 @@ EMongo.prototype.colStats = function(next){
 				self.locals.stats = stats;
 				
 				self.mng.admin().command({top:1}, function(err, top){
+					if(err)
+						return next.call(self, err);
+
 					self.locals.top = top.documents[0].totals[self.mng.db.databaseName + '.' + self.mng.collection.collectionName];
 					
 					next.call(self);
@@ -177,13 +163,25 @@ EMongo.prototype.colStats = function(next){
 		case 'validate':
 			this.view = 'validate';
 			this.mng.db.command({validate: this.mng.collection.collectionName, full: true}, function(err, validate){
+				if(err)
+					return next.call(self, err);
+				
 				self.locals.validate = validate;
 				next.call(self);
 			});
 			break;
 		case 'indexes':
 			this.view = 'indexes';
-			next.call(this);
+			
+			this.mng.collection.indexes(function(err, r){
+				if(err)
+					return next.call(self, err);
+				
+				self.locals.indexes = r;
+				
+				next.call(self);
+			});
+			
 			break;
 		case 'rename':
 			this.view = 'rename';
@@ -210,8 +208,14 @@ EMongo.prototype.colStats = function(next){
 				
 			next.call(this);
 			break;
+		case 'error':
+			this.view = 'collerror';
+			self.locals.message = req.params.msg;
+			next.call(this);
+			break;
 		default:
-			req.res.status(404).send('op ' + this.locals.op + ' not defined');
+			next();
+//			req.res.status(404).send('op ' + this.locals.op + ' not defined');
 	}
 };
 
@@ -221,27 +225,13 @@ EMongo.prototype.getCollections = function(next){
 	
 	this.locals.collections = [];
 		
-	this.mng.db.collections(function(err, collections){
-		assert.ifError(err);
-
-		if(!collections.length)
-			return next.call(self);
+	this.mng.getCollections(function(err, collections){
+		if(err || !collections)
+			return next.call(self, err, collections);
 		
-		var count = 0;
-
-		collections.forEach(function(c){
-			c.count(function(err, t){
-				self.locals.collections.push({name: c.collectionName, count: t});
-
-				if(++count === collections.length){
-					self.locals.collections.sort(function(a,b){
-						return a.name > b.name ? 1 : -1;
-					});
-
-					next.call(self);
-				}
-			});
-		});
+		self.locals.collections = collections;
+		
+		next.call(self);
 	});
 };
 
@@ -311,12 +301,12 @@ EMongo.prototype.render = function(){
 	this.req.res.render(this.view, this.locals);
 };
 
-module.exports = function(req, res){
+module.exports = function(req, res, next){
 	new EMongo(req).process(function(err){
 		if(err)
 			res.locals.err = err.message;
 		
-		this.render();
+		this && this.render() || next();
 	});
 };
 

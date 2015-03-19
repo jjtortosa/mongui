@@ -9,6 +9,7 @@ pre{
 a {
   color: #004499;
   text-decoration: none;
+  font-weight: normal;
 }
 a:hover{
 	color: #0099FF;
@@ -29,6 +30,7 @@ td{
 ul{
 	list-style: none;
 	padding: 0;
+	margin: 2px 0;
 }
 
 footer{
@@ -36,13 +38,24 @@ footer{
 	bottom: 0;
 	padding: 2px 0;
 	width: 100%;
+	height: 16px;
 	text-align: center;
 	border-top: 1px solid #ccc;
 	background-color: #eeefff;
 }
 
+table.lcaption td{
+	vertical-align: middle;
+}
+
 thead th, .lcaption .thead th{
 	background-color: #eee;
+}
+.breadcrumb{
+	font-size: 1.12em;
+	margin: 4px;
+	padding: 4px;
+	border-bottom: 1px solid #5f6d9a;
 }
 .dbplus{
 	display: block;
@@ -67,7 +80,10 @@ thead th, .lcaption .thead th{
 	border-bottom: 1px solid #ccc;
 }
 #header-sep{
-	height: 30px;
+	height: 25px;
+}
+#header-sep-db{
+	height: 50px;
 }
 .result{
 	max-height: 162px;
@@ -82,21 +98,21 @@ thead th, .lcaption .thead th{
 }
 #main-t{
 	width: 100%;
-	margin: -19px 0;
+	margin-bottom: 21px;
 }
 #leftC{
 	background-color: #eeefff;
 	border-right: 1px solid;
-	padding: 0;
+	padding: 0 8px;
 }
 #rightC{
 	width: 85%;
-	padding: 0;
+	padding: 0 0 0 8px;
 }
 .auto-height{
 	overflow-y: auto;
 	overflow-x: hidden;
-	padding: 0 8px;
+	padding-top: 8px;
 }
 textarea{
 	height: 100px;
@@ -151,5 +167,13 @@ textarea{
 	border: 1px solid gray;
 }
 #command-result pre{
-	
+	white-space: pre-wrap;
+}
+
+#indexes tr td:nth-child(3){
+	font-size: 1.5em;
+}
+
+#indexes tr td:nth-child(n+3){
+	text-align: center;
 }

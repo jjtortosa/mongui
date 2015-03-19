@@ -1,0 +1,33 @@
+.icon{
+	position: relative;
+	padding-left: 20px;
+}
+
+.icon:before{
+	content: "";
+	position: absolute;
+	width: 16px;
+	height: 16px;
+	background-repeat: no-repeat;
+	left: 0;
+	top: .1em;
+}
+.icon-home:before{
+	background-image: url("../img/home.png");
+}
+.icon-db:before{
+	background-image: url("../img/database.png");
+}
+.icon-collection:before{
+	background-image: url("../img/collection.png");
+}
+
+.gtt{
+	background: url("../img/double-arrow-right.png") no-repeat;
+	position: relative;
+	top: .3em;
+	width: 16px;
+	height: 16px;
+	display: inline-block;
+	margin: 0 .3em;
+}

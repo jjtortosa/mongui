@@ -280,7 +280,7 @@ $(function(){
 		e.preventDefault();
 		
 		$.ajax({
-			url: '/post',
+//			url: '/post',
 			type: 'post',
 			data: $(this).serializeArray()
 		}).done(function(d){
@@ -303,6 +303,16 @@ $(function(){
 			op.value='drop';
 			$('#post').submit();
 		}
+		return false;
+	});
+	
+	$('#dropdb').click(function(){
+		if(confirm($(this).attr('data-msg').replace('%s', db))){
+			dbop.value='dropdb';
+			
+			$('#post').submit();
+		}
+		
 		return false;
 	});
 	
@@ -333,6 +343,7 @@ $(function(){
 	});
 	
 	$(window).resize(function(){
-		$('.auto-height').height($(this).height());
+		$('#leftC .auto-height').height($(this).height()-28);
+		$('#rightC .auto-height').height($(this).height()-54);
 	}).resize();
 });

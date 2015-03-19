@@ -1,11 +1,16 @@
+/* global require, module */
+
 var ObjectId = require('mongodb').ObjectID,
 	MongoDoc = require('../modules/mongodoc');
 
-module.exports = function(req, res){
-	var col = req.mongoMng.db.collection(req.param('collection'))
+module.exports = function(req, res, next){
+	if(!ObjectId.isValid(req.params.id))
+		return next();
+	
+	var col = req.mongoMng.db.collection(req.params.collection)
 	,	fields = {_id: false}
-	,	field = req.param('field')
-	,	id = req.param('id');
+	,	field = req.params.field
+	,	id = req.params.id;
 
 	fields[field] = true;
 

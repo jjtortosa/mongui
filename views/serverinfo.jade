@@ -1,14 +1,15 @@
 extends layout
 
 block content
-	table.lcaption(style="max-width:600px")
-		tbody
-			tr
-				th(style="width:18%") profilingLevel
-				td=level
-			tr
-				th(colspan="3",style="background-color:#eee;text-align:center") Información de compilación ({buildinfo:1})
-			each i,k in info
+	.auto-height
+		table.lcaption(style="max-width:600px")
+			tbody
 				tr
-					th=k
-					td=i
+					th(style="width:18%") profilingLevel
+					td=level
+				tr
+					th(colspan="3",style="background-color:#eee;text-align:center") Información de compilación ({buildinfo:1})
+				each i,k in info
+					tr
+						th=k
+						td=i

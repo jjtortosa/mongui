@@ -1,28 +1,34 @@
-extends db
+extends layout
 
-block collection
+block content
+	.breadcrumb
+		a.icon.icon-home(href="/")=ml.home
+		span.gtt 
+		a.icon.icon-db(href="/db/"+dbname)=dbname
+		span.gtt  
+		span.icon.icon-collection=collection
+
+	input#db(type="hidden",value=dbname)
 	input#collection(type="hidden",value=collection)
-	form#post(style="display:none",method="post")
+	form#post(style="display:none",method="post",action="/db/"+dbname+"/"+collection)
 		input#op(type="hidden",name="op")
 	.actions
-		span Collection: 
-		b=collection
 		br
 		a(href="/db/"+dbname+"/"+collection,class={active:!op})=ml.browse
 		|  | 
-		a(href="?op=insert",class={active:op==="insert"})=ml.insert
+		a(href="/db/"+dbname+"/"+collection+"/insert",class={active:op==="insert"})=ml.insert
 		|  | 
-		a(href="truncate",data-msg=ml.delAllRecordsMsg)=ml.clear
+		a(href="truncate",data-msg=ml.delAllRecordsMsg,class={active:op==="truncate"})=ml.clear
 		|  | 
-		a(href="?op=stats",class={active:op==="stats"})=ml.statistics
+		a(href="/db/"+dbname+"/"+collection+"/stats",class={active:op==="stats"})=ml.statistics
 		|  | 
-		a(href="?op=indexes",class={active:op==="indexes"})=ml.indexes
+		a(href="/db/"+dbname+"/"+collection+"/indexes",class={active:op==="indexes"})=ml.indexes
 		|  | 
-		a(href="?op=rename",class={active:op==="rename"})=ml.rename
+		a(href="/db/"+dbname+"/"+collection+"/rename",class={active:op==="rename"})=ml.rename
 		|  | 
-		a(href="?op=dup",class={active:op==="dup"})=ml.duplicate
+		a(href="/db/"+dbname+"/"+collection+"/dup",class={active:op==="dup"})=ml.duplicate
 		|  | 
-		a(href="?op=validate",class={active:op==="validate"})=ml.validate
+		a(href="/db/"+dbname+"/"+collection+"/validate",class={active:op==="validate"})=ml.validate
 		|  | 
 		a(href="drop",data-msg=ml.dropCollectionMsg)=ml.remove
 

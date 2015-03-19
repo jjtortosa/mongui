@@ -1,5 +1,6 @@
 var MongoClient = require('mongodb').MongoClient
 ,	events = require('events')
+,	debug = require('debug')('mongui:server')
 ,	assert = require('assert');
 
 function MongoMng(db) {
@@ -8,19 +9,17 @@ function MongoMng(db) {
 
 MongoMng.prototype.__proto__ = events.EventEmitter.prototype;
 
-MongoMng.prototype.dbsInfo = function(full, cb){
+MongoMng.prototype.dbsInfo = function(cb){
 	var self = this;
 	
 	this.listDbs(function(err, databases){
-		if(err)
-			return cb.call(self, err);
+		if(err || !databases.length)
+			return cb.call(self, err, databases);
 		
 		var count = 0;
 		
 		databases.forEach(function(db){
-			db.sizeOnDisk = human(db.sizeOnDisk);
-			
-			full && self.useDb(db.name).stats(function(err, stats){
+			self.useDb(db.name).stats(function(err, stats){
 				for(var i in stats)
 					db[i] = stats[i];
 				
@@ -35,9 +34,6 @@ MongoMng.prototype.dbsInfo = function(full, cb){
 				}
 			});
 		});
-		
-		if(!full || !databases.length)
-			cb.call(self, null, databases);
 	});
 };
 
@@ -50,17 +46,55 @@ MongoMng.prototype.admin = function(){
 };
 
 MongoMng.prototype.listDbs = function(cb){
+	if(this.databases)
+		return cb.call(self, null, this.databases);
+	
 	var self = this;
 	
 	this.admin().listDatabases(function(err, result){
 		if(err)
 			return cb.call(self, err);
 		
+		result.databases.forEach(function(db){
+			db.sizeOnDisk = human(db.sizeOnDisk);
+		});
+		
 		result.databases.sort(function(a,b){
 			return a.name > b.name ? 1 : -1;
 		});
 		
-		cb.call(self, null, result.databases);
+		self.databases = result.databases;
+		
+		cb.call(self, null, self.databases);
+	});
+};
+
+MongoMng.prototype.getCollections = function(cb){
+	var self = this
+	,	collections = [];
+		
+	this.db.collections(function(err, r){
+		if(err)
+			return cb.call(self, err);
+
+		if(!r.length)
+			return cb.call(self);
+		
+		var count = 0;
+
+		r.forEach(function(c){
+			c.count(function(err, t){
+				collections.push({name: c.collectionName, count: t});
+
+				if(++count === r.length){
+					collections.sort(function(a,b){
+						return a.name > b.name ? 1 : -1;
+					});
+
+					cb.call(self, null, collections);
+				}
+			});
+		});
 	});
 };
 
@@ -135,9 +169,19 @@ module.exports = function(req, res, next){
 		
 		res.locals.path = req.path;
 		
-		console.info('MongoDb - Connected' + (res.locals.dbname ? ' to db "' + res.locals.dbname + '"' : ''))	;
+		debug('MongoDb - Connected' + (res.locals.dbname ? ' to db "' + res.locals.dbname + '"' : ''))	;
 		
-		next();
+		if(req.path === 'login' || req.method === 'post')
+			return next();
+		
+		req.mongoMng.listDbs(function(err, dbs){
+			if(err)
+				return next(err);
+
+			res.locals.dbs = dbs;
+			
+			next(err);
+		});
 	});
 };
 

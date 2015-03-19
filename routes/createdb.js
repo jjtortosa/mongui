@@ -1,9 +1,13 @@
 
-module.exports = function(req, res){
-	var db = req.mongoMng.db;
+module.exports = function(req, res, next){
+	if(!req.body.dbname){
+		res.locals.err = req.param('err');
+		res.locals.db = req.param('db');
+		
+		return res.render('createdb');
+	}
 	
-	if(!req.body.dbname)
-		return res.redirect('/?op=createdb');
+	var db = req.mongoMng.db;
 
 	try{
 		db = db.db(req.body.dbname);

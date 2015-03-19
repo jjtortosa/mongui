@@ -2,27 +2,59 @@ doctype html
 html
 	head
 		title="Mongui - MongoDB ui"
+		// jquery ui dialogs
 		link(rel="stylesheet", href="//code.jquery.com/ui/1.11.2/themes/smoothness/jquery-ui.css")
 		link(rel='stylesheet', href='/css/style.css')
+		link(rel='stylesheet', href='/css/icons.css')
 		script(src="//code.jquery.com/jquery-1.11.2.min.js")
 		script(src="//code.jquery.com/ui/1.11.2/jquery-ui.js")
 		script(src="/js/mongui.js")
 	body
-		if(!dbname && reqpath !== "/login")
-			.header
-				a(href="/",class={active: path==="/"}) Bases de datos
-				|  | 
-				a(href="/serverinfo",class={active: path==="/serverinfo"}) Servidor
-				|  | 
-				a(href="/serverstatus",class={active: path==="/serverstatus"}) Estados
-				|  | 
-				a(href="/processlist",class={active: path==="/processlist"}) Processlist
-				|  | 
-				a(href="/command",class={active: path==="/command"}) Comando
-				|  | 
-				a(href="/replication",class={active: path==="/replication"}) Replication
-			#header-sep
-		block content
+		unless reqpath === "/login"
+
+			table#main-t
+				tr
+					unless path==="/dbs"
+						td#leftC
+							.auto-height
+								h3
+									if dbname
+										a(href="/") Db's
+										| &nbsp;·&nbsp;
+										select(onchange="location.href='/db/'+this.value")
+											each db in dbs
+												option(selected=dbname===db.name)=db.name
+									else
+										ul#dbs
+											each db in dbs
+												li(class={active:db.name===dbname})
+													a(href="/db/"+db.name)=db.name
+
+
+								if collections
+									ul#collections
+										each col in collections
+											li(class={active:col.name===collection})
+												a(href="/db/"+dbname+"/"+col.name)=col.name
+												if col.count
+													span=" ("+col.count+")"
+					td#rightC
+						if(!dbname)
+							.header
+								a(href="/",class={active: path==="/"}) Servidor
+								|  | 
+								a(href="/serverstatus",class={active: path==="/serverstatus"}) Estados
+								|  | 
+								a(href="/dbs",class={active: path==="/dbs"}) Bases de datos
+								|  | 
+								a(href="/processlist",class={active: path==="/processlist"}) Processlist
+								|  | 
+								a(href="/command",class={active: path==="/command"}) Comando
+								|  | 
+								a(href="/replication",class={active: path==="/replication"}) Replication
+							#header-sep
+
+						block content
 		
 		footer
 			a(href="/readme") Readme 

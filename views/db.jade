@@ -1,49 +1,33 @@
 extends layout
 
 block content
-	input#db(type="hidden",value=dbname)
 	form#post(style="display:none",method="post")
-		input#op(type="hidden",name="op")
-	table#main-t
-		tr
-			td#leftC
-				.auto-height
-					h3
-						a(href="/") DB's
-						| &nbsp;·&nbsp;
-						select(onchange="location.href='/db/'+this.value")
-							each db in dbs
-								option(selected=dbname===db)=db
-					ul#collections
-						each col in collections
-							li(class={active:col.name===collection})
-								a(href="/db/"+dbname+"/"+col.name)=col.name
-								if col.count
-									span=" ("+col.count+")"
-			td#rightC
-				.auto-height
-					.actions
-						span DB: 
-						b=dbname
-						br
-						a(href="/db/"+dbname,class={active:op==="stats"})=ml.statistics
-						|  | 
-						a(href="/db/"+dbname+"?op=processlist",class={active:op==="processlist"})=ml.processes
-						|  | 
-						a(href="/db/"+dbname+"?op=newcollection",class={active:op==="newcollection"})=ml.newCollection
-						|  | 
-						a(href="/db/"+dbname+"?op=command",class={active:op==="command"})=ml.command
-						|  | 
-						a(href="/db/"+dbname+"?op=export",class={active:op==="export"})=ml.export
-						|  | 
-						a(href="/db/"+dbname+"?op=import",class={active:op==="import"})=ml.import
-						|  | 
-						a(href="/db/"+dbname+"?op=repair",class={active:op==="repair"})=ml.repair
-						|  | 
-						a(href="/db/"+dbname+"?op=auth",class={active:op==="auth"})=ml.auth
-						|  | 
-						a(href="dropdb",onclick="if(confirm('"+dbname+" - "+ml.dropDbMsg+"')){op.value='dropdb';$('#post').submit()}return false")=ml.remove
+		input#db(type="hidden",value=dbname)
+		input#dbop(type="hidden",name="op")
 
-						block dbbody
+	.header
+		span DB: 
+		b=dbname
+		br
+		a(href="/db/"+dbname,class={active:op==="stats"})=ml.statistics
+		|  | 
+		a(href="/db/"+dbname+"?op=processlist",class={active:op==="processlist"})=ml.processes
+		|  | 
+		a(href="/db/"+dbname+"?op=newcollection",class={active:op==="newcollection"})=ml.newCollection
+		|  | 
+		a(href="/db/"+dbname+"?op=command",class={active:op==="command"})=ml.command
+		|  | 
+		a(href="/db/"+dbname+"?op=export",class={active:op==="export"})=ml.export
+		|  | 
+		a(href="/db/"+dbname+"?op=import",class={active:op==="import"})=ml.import
+		|  | 
+		a(href="/db/"+dbname+"?op=repair",class={active:op==="repair"})=ml.repair
+		|  | 
+		a(href="/db/"+dbname+"?op=auth",class={active:op==="auth"})=ml.auth
+		|  | 
+		a#dropdb(href="#",data-msg=ml.dropDbMsg)=ml.remove
+	
+	#header-sep-db
+	block dbbody
 
-					block collection
+	block collection

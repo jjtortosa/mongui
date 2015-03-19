@@ -11,11 +11,20 @@ module.exports = function(req, res, next){
 	
 	if(req.body.id)
 		var query = {_id: ObjectId(req.body.id)};
-
+	
+	res.locals.op = req.body.op;
+	
 	switch(req.body.op){
 		case 'truncate':
 			col.remove({}, function(err, a){
-				req.res.redirect(req.path);
+				if(!err)
+					return res.redirect(req.path);
+				
+				res.locals.message = err.message;
+				
+				req.mongoMng.getCollections(function(err, collections){
+					res.render('collerror', {collections: collections});
+				});
 			});
 			break;
 		case 'drop':
@@ -57,7 +66,7 @@ module.exports = function(req, res, next){
 			}
 			
 			update.$set[req.body.field] = value;
-			l(query, update)
+
 			col.update(query, update, function(err, r){
 				res.send({error: err && err.message, affected: r});
 			});
@@ -86,10 +95,10 @@ module.exports = function(req, res, next){
 				if(!Object.keys(json).length)
 					return req.res.redirect(req.path);
 
-				col.insert(json, function(err, doc){l(err)
+				col.insert(json, function(err, doc){
 					res.redirect(redirect + '&msg=ok');
 				});
-			} catch(e){l(e,555)
+			} catch(e){
 				res.redirect(redirect + '&msg=parseError');
 			}
 			break;
