@@ -57,6 +57,10 @@ MongoMng.prototype.listDbs = function(cb){
 		
 		result.databases.forEach(function(db){
 			db.sizeOnDisk = human(db.sizeOnDisk);
+			
+			self.useDb(db.name).collectionNames(function(err, collections){
+				db.collections = collections.length;
+			});
 		});
 		
 		result.databases.sort(function(a,b){
@@ -102,22 +106,18 @@ MongoMng.prototype.serverInfo = function(cb){
 	var self = this
 	,	admin = this.admin();
 	
-	admin.replSetGetStatus(function(err, level){
-		if(err) return cb.call(self, err);
-		
-		admin.profilingLevel(function(err, level){
-			if(err) return cb.call(self, err);
-		
-			admin.serverInfo(function(err, info){
-				if(err) return cb.call(self, err);
-		
-				cb.call(self, null, {
-					info: info,
-					level: level
-				});
-			});
-		});
-	});
+    admin.profilingLevel(function(err, level){
+        if(err) return cb.call(self, err);
+
+        admin.serverInfo(function(err, info){
+            if(err) return cb.call(self, err);
+
+            cb.call(self, null, {
+                info: info,
+                level: level
+            });
+        });
+    });
 };
 
 MongoMng.prototype.serverStatus = function(cb){

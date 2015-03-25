@@ -1,4 +1,4 @@
-/* global require */
+/* global require, module */
 
 "use strict";
 
@@ -19,7 +19,7 @@ function EMongo(req){
 
 	merge(this.locals, {
 		title: 'EucaMongo',
-		action: req.params.action,
+		action: req.params.action || req.query.action,
 		op: req.params.op,
 		err: req.params.err
 	});
@@ -31,24 +31,8 @@ function EMongo(req){
 EMongo.limit = 10;
 
 EMongo.prototype.process = function(next){
-	var req = this.req;
-	
-	if(this.locals.action)
-		return this.action();
-	
-	this.getCollections(function(){
-		if(!this.locals.collection)
-			return this.dbStats(next);
-
-		if(this.locals.op)
-			return this.colStats(next);
-
-		this.processCollection(next);
-	});
-};
-
-EMongo.prototype.action = function(){
-	var req = this.req;
+	var self = this
+	,	req = this.req;
 	
 	switch(this.locals.action){
 		case 'delete':
@@ -83,8 +67,37 @@ EMongo.prototype.action = function(){
 				req.res.json(err || r);
 			});
 			break;
+		case 'remove':
+			if(req.query.criteria){
+				query = this.getQuery();
+				this.locals.criteria = req.query.criteria;
+
+				if(!query)
+					return next.call(this, new Error('Invalid query'));
+				
+				this.getCollections(function(){
+					this.mng.collection.remove(query, function(err, r){
+						if(err)
+							return next.call(self, err);
+
+						self.locals.message = r + ' records affected';
+
+						next.call(self, null);
+					});
+				});
+			}
+			break;
+		case 'find':
 		default:
-			req.res.send('Action not found');
+			this.getCollections(function(){
+				if(!this.locals.collection)
+					return this.dbStats(next);
+
+				if(this.locals.op)
+					return this.colStats(next);
+
+				this.processCollection(next);
+			});
 	}
 };
 
@@ -280,6 +293,12 @@ EMongo.prototype.processCollection = function(next){
 			return self.locals.result[r._id] = sanitize(r).html;
 	
 		cursor.count(function(err, count){
+			if(!count){
+				self.locals.message = 'No records found';
+				
+				return next.call(self);
+			}
+			
 			var pagesCount = Math.floor(count/EMongo.limit) + 1;
 
 			self.locals.paginator = {
@@ -306,10 +325,12 @@ module.exports = function(req, res, next){
 		if(err)
 			res.locals.err = err.message;
 		
-		this && this.render() || next();
+		this ? this.render() : next();
 	});
 };
 
+
+// helper functions
 function sanitize(obj, indent, parent){
 	indent = indent || '';
 	

@@ -177,3 +177,9 @@ textarea{
 #indexes tr td:nth-child(n+3){
 	text-align: center;
 }
+
+#dbs li a{
+	display: block;
+	padding: 3px 3px 3px 20px;
+	font-size: 1.1em;
+}

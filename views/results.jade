@@ -11,10 +11,10 @@ block collection-content
 		input#explain(type="button",value=ml.explain)
 		|  | 
 		label(for="actsel")=ml.action+": "
-		select#actsel(name="q-action")
+		select#actsel(name="action")
 			option find
-			option remove
-			option update
+			option(selected=action==="remove") remove
+			option(selected=action==="update") update
 	if result
 		.paginator
 			if(count>10)
@@ -59,6 +59,8 @@ block collection-content
 			span ------
 			a(href="#fieldHide")=ml.hide
 			a(href="#fieldShow")=ml.show
+	else if message
+		p=message
 
 	#update-dialog
 		table(class="lcaption")

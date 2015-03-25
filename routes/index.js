@@ -8,7 +8,6 @@ router.get('/', require('./home'));
 /* ajax */
 router.get('/db/:db/:collection/:id/:field', require('./field'));
 router.all('/createdb', require('./createdb'));
-//router.post('/db/:db/:collection/post', require('./post'));
 
 /* html */
 router.get('/dbs', require('./dbs'));

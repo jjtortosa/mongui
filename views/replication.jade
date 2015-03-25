@@ -1,12 +1,16 @@
 extends layout
 
 block content
-	table.lcaption
-		thead
-			tr
-				th(colspan="3") Replication (replSetGetStatus())
-		tbody
-			each i,k in info
+	.auto-height
+		table.lcaption
+			thead
 				tr
-					th=k
-					td: pre=JSON.stringify(i, null, '\t')
+					th(colspan="3") Replication (replSetGetStatus())
+			tbody
+				if(!info.length)
+					tr: td No replica set
+				else
+					each i,k in info
+						tr
+							th=k
+							td: pre=JSON.stringify(i, null, '\t')
