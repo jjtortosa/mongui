@@ -1,3 +1,5 @@
+/* global module, __dirname */
+
 var fs = require('fs')
 ,	path = require('path')
 ,	md = require('marked');
