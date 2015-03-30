@@ -1,4 +1,4 @@
-/* global module */
+/* global module, __dirname */
 
 var express = require('express');
 var path = require('path');
