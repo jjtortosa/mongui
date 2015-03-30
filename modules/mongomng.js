@@ -51,7 +51,8 @@ MongoMng.prototype.listDbs = function(cb){
 	if(this.databases)
 		return cb.call(self, null, this.databases);
 	
-	var self = this;
+	var self = this
+	,	count = 0;
 	
 	this.admin().listDatabases(function(err, result){
 		if(err)
@@ -62,6 +63,9 @@ MongoMng.prototype.listDbs = function(cb){
 			
 			self.useDb(db.name).collectionNames(function(err, collections){
 				db.collections = collections.length;
+				
+				if(++count === result.databases.length)
+					cb.call(self, null, self.databases);
 			});
 		});
 		
@@ -70,8 +74,6 @@ MongoMng.prototype.listDbs = function(cb){
 		});
 		
 		self.databases = result.databases;
-		
-		cb.call(self, null, self.databases);
 	});
 };
 
