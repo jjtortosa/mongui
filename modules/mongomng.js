@@ -1,3 +1,5 @@
+/* global require, module, decodeURI */
+
 var MongoClient = require('mongodb').MongoClient
 ,	events = require('events')
 ,	debug = require('debug')('mongui:server')

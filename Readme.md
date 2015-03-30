@@ -25,6 +25,11 @@ default port: 3101
 
 ## Usage
 
+Setup config.json
+
+Default user: "test", password: 1234
+Leave users empty for no security check
+
 Navigate to:
 [http://localhost:3101/](http://localhost:3101/)
 

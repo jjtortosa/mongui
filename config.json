@@ -1,8 +1,13 @@
 {
-	"name": "Mongui",
 	"host": "localhost:27017",
 	"mongouser": "",
 	"mongopass": "",
-	"users": {},
+	"cookieSession": {
+		"keys": ["tobo!", "keyboard"],
+		"cookie": { "maxAge": "3600000" }
+	},
+	"users": {
+		"test": "1234"
+	},
 	"port": 3101
 }

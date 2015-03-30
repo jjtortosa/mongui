@@ -6,6 +6,7 @@
 	"indexes": "Indexes",
 	"insert": "Insert",
 	"key": "Key",
+	"login": "Login",
 	"name": "Name",
 	"operation": "Operation",
 	"statistics": "Statistics",
@@ -33,5 +34,7 @@
 	"show": "Show",
 	"delAllRecordsMsg": "Are you sure to delete all records in collection?",
 	"dropCollectionMsg": "Are you sure to drop collection?",
-	"dropDbMsg": "Are you sure to drop db?"
+	"dropDbMsg": "Are you sure to drop db?",
+	"userNotFound": "User not found",
+	"wrongPass": "Wrong password"
 }
