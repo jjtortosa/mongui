@@ -1,11 +1,14 @@
 /* global module */
 
 module.exports = function(req, res, next){
+	var conf = req.app.get('conf');
+	
+	if(!conf.users || !Object.keys(conf.users).length)
+		res.redirect('/');
+	
 	var redirect = req.session.referer || '/';
 	
 	if(req.method === 'POST'){
-		var conf = req.app.get('conf');
-		
 		res.locals.user = req.body.user;
 	
 		if(conf.users[req.body.user] === undefined)
@@ -18,9 +21,6 @@ module.exports = function(req, res, next){
 
 		return res.redirect(redirect);
 	}
-	
-	if(req.session.user)
-		return res.redirect(redirect);
 	
 	res.render('login');
 };

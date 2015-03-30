@@ -1,8 +1,11 @@
 
 module.exports = function access(req,res,next){
-	var allowed = ['login'];
-
-	if(allowed.indexOf(req.path.substr(1))>-1)
+	if(req.path === '/login')
+		return next();
+	
+	var conf = req.app.get('conf');
+	
+	if(!conf.users || !Object.keys(conf.users).length)
 		return next();
 	
 	req.session.referer = req.path;
