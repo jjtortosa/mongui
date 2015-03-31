@@ -1,3 +1,4 @@
 .git*
 test/
 packmanaged.js
+config.json

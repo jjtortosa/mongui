@@ -1,3 +1,4 @@
 node_modules/
 .nbinfo
 pakmanaged.js
+config.json
