@@ -160,7 +160,11 @@ textarea{
 #db-content{
 	padding: 4px 8px;
 }
+#command{
+	float: left;
+}
 #command-result{
+	clear: both;
 	display: none;
 	margin-top: 14px;
 	background-color: #eeefff;
@@ -182,4 +186,17 @@ textarea{
 	display: block;
 	padding: 3px 3px 3px 20px;
 	font-size: 1.1em;
+}
+
+#command-examples{
+	float: left;
+	text-align: right;
+}
+
+#command-examples li{
+	padding: 2px 8px;
+}
+
+#command-examples li:after{
+	content: " ->";
 }

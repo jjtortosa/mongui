@@ -16,19 +16,6 @@ module.exports = function(req, res, next){
 				res.redirect(dbpath + '/' + req.body.colname);
 			});
 			break;
-		case 'command':
-			var command;
-			
-			if(!req.body.command)
-				return res.send();
-			
-			eval('command=' + req.body.command);
-			
-			req.mongoMng.db.command(command, function(err, r){
-				res.locals.result = err || r;
-				res.send(err || r);
-			});
-			break;
 		default:
 			next();
 	}

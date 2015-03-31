@@ -39,11 +39,11 @@ block collection-content
 					.actions
 						a(href="#delete-row", data-action="delete-row")=ml.remove
 						|  | 
-						a(href="", data-action="new-field")=ml.newField
+						a(href="#", data-action="new-field")=ml.newField
 						|  | 
-						a(href="")=ml.duplicate
+						a(href="#", data-action="duplicate")=ml.duplicate
 						|  | 
-						a(href="")=ml.refresh
+						a(href="", data-action="refresh")=ml.refresh
 						|  | 
 						a(href="", class="exp")=ml.expand
 					.result!=r

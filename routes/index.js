@@ -10,6 +10,7 @@ router.get('/db/:db/:collection/:id/:field', require('./field'));
 router.all('/createdb', require('./createdb'));
 
 /* html */
+router.all('/command', require('./command'));
 router.get('/dbs', require('./dbs'));
 router.get('/db/:db', db);
 router.post('/db/:db', require('./dbpost'));
@@ -17,6 +18,7 @@ router.get('/db/:db/:collection', db);
 router.get('/db/:db/:collection/:op', db);
 router.get('/db/:db/:collection/:op/:msg', db);
 router.post('/db/:db/:collection', require('./colpost'));
+router.post('/db/:db/:collection/:op', require('./colpost'));
 
 router.all('/login', require('./login'));
 

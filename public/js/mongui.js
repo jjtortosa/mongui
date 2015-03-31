@@ -50,6 +50,28 @@ $(function(){
 		fieldMethods.fieldCreate({
 			id: $(this).parents('.result-box:first')[0].id
 		});
+	}).on('click', '[data-action="duplicate"]', function(e){
+		e.preventDefault();
+		
+		var id = $(this).parents('.result-box:first')[0].id;
+		
+		$.ajax({
+			data: {
+				op: 'duplicate',
+				id: id,
+				db: db,
+				collection: collection
+			},
+			type: 'post'
+		}).done(function(d){
+			if(d.error)
+				return alert(d.error);
+			
+			$('#criteria').val('{\n\t_id: ObjectId("' + d._id + '")\n}');
+			$('#actsel').val(['find']);
+			
+			$('#query-form').submit();
+		});
 	}).on('click', '.r-key', function(){
 		$('.r-key.selected').removeClass('selected');
 		
@@ -346,4 +368,12 @@ $(function(){
 		$('#leftC .auto-height').height($(this).height()-28);
 		$('#rightC .auto-height').height($(this).height()-54);
 	}).resize();
+	
+	$('#command-examples a').click(function(){
+		$('[name="command"]').val($(this).html());
+		
+		$('#command').submit();
+		
+		return false;
+	});
 });

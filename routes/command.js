@@ -1,5 +1,13 @@
 module.exports = function(req, res){
-	req.mongoMng.listDbs(function(err, dbs){
-		res.render('command', {dbs: dbs});
+	if(req.method === 'GET' || !req.body.command)
+		return res.render('command');
+	
+	var command;
+	
+	eval('command=' + req.body.command);
+
+	req.mongoMng.db.command(command, function(err, r){
+		res.locals.result = err || r;
+		res.send(err || r);
 	});
 };

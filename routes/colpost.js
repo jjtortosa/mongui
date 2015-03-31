@@ -108,6 +108,26 @@ module.exports = function(req, res){
 				res.redirect(redirect + '&msg=parseError');
 			}
 			break;
+		case 'duplicate':
+//			console.log(req.body)
+
+			col.findOne(query, function(err, doc){
+				if(err)
+					return res.send({error: err});
+				
+				if(!doc)
+					return res.send({error: "Doc not found"});
+				
+				delete doc._id;
+				
+				col.insert(doc, function(err, doc){
+					if(err)
+						return res.send({error: err});
+					
+					res.send(doc[0]);
+				});
+			});
+			break;
 		default:
 			res.send('Op "' + req.body.op + '" not found');
 	}

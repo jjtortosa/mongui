@@ -3,6 +3,10 @@ extends layout
 block content
 	.auto-height
 		#db-content
+			ul#command-examples
+				li: a(href="#") {getCmdLineOpts: 1}
+				li: a(href="#") {listCommands: 1}
+
 			form#command(action="/post",method="post")
 				textarea(name="command",cols="60",rows="6") {listCommands: 1}
 				br
@@ -13,6 +17,7 @@ block content
 
 				input(type="hidden",name="op",value="command")
 				input(type="submit")
-
+			
+			br(style="clear:both")
 			#command-result Respuesta del servidor:
 				pre
