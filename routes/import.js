@@ -12,8 +12,8 @@ module.exports = function(req, res, next){
 	
 	if(fs.existsSync(tmp))
 		fs.unlinkSync(tmp);
-	l(fs.existsSync(dump.path))
-	fs.rename(dump.path, tmp, function(err){l(11)
+	
+	fs.rename(dump.path, tmp, function(err){
 		if(err)
 			return next(err);
 		
