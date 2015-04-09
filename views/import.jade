@@ -1,4 +1,10 @@
 extends db
 
 block dbbody
-	p TODO!
+	p dump_xxxxx.tar.gz
+	form(method="post",enctype="multipart/form-data",action="/import/"+dbname)
+		input(type="hidden",name="op",value="import")
+		input(type="file", style="width:400px", name="dump",required)
+		br
+		br
+		input(type="submit",value=ml.import)

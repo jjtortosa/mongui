@@ -1,5 +1,8 @@
 {
-	"action": "action",
+	"action": "Action",
+	"allcoll": "All",
+	"collection": "Collection",
+	"collections": "Collections",
 	"browse": "Browse",
 	"drop": "Drop",
 	"home": "Home",

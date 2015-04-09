@@ -1,6 +1,10 @@
+/* global module */
+
 var express = require('express')
 ,	router = express.Router({strict: true})
-,	db = require('./db');
+,	db = require('./db')
+,	multipart = require('connect-multiparty')
+,	multipartMiddleware = multipart();
 
 /* GET home page. */
 router.get('/', require('./home'));
@@ -14,6 +18,7 @@ router.all('/command', require('./command'));
 router.get('/dbs', require('./dbs'));
 router.get('/db/:db', db);
 router.post('/db/:db', require('./dbpost'));
+router.post('/import/:db', multipartMiddleware, require('./import'));
 router.get('/db/:db/:collection', db);
 router.get('/db/:db/:collection/:op', db);
 router.get('/db/:db/:collection/:op/:msg', db);

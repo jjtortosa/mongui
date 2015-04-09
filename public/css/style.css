@@ -32,7 +32,9 @@ ul{
 	padding: 0;
 	margin: 2px 0;
 }
-
+.clear{
+	clear: both;
+}
 footer{
 	position: fixed;
 	bottom: 0;
@@ -199,4 +201,18 @@ textarea{
 
 #command-examples li:after{
 	content: " ->";
+}
+
+ul.list{
+	width: 600px;
+}
+ul.list li{
+	float:left;
+	width: 200px;
+}
+#export input[type="checkbox"]{
+	margin-right: 8px;
+}
+#coll-export input[type="submit"]{
+	margin: 20px 0;
 }

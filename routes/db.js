@@ -20,8 +20,9 @@ function EMongo(req){
 	merge(this.locals, {
 		title: 'EucaMongo',
 		action: req.params.action || req.query.action,
-		op: req.params.op,
-		err: req.params.err
+		op: req.params.op || req.query.op,
+		err: req.params.err,
+		scripts: []
 	});
 
 	if(!this.locals.collection && !this.locals.op)
@@ -219,6 +220,15 @@ EMongo.prototype.colStats = function(next){
 					break;
 			}
 				
+			next.call(this);
+			break;
+		case 'export':
+			this.view = 'export';
+			this.locals.scripts.push('/js/export.js');
+			next.call(this);
+			break;
+		case 'import':
+			this.view = 'import';
 			next.call(this);
 			break;
 		case 'error':

@@ -1,4 +1,4 @@
-/* global module, require */
+/* global module, require, err */
 
 var ObjectId = require('mongodb').ObjectID
 ,	MongoDoc = require('../modules/mongodoc');
@@ -14,9 +14,9 @@ module.exports = function(req, res){
 	if(req.body.id)
 		var query = {_id: ObjectId(req.body.id)};
 	
-	res.locals.op = req.body.op;
+	res.locals.op = req.body.op || req.params.op;
 	
-	switch(req.body.op){
+	switch(res.locals.op){
 		case 'truncate':
 			col.remove({}, function(err, a){
 				if(!err)
@@ -108,6 +108,7 @@ module.exports = function(req, res){
 				res.redirect(redirect + '&msg=parseError');
 			}
 			break;
+			
 		case 'duplicate':
 //			console.log(req.body)
 
@@ -128,6 +129,7 @@ module.exports = function(req, res){
 				});
 			});
 			break;
+			
 		default:
 			res.send('Op "' + req.body.op + '" not found');
 	}

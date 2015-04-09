@@ -1,5 +1,8 @@
 {
 	"action": "Acción",
+	"allcoll": "Todas",
+	"collection": "Colección",
+	"collections": "Colecciones",
 	"browse": "Consultar",
 	"drop": "Eliminar",
 	"home": "Inicio",

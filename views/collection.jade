@@ -31,6 +31,10 @@ block content
 		a(href="/db/"+dbname+"/"+collection+"/validate",class={active:op==="validate"})=ml.validate
 		|  | 
 		a(href="drop",data-msg=ml.dropCollectionMsg)=ml.remove
+		|  | 
+		a(href="/db/"+dbname+"/"+collection+"/export")=ml.export
+		|  | 
+		a(href="/db/"+dbname+"/"+collection+"/import")=ml.import
 
 	if err
 		p(style="color:red")=err

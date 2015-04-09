@@ -1,3 +1,4 @@
+/* global module */
 
 module.exports = function(req, res, next){
 	var dbpath = '/db/' + req.mongoMng.db.databaseName;
@@ -8,6 +9,7 @@ module.exports = function(req, res, next){
 				req.res.redirect('/');
 			});
 			break;
+			
 		case 'createCollection':
 			if(!req.body.colname)
 				return res.redirect(dbpath + '?op=newcollection');
@@ -16,6 +18,18 @@ module.exports = function(req, res, next){
 				res.redirect(dbpath + '/' + req.body.colname);
 			});
 			break;
+			
+		case 'export':
+			var mongodump = require('../modules/mongodump.js');
+			
+			mongodump(req.params.db, JSON.parse(req.body.collections), function(err, file){
+				if(err)
+					return next(err);
+				
+				res.download(file);
+			});
+			break;
+		
 		default:
 			next();
 	}
