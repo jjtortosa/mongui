@@ -153,15 +153,15 @@ module.exports = function(req, res, next){
 	if(conf.mongouser && conf.mongopass)
 		uri += conf.mongouser + ':' + conf.mongopass + '@';
 
-	var match = decodeURI(req.path).match(/^\/db\/([^\/]+)\/?([^\/]*)/);
-	
+	var match = decodeURI(req.path).match(/^\/(db|import)\/([^\/]+)\/?([^\/]*)/);
+
 	if(match){
-		res.locals.dbname = match && match[1];
-		res.locals.collection = match && match[2];
+		res.locals.dbname = match && match[2];
+		res.locals.collection = match && match[3];
 	}
 	
 	uri += (conf.host || 'localhost') + (res.locals.dbname ? '/' + res.locals.dbname : '');
-	
+
 	MongoClient.connect(uri, function(err, db){
 		if(err)
 			return next(err);
@@ -175,7 +175,7 @@ module.exports = function(req, res, next){
 		
 		debug('MongoDb - Connected' + (res.locals.dbname ? ' to db "' + res.locals.dbname + '"' : ''))	;
 		
-		if(req.path === 'login' || req.method === 'post')
+		if(req.path === 'login' || (req.method === 'post' && req.path.indexOf('import') !== 1))
 			return next();
 		
 		req.mongoMng.listDbs(function(err, dbs){

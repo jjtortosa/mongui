@@ -1,4 +1,4 @@
-
+/* global module */
 
 module.exports = function multilang(req,res,next){
 	req.lang = req.acceptsLanguages('en','es') || 'en';

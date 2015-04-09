@@ -9,17 +9,18 @@ var spawn = require('child_process').spawn
 module.exports = function(file, cb){
 	var tmp = '/tmp/mongorestore';
 	
-	new tgz().extract(file, tmp, function(err){l(err, 22)
+	new tgz().extract(file, tmp, function(err){
 		if(err)
 			return cb(err);
 		
 		err = '';
 		
-		var process = spawn('mongorestore', ['--dir', tmp]);
+		var process = spawn('mongorestore', ['--dir', tmp + '/dump', '--drop']);
 		
-		process.stderr.on('data', function (data) {
-			err += data;
-		});
+		//stderr no sólo contiene errores
+//		process.stderr.on('data', function (data) {
+//			err += data;
+//		});
 		
 		process.on('exit', function (code) {
 			cb(err && new Error(err), code);
