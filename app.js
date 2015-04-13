@@ -1,19 +1,35 @@
 /* global module, __dirname */
 
-var express = require('express');
-var path = require('path');
-var favicon = require('serve-favicon');
-var logger = require('morgan');
-var cookieParser = require('cookie-parser');
-var bodyParser = require('body-parser')
+var express = require('express')
+,	fs = require('fs')
+,	path = require('path')
+,	favicon = require('serve-favicon')
+,	logger = require('morgan')
+,	cookieParser = require('cookie-parser')
+,	bodyParser = require('body-parser')
 ,	session = require('cookie-session')
 ,	routes = require('./routes')
-,	pmx = require('pmx');
-
-var conf = require('./config');
+,	pmx = require('pmx')
+,	confLocations = [
+	'/etc/mongui',
+	path.join(process.env.HOME, '.mongui'),
+	path.join(process.env.PWD, 'mongui'),
+	__dirname
+];
 
 pmx.init();
 
+var file;
+
+confLocations.some(function(loc){
+	loc += '/config.json';
+	
+	return !!(file = fs.existsSync(loc) && loc);
+});
+
+var conf = require(file);
+
+console.info('Config file "%s" loaded', file);
 
 var app = express();
 

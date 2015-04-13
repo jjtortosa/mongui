@@ -27,6 +27,12 @@ default port: 3101
 
 Setup config.json
 
+Config file location search order:
+- /etc/mongui/config.json
+- ~/.mongui/config.json
+- \[PWD\]/config.json
+- config.json
+
 Default user: "test", password: 1234
 Leave users empty for no security check
 

@@ -31,8 +31,6 @@ server.listen(port);
 server.on('error', onError);
 server.on('listening', onListening);
 
-l = console.log;
-
 /**
  * Event listener for HTTP server "error" event.
  * @param {Error} error
@@ -63,5 +61,5 @@ function onError(error) {
  */
 
 function onListening() {
-  console.log('Listening on port ' + server.address().port);
+  console.info('Listening on port ' + server.address().port);
 }
