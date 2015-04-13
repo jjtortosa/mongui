@@ -1,4 +1,4 @@
-/* global module, __dirname */
+/* global module, __dirname, process */
 
 var express = require('express')
 ,	fs = require('fs')
@@ -11,11 +11,11 @@ var express = require('express')
 ,	routes = require('./routes')
 ,	pmx = require('pmx')
 ,	confLocations = [
-	'/etc/mongui',
-	path.join(process.env.HOME, '.mongui'),
-	path.join(process.env.PWD, 'mongui'),
-	__dirname
-];
+		'/etc/mongui',
+		path.join(process.env.HOME, '.mongui'),
+		path.join(process.env.PWD, 'mongui'),
+		__dirname
+	];
 
 pmx.init();
 
