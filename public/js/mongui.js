@@ -189,13 +189,34 @@ $(function(){
 			});
 		},
 		fieldSortAsc: function(o){
-			console.error('Todo: fieldSortAsc');
+			alert('Todo: fieldSortAsc');
 		},
 		fieldSortDesc: function(o){
-			console.error('Todo: fieldSortDesc');
+			alert('Todo: fieldSortDesc');
 		},
 		fieldRename: function(o){
-			console.error('Todo: fieldRename');
+			var name = prompt('New name for field ' + o.field);
+			
+			if(!name)
+				return;
+			
+			$.ajax({
+				url: '/db/' + db + '/' + collection,
+				data: {
+					op: 'renameField',
+					key: o.field,
+					name: name,
+					id: o.id,
+					db: db,
+					collection: collection
+				},
+				type: 'post'
+			}).done(function(d){
+				if(d.error)
+					return alert(d.error);
+			
+				o.target.html(name);
+			});
 		},
 		fieldRemove: function(o){
 			if(!confirm('Are you sure to remove field "' + o.field + '"?'))

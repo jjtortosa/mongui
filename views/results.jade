@@ -2,8 +2,6 @@ extends collection
 
 block collection-content
 	form#query-form
-		input(type="hidden",name="db",value=db)
-		input(type="hidden",name="col",value=collection)
 		textarea#criteria(name="criteria",rows="5",cols="70")=criteria
 		br
 		input(type="submit")

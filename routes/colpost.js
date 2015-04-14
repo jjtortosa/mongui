@@ -130,6 +130,19 @@ module.exports = function(req, res){
 			});
 			break;
 			
+		case 'renameField':
+			var rename = {};
+			
+			rename[req.body.key] = req.body.name;
+			
+			col.update(query, {$rename: rename}, function(err, r){
+				if(err)
+					return res.json({error: err.message});
+				
+				res.json(r === 1 ? req.body.name : {error: 'not modified'});
+			});
+			break;
+		
 		default:
 			res.send('Op "' + req.body.op + '" not found');
 	}
