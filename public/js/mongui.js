@@ -1,4 +1,3 @@
-var l = console.log;
 
 $(function(){
 	var db = $('#db').val(),
@@ -14,7 +13,16 @@ $(function(){
 	$(document).click(function(){
 		$('#field_menu').hide();
 	});
+	
+	$('#query-form').submit(function(){
+		var $f = $(this);
 		
+		$('#sort-order [name^="sortFields"]').each(function(){
+			if(this.value)
+				$f.append('<input type="hidden" name="sort[' + this.value + ']" value="' + $(this).next().val() + '"/>');
+		});
+	});
+	
 	$('#results').on('click', '[data-action="delete-row"]', function(e){
 		e.preventDefault();
 		
@@ -189,10 +197,26 @@ $(function(){
 			});
 		},
 		fieldSortAsc: function(o){
-			alert('Todo: fieldSortAsc');
+			$('#sort-order [name^="sortFields"]').each(function(){
+				this.value = '';
+			});
+			
+			$('#sort-order [name="sortFields[0]"]')
+				.val(o.field)
+				.next().val([1]);
+		
+			$('#query-form').submit();
 		},
 		fieldSortDesc: function(o){
-			alert('Todo: fieldSortDesc');
+			$('#sort-order [name^="sortFields"]').each(function(){
+				this.value = '';
+			});
+			
+			$('#sort-order [name="sortFields[0]"]')
+				.val(o.field)
+				.next().val([-1]);
+		
+			$('#query-form').submit();
 		},
 		fieldRename: function(o){
 			var name = prompt('New name for field ' + o.field);

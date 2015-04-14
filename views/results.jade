@@ -1,18 +1,27 @@
 extends collection
 
 block collection-content
-	form#query-form
-		textarea#criteria(name="criteria",rows="5",cols="70")=criteria
-		br
-		input(type="submit")
-		|  | 
-		input#explain(type="button",value=ml.explain)
-		|  | 
-		label(for="actsel")=ml.action+": "
-		select#actsel(name="action")
-			option find
-			option(selected=action==="remove") remove
-			option(selected=action==="update") update
+	#query-form-container
+		form#query-form
+			textarea#criteria(name="criteria",rows="5",cols="70")=criteria
+			br.clear
+			input(type="submit")
+			|  | 
+			input#explain(type="button",value=ml.explain)
+			|  | 
+			label(for="actsel")=ml.action+": "
+			select#actsel(name="action")
+				option find
+				option(selected=action==="remove") remove
+				option(selected=action==="update") update
+		#sort-order=ml.sort
+			each s,i in sortFields
+				div
+					input(name="sortFields["+i+"]",value=s&&s.name)
+					select(name="order["+i+"]")
+						option(value="1") ASC
+						option(value="-1",selected=s&&s.order===-1) DESC
+		br.clear
 	if result
 		.paginator
 			if(count>10)

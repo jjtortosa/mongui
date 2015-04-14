@@ -288,8 +288,17 @@ EMongo.prototype.processCollection = function(next){
 			return next.call(self, new Error('Invalid query'));
 	}
 	
-	var page = parseInt(req.query.page) || 1;
+	this.locals.sortFields = new Array(4);
 	
+	var i = 0;
+	
+	for(var k in sort){
+		sort[k] = parseInt(sort[k]);
+		this.locals.sortFields[i++] = {name: k, order: sort[k]};
+	}
+	
+	var page = parseInt(req.query.page) || 1;
+
 	var cursor = this.mng.collection
 		.find(query, fields)
 		.sort(sort).limit(10)

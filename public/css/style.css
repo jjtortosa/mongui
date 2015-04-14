@@ -132,9 +132,20 @@ textarea{
 .lcaption tbody th:after{
 	content: ': ';
 }
-#query-form{
+#query-form-container{
 	padding: 8px;
 	background-color: #eeefff;
+}
+#query-form{
+	float: left;
+}
+#sort-order{
+	text-align: center;
+	display: inline-block;
+	margin-left: 12px;
+}
+#sort-order>*>*{
+	margin: 2px;
 }
 #field_menu{
 	display: none;
