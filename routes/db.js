@@ -135,6 +135,8 @@ EMongo.prototype.dbStats = function(next){
 			break;
 		case 'export':
 			this.view = 'export';
+			this.locals.selected = req.query.collections;
+			this.locals.scripts.push('/js/export.js');
 			next.call(this);
 			break;
 		case 'import':
@@ -220,11 +222,6 @@ EMongo.prototype.colStats = function(next){
 					break;
 			}
 				
-			next.call(this);
-			break;
-		case 'export':
-			this.view = 'export';
-			this.locals.scripts.push('/js/export.js');
 			next.call(this);
 			break;
 		case 'import':

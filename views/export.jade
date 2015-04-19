@@ -11,7 +11,7 @@ block dbbody
 		ul.list
 			each col in collections
 				li: label
-					input(type="checkbox",name=col.name,checked=col.name===collection)
+					input(type="checkbox",name=col.name,checked=selected.indexOf(col.name)!==-1)
 					=col.name
 
 		form#coll-export.clear(method="post",action="/db/"+dbname)

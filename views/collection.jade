@@ -32,7 +32,7 @@ block content
 		|  | 
 		a(href="drop",data-msg=ml.dropCollectionMsg)=ml.remove
 		|  | 
-		a(href="/db/"+dbname+"/"+collection+"/export")=ml.export
+		a(href="/db/"+dbname+"?op=export&collections[]="+collection)=ml.export
 		|  | 
 		a(href="/db/"+dbname+"/"+collection+"/import")=ml.import
 
