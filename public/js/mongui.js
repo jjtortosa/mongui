@@ -41,7 +41,7 @@ $(function(){
 			type: 'post'
 		}).done(function(d){
 			if(d.error)
-				return alert(d.error);
+				return $.alert(d.error);
 			
 			if(d.affected === 1){
 				$('#' + id).slideUp();
@@ -73,7 +73,7 @@ $(function(){
 			type: 'post'
 		}).done(function(d){
 			if(d.error)
-				return alert(d.error);
+				return $.alert(d.error);
 			
 			$('#criteria').val('{\n\t_id: ObjectId("' + d._id + '")\n}');
 			$('#actsel').val(['find']);
@@ -237,7 +237,7 @@ $(function(){
 				type: 'post'
 			}).done(function(d){
 				if(d.error)
-					return alert(d.error);
+					return $.alert(d.error);
 			
 				o.target.html(name);
 			});
@@ -258,7 +258,7 @@ $(function(){
 				type: 'post'
 			}).done(function(d){
 				if(d.error)
-					return alert(d.error);
+					return $.alert(d.error);
 
 				if(d.affected === 1){
 					$(o.target[0].nextSibling).remove();//text node ': '
@@ -295,7 +295,7 @@ $(function(){
 				};
 			
 			if(!data.field)
-				return alert('No name');
+				return $.alert('No name');
 			
 			$.ajax({
 				url: '/db/' + db + '/' + collection,
@@ -303,7 +303,7 @@ $(function(){
 				type: 'POST'
 			}).done(function(d){
 				if(d.error)
-					return alert(d.error);
+					return $.alert(d.error);
 				
 				if(!$target){//es un nuevo campo
 					var $last = $('#' + data.id + '>.result>span:last');
@@ -351,7 +351,7 @@ $(function(){
 			type: 'post',
 			data: {
 				command: $(this).find('[name="command"]').val(),
-				db: document.getElementById('db').value
+				db: $('[name="db"]').val()
 			}
 		}).done(function(d){
 			$('#command-result').show().find('pre').text(JSON.stringify(d, null, '\t'));
@@ -360,25 +360,47 @@ $(function(){
 		return false;
 	});
 	
-	$('[href="truncate"]').click(function(){
+	$('[href="truncate"]').click(function() {
 		if(confirm($(this).attr('data-msg').replace('%s', collection))){
-			op.value='truncate';
+			$('#op').val('truncate');
+			
 			$('#post').submit();
 		}
 		return false;
 	});
 	
-	$('[href="drop"]').click(function(){
+	$('[href="drop"]').click(function() {
 		if(confirm($(this).attr('data-msg').replace('%s', collection))){
-			op.value='drop';
+			$('#op').val('drop');
+			
 			$('#post').submit();
 		}
 		return false;
 	});
 	
-	$('#dropdb').click(function(){
+	$('#db-repair').click(function() {
 		if(confirm($(this).attr('data-msg').replace('%s', db))){
-			dbop.value='dropdb';
+			var data = {
+				command: '{repairDatabase: 1}',
+				db: $('[name="db"]').val()
+			};
+			
+			$.ajax({
+				url: '/command',
+				type: 'post',
+				data: data
+			}).done(function(d){
+				$.alert(data.command + '<br><br>'
+						+ $('#serverResponse').val()
+						+ '<br><br>' + JSON.stringify(d));
+			});
+		}
+		return false;
+	});
+	
+	$('#dropdb').click(function() {
+		if(confirm($(this).attr('data-msg').replace('%s', db))){
+			$('#dbop').val('dropdb');
 			
 			$('#post').submit();
 		}
@@ -398,7 +420,7 @@ $(function(){
 			}
 		}).done(function(d){
 			if(d.error)
-				return alert(d.error);
+				return $.alert(d.error);
 			
 			$('.paginator').remove();
 			
@@ -424,4 +446,19 @@ $(function(){
 		
 		return false;
 	});
+	
+	var $msgDialog = $('#msg-dialog').dialog({
+		autoOpen: false,
+		title: 'Mongui',
+		modal: true,
+		buttons: {
+			OK: function() {
+				$(this).dialog( "close" );
+			}
+		}
+	});
+	
+	$.alert = function(msg){
+		$msgDialog.find('#msg-body').html(msg).end().dialog('open');
+	};
 });

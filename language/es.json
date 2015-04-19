@@ -13,6 +13,7 @@
 	"login": "Iniciar sesión",
 	"name": "Nombre",
 	"operation": "Operación",
+	"serverResponse": "Respuesta del servidor: ",
 	"sort": "Orden",
 	"statistics": "Estadística",
 	"unique": "Único",
@@ -40,6 +41,7 @@
 	"delAllRecordsMsg": "¿Estás seguro de eliminar todos los registros de '%s'?",
 	"dropCollectionMsg": "¿Estás seguro de eliminar la colección '%s'?",
 	"dropDbMsg": "¿Seguro que quieres eliminar toda la base de datos '%s'?",
+	"repairDbMsg": "¿Seguro que quieres reparar la base de datos '%s'?",
 	"userNotFound": "Usuario no encontrado",
 	"wrongPass": "Contraseña incorrecta"
 }

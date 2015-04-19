@@ -2,7 +2,7 @@ extends layout
 
 block content
 	form#post(style="display:none",method="post")
-		input#db(type="hidden",value=dbname)
+		input#db(type="hidden",name="db",value=dbname)
 		input#dbop(type="hidden",name="op")
 
 	.header
@@ -21,7 +21,7 @@ block content
 		|  | 
 		a(href="/db/"+dbname+"?op=import",class={active:op==="import"})=ml.import
 		|  | 
-		a(href="/db/"+dbname+"?op=repair",class={active:op==="repair"})=ml.repair
+		a#db-repair(href="/db/"+dbname+"?op=repair",data-msg=ml.repairDbMsg)=ml.repair
 		|  | 
 		a(href="/db/"+dbname+"?op=auth",class={active:op==="auth"})=ml.auth
 		|  | 

@@ -9,6 +9,14 @@ module.exports = function(req, res, next){
 				req.res.redirect('/');
 			});
 			break;
+		
+		case 'repair':
+			req.mongoMng.useDb(res.locals.dbname).command({repairDatabase: 1}, function(err, r){
+				res.locals.result = err || r;
+				res.send(err || r);
+			});
+			
+			break;
 			
 		case 'createCollection':
 			if(!req.body.colname)
