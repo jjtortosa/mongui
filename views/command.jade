@@ -7,7 +7,7 @@ block content
 				li: a(href="#") {getCmdLineOpts: 1}
 				li: a(href="#") {listCommands: 1}
 
-			form#command(action="/post",method="post")
+			form#command
 				textarea(name="command",cols="60",rows="6") {listCommands: 1}
 				br
 				| DB: 
@@ -15,7 +15,6 @@ block content
 					each db in dbs
 						option=db.name
 
-				input(type="hidden",name="op",value="command")
 				input(type="submit")
 			
 			br(style="clear:both")

@@ -342,14 +342,17 @@ $(function(){
 				$dv.append('<input>');
 		}
 	});
-	
+
 	$('form#command').submit(function(e){
 		e.preventDefault();
-		
+	
 		$.ajax({
-//			url: '/post',
+			url: '/command',
 			type: 'post',
-			data: $(this).serializeArray()
+			data: {
+				command: $(this).find('[name="command"]').val(),
+				db: document.getElementById('db').value
+			}
 		}).done(function(d){
 			$('#command-result').show().find('pre').text(JSON.stringify(d, null, '\t'));
 		});

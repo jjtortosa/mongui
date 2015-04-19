@@ -6,7 +6,7 @@ module.exports = function(req, res){
 	
 	eval('command=' + req.body.command);
 
-	req.mongoMng.db.command(command, function(err, r){
+	req.mongoMng.useDb(req.body.db).command(command, function(err, r){
 		res.locals.result = err || r;
 		res.send(err || r);
 	});
