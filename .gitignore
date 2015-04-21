@@ -2,3 +2,4 @@ node_modules/
 .nbinfo
 pakmanaged.js
 config.json
+npm-debug.log
