@@ -74,12 +74,11 @@ html
 			a(href="/logout") Logout
 			|  · 
 			select(style="width:100px",onchange="window.top.location='?changeLang='+this.value")
-				option(value="es") Español
-				option(value="en") English
+				each name,code in langs
+					option(value=code,selected=code===lang)=name
 			
 
 		#msg-dialog
 			p#msg-body
 		
 		input#serverResponse(type="hidden",value=ml.serverResponse)
-			
