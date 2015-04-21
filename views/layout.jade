@@ -51,17 +51,17 @@ html
 				td#rightC
 					if(!dbname)
 						.header
-							a(href="/",class={active: path==="/"}) Servidor
+							a(href="/",class={active: path==="/"})=ml.server
 							|  | 
-							a(href="/serverstatus",class={active: path==="/serverstatus"}) Estados
+							a(href="/serverstatus",class={active: path==="/serverstatus"})=ml.status
 							|  | 
-							a(href="/dbs",class={active: path==="/dbs"}) Bases de datos
+							a(href="/dbs",class={active: path==="/dbs"})=ml.dbs
 							|  | 
-							a(href="/processlist",class={active: path==="/processlist"}) Processlist
+							a(href="/processlist",class={active: path==="/processlist"})=ml.processes
 							|  | 
-							a(href="/command",class={active: path==="/command"}) Comando
+							a(href="/command",class={active: path==="/command"})=ml.command
 							|  | 
-							a(href="/replication",class={active: path==="/replication"}) Replication
+							a(href="/replication",class={active: path==="/replication"})=ml.replication
 						#header-sep
 
 					block content
@@ -72,6 +72,10 @@ html
 			a(href="https://github.com/jjtortosa/mongui",target="_blank")!="&copy;Mongui v"+settings.version
 			|  · 
 			a(href="/logout") Logout
+			|  · 
+			select(style="width:100px",onchange="window.top.location='?changeLang='+this.value")
+				option(value="es") Español
+				option(value="en") English
 			
 
 		#msg-dialog
