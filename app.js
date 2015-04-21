@@ -1,4 +1,4 @@
-/* global module, __dirname, process */
+/* global module, __dirname, process, require */
 
 var express = require('express')
 ,	fs = require('fs')
@@ -12,6 +12,7 @@ var express = require('express')
 ,	pmx = require('pmx')
 ,	confLocations = [
 		'/etc/mongui',
+		'/usr/local/etc',
 		path.join(process.env.HOME, '.mongui'),
 		path.join(process.env.PWD, 'mongui'),
 		__dirname
@@ -23,7 +24,7 @@ var file;
 
 confLocations.some(function(loc){
 	loc += '/config.json';
-	
+
 	return !!(file = fs.existsSync(loc) && loc);
 });
 
@@ -34,6 +35,7 @@ console.info('Config file "%s" loaded', file);
 var app = express();
 
 app.set('conf', conf);
+app.set('version', require('./package.json').version);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -48,6 +50,7 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(session(conf.cookieSession));
 
+app.use(require('./modules/setup'));
 app.use(require('./modules/access'));
 app.use(require('./modules/multilang'));
 app.use(require('./modules/mongomng'));

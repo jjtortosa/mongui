@@ -29,6 +29,7 @@ Setup config.json
 
 Config file location search order:
 - /etc/mongui/config.json
+- /usr/local/etc/mongui/config.json
 - ~/.mongui/config.json
 - \[PWD\]/config.json
 - config.json

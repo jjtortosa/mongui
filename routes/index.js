@@ -26,6 +26,9 @@ router.post('/db/:db/:collection', require('./colpost'));
 router.post('/db/:db/:collection/:op', require('./colpost'));
 
 router.all('/login', require('./login'));
+router.all('/logout', require('./logout'));
+
+router.get('/readme', require('./readme.md'));
 
 router.get('/:sec', function(req, res, next){
 	try{
@@ -34,7 +37,5 @@ router.get('/:sec', function(req, res, next){
 		next();
 	}
 });
-
-router.get('readme', require('./readme.md'));
 
 module.exports = router;
