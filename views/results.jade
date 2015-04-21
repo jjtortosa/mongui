@@ -14,13 +14,15 @@ block collection-content
 				option find
 				option(selected=action==="remove") remove
 				option(selected=action==="update") update
-		#sort-order=ml.sort
-			each s,i in sortFields
-				div
-					input(name="sortFields["+i+"]",value=s&&s.name)
-					select(name="order["+i+"]")
-						option(value="1") ASC
-						option(value="-1",selected=s&&s.order===-1) DESC
+		
+		if sortFields
+			#sort-order=ml.sort
+				each s,i in sortFields
+					div
+						input(name="sortFields["+i+"]",value=s&&s.name)
+						select(name="order["+i+"]")
+							option(value="1") ASC
+							option(value="-1",selected=s&&s.order===-1) DESC
 		br.clear
 	if result
 		.paginator
