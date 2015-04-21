@@ -1,15 +1,25 @@
 /* global module */
 
-module.exports = function multilang(req,res,next){
-	if(req.query.changeLang){
-		req.session.lang = req.query.changeLang;
+module.exports = function multilang(app){
+	app.locals.langs = {
+		es: "Español",
+		en: "English"
+	};
 
-		return res.redirect(req.path);
-	}
+	return function multilang(req,res,next){
+		if(req.query.changeLang){
+			if(!app.locals.langs[req.query.changeLang])
+				return next(new Error('Langcode ' + req.query.changeLang + ' unavailable'));
+			
+			req.session.lang = req.query.changeLang;
 
-	req.lang = req.session.lang || req.acceptsLanguages('en','es') || 'en';
+			return res.redirect(req.path);
+		}
 
-	res.locals.ml = require('../language/' + req.lang);
+		req.lang = res.locals.lang = req.session.lang || req.acceptsLanguages('en','es') || 'en';
 
-	next();
+		res.locals.ml = require('../language/' + req.lang);
+
+		next();
+	};
 };
