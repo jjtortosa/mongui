@@ -1,3 +1,4 @@
+/* global module */
 
 module.exports = function access(req,res,next){
 	if(req.path === '/login' || req.path === '/logout')

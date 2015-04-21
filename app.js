@@ -12,7 +12,7 @@ var express = require('express')
 ,	pmx = require('pmx')
 ,	confLocations = [
 		'/etc/mongui',
-		'/usr/local/etc',
+		'/usr/local/etc/mongui',
 		path.join(process.env.HOME, '.mongui'),
 		path.join(process.env.PWD, 'mongui'),
 		__dirname
