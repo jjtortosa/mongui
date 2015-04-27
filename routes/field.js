@@ -7,10 +7,7 @@ module.exports = function(req, res, next){
 	var col = req.mongoMng.db.collection(req.params.collection)
 	,	fields = {_id: false}
 	,	field = req.params.field
-	,	id = req.params.id;
-
-	if(ObjectId.isValid(id))
-		id = ObjectId(id);
+	,	id = req.mongoMng.parseId(req.params.id);
 
 	fields[field] = true;
 

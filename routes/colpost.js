@@ -10,20 +10,20 @@ function ISODate(d){
 module.exports = function(req, res){
 	var col = req.mongoMng.collection
 	,	dbpath = '/db/' + req.mongoMng.db.databaseName + '/';
-	
+
 	if(req.body.id)
-		var query = {_id: ObjectId(req.body.id)};
-	
+		var query = {_id: req.mongoMng.parseId(req.body.id)};
+
 	res.locals.op = req.body.op || req.params.op;
-	
+
 	switch(res.locals.op){
 		case 'truncate':
 			col.remove({}, function(err, a){
 				if(!err)
 					return res.redirect(req.path);
-				
+
 				res.locals.message = err.message;
-				
+
 				req.mongoMng.getCollections(function(err, collections){
 					res.render('collerror', {collections: collections});
 				});
@@ -32,7 +32,7 @@ module.exports = function(req, res){
 		case 'drop':
 			col.drop(function(err){
 				var red = err ? req.path + '?err=' + err.message : '/db/' + res.locals.dbname;
-				
+
 				req.res.redirect(red);
 			});
 			break;
@@ -51,7 +51,7 @@ module.exports = function(req, res){
 		case 'setField':
 			var update = {$set: {}},
 				value;
-			
+
 			switch(req.body.type){
 				case 'number':
 					value = Number(req.body.value);
@@ -70,7 +70,7 @@ module.exports = function(req, res){
 				default:
 					value = req.body.value;
 			}
-			
+
 			update.$set[req.body.field] = value;
 
 			col.update(query, update, function(err, r){
@@ -78,15 +78,16 @@ module.exports = function(req, res){
 			});
 			break;
 		case 'deleteRow':
+			console.log(query);
 			col.remove(query, function(err, r){
 				res.send({error: err && err.message, affected: r});
 			});
 			break;
 		case 'deleteField':
 			var update;
-			
+
 			eval('update = {$unset: {"' + req.body.key + '": ""}}');
-			
+
 			col.update(query, update, function(err, r){
 				res.send({error: err && err.message, affected: r});
 			});
@@ -95,7 +96,7 @@ module.exports = function(req, res){
 			var redirect = req.path + '?op=insert&json=' + encodeURIComponent(req.body.json);
 			try{
 				var json;
-				
+
 				eval('json = ' + req.body.json);
 
 				if(!Object.keys(json).length)
@@ -108,41 +109,41 @@ module.exports = function(req, res){
 				res.redirect(redirect + '&msg=parseError');
 			}
 			break;
-			
+
 		case 'duplicate':
 //			console.log(req.body)
 
 			col.findOne(query, function(err, doc){
 				if(err)
 					return res.send({error: err});
-				
+
 				if(!doc)
 					return res.send({error: "Doc not found"});
-				
+
 				delete doc._id;
-				
+
 				col.insert(doc, function(err, doc){
 					if(err)
 						return res.send({error: err});
-					
+
 					res.send(doc[0]);
 				});
 			});
 			break;
-			
+
 		case 'renameField':
 			var rename = {};
-			
+
 			rename[req.body.key] = req.body.name;
-			
+
 			col.update(query, {$rename: rename}, function(err, r){
 				if(err)
 					return res.json({error: err.message});
-				
+
 				res.json(r === 1 ? req.body.name : {error: 'not modified'});
 			});
 			break;
-		
+
 		default:
 			res.send('Op "' + req.body.op + '" not found');
 	}

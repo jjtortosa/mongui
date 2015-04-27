@@ -1,6 +1,7 @@
 /* global require, module, decodeURI */
 
 var MongoClient = require('mongodb').MongoClient
+,	ObjectId = require('mongodb').ObjectID
 ,	events = require('events')
 ,	debug = require('debug')('mongui:server')
 ,	assert = require('assert');
@@ -141,6 +142,14 @@ MongoMng.prototype.currentOp = function(q, cb){
 
 MongoMng.prototype.setCollection = function(colname, cb){
 	this.collection = this.db.collection(colname);
+};
+
+MongoMng.prototype.parseId = function(id){
+	return MongoMng.parseId(id);
+};
+
+MongoMng.parseId = function(id){
+	return ObjectId.isValid(id) ? ObjectId(id) : id;
 };
 
 
