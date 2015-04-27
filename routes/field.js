@@ -4,17 +4,17 @@ var ObjectId = require('mongodb').ObjectID,
 	MongoDoc = require('../modules/mongodoc');
 
 module.exports = function(req, res, next){
-	if(!ObjectId.isValid(req.params.id))
-		return next();
-	
 	var col = req.mongoMng.db.collection(req.params.collection)
 	,	fields = {_id: false}
 	,	field = req.params.field
 	,	id = req.params.id;
 
+	if(ObjectId.isValid(id))
+		id = ObjectId(id);
+
 	fields[field] = true;
 
-	col.findOne({_id: ObjectId(id)}, fields, function(err, r){
+	col.findOne({_id: id}, fields, function(err, r){
 		if(err || !r)
 			return res.json(err || r);
 
