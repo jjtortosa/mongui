@@ -27,16 +27,16 @@ block collection-content
 	if result
 		.paginator
 			if(count>10)
-				a(href=url+"&page=1") «
+				a(href=paginator.url+"1") «
 
 				- var n = paginator.first
 
 				while n<= paginator.last
 					|  &nbsp; 
-					a(href="?page="+n,class={active:n===paginator.page})=n++
+					a(href=paginator.url+n,class={active:n===paginator.page})=n++
 
 				|  &nbsp; 
-				a(href=url+"&page="+paginator.total) »
+				a(href=paginator.url+paginator.total) »
 				|  &nbsp; 
 
 			if count

@@ -283,7 +283,7 @@ EMongo.prototype.processCollection = function(next){
 
 		if(query instanceof Error)
 			return next.call(self, query);
-		
+
 		if(!query)
 			return next.call(self, new Error('Invalid query'));
 	}
@@ -312,6 +312,9 @@ EMongo.prototype.processCollection = function(next){
 			return self.locals.result[r._id] = sanitize(r).html;
 
 		cursor.count(function(err, count){
+			if(err)
+				return next.call(self, err);
+
 			if(!count){
 				self.locals.message = 'No records found';
 
@@ -320,15 +323,17 @@ EMongo.prototype.processCollection = function(next){
 
 			var pagesCount = Math.floor(count/EMongo.limit) + 1;
 
+			self.locals.url = req.url.replace(/&page=\d*/, '');
+
 			self.locals.paginator = {
 				page: page,
 				first: Math.max(1, page-6),
 				last: Math.min(pagesCount, page+6),
-				total: pagesCount
+				total: pagesCount,
+				url: self.locals.url + (self.locals.url.indexOf('?') !== -1 ? '&' : '?') + 'page='
 			};
 
 			self.locals.count = count;
-			self.locals.url = req.url.replace(/&page=\d*/, '');
 
 			next.call(self);
 		});
