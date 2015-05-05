@@ -8,8 +8,8 @@ function ISODate(d){
 }
 
 module.exports = function(req, res){
-	var col = req.mongoMng.collection
-	,	dbpath = '/db/' + req.mongoMng.db.databaseName + '/';
+	var col = req.collection
+	,	dbpath = '/db/' + req.db.databaseName + '/';
 
 	if(req.body.id)
 		var query = {_id: req.mongoMng.parseId(req.body.id)};
@@ -24,7 +24,7 @@ module.exports = function(req, res){
 
 				res.locals.message = err.message;
 
-				req.mongoMng.getCollections(res.locals.dbname, function(err, collections){
+				req.db.getCollections(res.locals.dbname, function(err, collections){
 					res.render('collerror', {collections: collections});
 				});
 			});

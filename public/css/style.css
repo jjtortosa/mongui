@@ -110,7 +110,7 @@ thead th, .lcaption .thead th{
 }
 #rightC{
 	width: 85%;
-	padding: 0 0 0 8px;
+	padding: 0 8px;
 }
 .auto-height{
 	overflow-y: auto;

@@ -170,8 +170,12 @@ module.exports = function(app){
 			if(match && match[2]){
 				res.locals.dbname = match[2];
 
-				if(match[3])
+				req.db = req.mongoMng.useDb(match[2]);
+
+				if(match[3]){
 					res.locals.collection = match[3];
+					req.collection = req.db.collection(match[3]);
+				}
 			}
 		}
 

@@ -30,10 +30,10 @@ function EMongo(req){
 
 	this.dbname = this.locals.dbname;
 
-	this.db = req.mongoMng.useDb(this.dbname);
+	this.db = req.db;
 
 	if(this.locals.collection)
-		this.collection = this.db.collection(this.locals.collection);
+		this.collection = req.collection;
 }
 
 EMongo.limit = 10;
@@ -44,7 +44,7 @@ EMongo.prototype.process = function(next){
 
 	switch(this.locals.action){
 		case 'delete':
-			this.mng.collection.remove({_id: req.param('id')}, function(err, a){
+			this.collection.remove({_id: req.param('id')}, function(err, a){
 				req.res.send(err || a);
 			});
 			break;
@@ -58,7 +58,7 @@ EMongo.prototype.process = function(next){
 				if(!Object.keys(json).length)
 					return req.res.redirect(req.path);
 
-				this.mng.collection.insert(json, function(err, doc){
+				this.collection.insert(json, function(err, doc){
 					req.res.redirect(redirect + '&msg=ok');
 				});
 			} catch(e){
@@ -71,7 +71,7 @@ EMongo.prototype.process = function(next){
 			if(!query)
 				return req.res.json({error: 'Invalid query'});
 
-			this.mng.collection.find(query).explain(function(err, r){
+			this.collection.find(query).explain(function(err, r){
 				req.res.json(err || r);
 			});
 			break;
@@ -84,7 +84,7 @@ EMongo.prototype.process = function(next){
 					return next.call(this, new Error('Invalid query'));
 
 				this.getCollections(function(){
-					this.mng.collection.remove(query, function(err, r){
+					this.collection.remove(query, function(err, r){
 						if(err)
 							return next.call(self, err);
 
@@ -117,7 +117,7 @@ EMongo.prototype.dbStats = function(next){
 		case 'stats':
 			this.view = 'dbstats';
 
-			this.mng.db.stats(function(err, stats){
+			this.db.stats(function(err, stats){
 				self.locals.dbStats = sanitizePlainObj(stats);
 
 				next.call(self);
@@ -126,7 +126,7 @@ EMongo.prototype.dbStats = function(next){
 		case 'processlist':
 			this.view = 'processlistdb';
 
-			this.mng.db.collection('$cmd.sys.inprog').findOne({ns: new RegExp('^' + this.locals.dbname + '.')}, function(err, data){
+			this.db.collection('$cmd.sys.inprog').findOne({ns: new RegExp('^' + this.locals.dbname + '.')}, function(err, data){
 				self.locals.processlist = data.inprog;
 
 				next.call(self);
@@ -170,14 +170,14 @@ EMongo.prototype.colStats = function(next){
 	switch(this.locals.op){
 		case 'stats':
 			this.view = 'colstats';
-			this.mng.collection.stats(function(err, stats){
+			this.collection.stats(function(err, stats){
 				self.locals.stats = stats;
 
 				self.mng.admin().command({top:1}, function(err, top){
 					if(err)
 						return next.call(self, err);
 
-					self.locals.top = top.documents[0].totals[self.mng.db.databaseName + '.' + self.mng.collection.collectionName];
+					self.locals.top = top.documents[0].totals[self.db.databaseName + '.' + self.collection.collectionName];
 
 					next.call(self);
 				});
@@ -185,7 +185,7 @@ EMongo.prototype.colStats = function(next){
 			break;
 		case 'validate':
 			this.view = 'validate';
-			this.mng.db.command({validate: this.mng.collection.collectionName, full: true}, function(err, validate){
+			this.db.command({validate: this.collection.collectionName, full: true}, function(err, validate){
 				if(err)
 					return next.call(self, err);
 
@@ -196,7 +196,7 @@ EMongo.prototype.colStats = function(next){
 		case 'indexes':
 			this.view = 'indexes';
 
-			this.mng.collection.indexes(function(err, r){
+			this.collection.indexes(function(err, r){
 				if(err)
 					return next.call(self, err);
 
@@ -250,7 +250,7 @@ EMongo.prototype.getCollections = function(next){
 	var self = this
 	,	req = this.req;
 
-	this.locals.collections = [];
+	this.locals.collections = new Array();
 
 	this.mng.getCollections(this.dbname, function(err, collections){
 		if(err || !collections)
@@ -282,7 +282,7 @@ EMongo.prototype.processCollection = function(next){
 	,	sort = req.query.sort || {_id: -1};
 
 	this.locals.criteria = req.query.criteria || '{\n\t\n}';
-	this.locals.result = {};
+
 	this.locals.page = req.query.page || 1;
 
 	if(req.query.criteria){
@@ -311,36 +311,37 @@ EMongo.prototype.processCollection = function(next){
 		.sort(sort).limit(10)
 		.skip((page -1) * EMongo.limit);
 
-	cursor.each(function(err, r){
+	cursor.count(function(err, count){
 		if(err)
 			return next.call(self, err);
 
-		if(r)
-			return self.locals.result[r._id] = sanitize(r).html;
+		if(!count){
+			self.locals.message = 'No records found';
 
-		cursor.count(function(err, count){
+			return next.call(self);
+		}
+
+		var pagesCount = Math.floor(count/EMongo.limit) + 1;
+
+		self.locals.url = req.url.replace(/&page=\d*/, '');
+
+		self.locals.paginator = {
+			page: page,
+			first: Math.max(1, page-6),
+			last: Math.min(pagesCount, page+6),
+			total: pagesCount,
+			url: self.locals.url + (self.locals.url.indexOf('?') !== -1 ? '&' : '?') + 'page='
+		};
+
+		self.locals.count = count;
+		self.locals.result = new Object();
+
+		cursor.each(function(err, r){
 			if(err)
 				return next.call(self, err);
 
-			if(!count){
-				self.locals.message = 'No records found';
-
-				return next.call(self);
-			}
-
-			var pagesCount = Math.floor(count/EMongo.limit) + 1;
-
-			self.locals.url = req.url.replace(/&page=\d*/, '');
-
-			self.locals.paginator = {
-				page: page,
-				first: Math.max(1, page-6),
-				last: Math.min(pagesCount, page+6),
-				total: pagesCount,
-				url: self.locals.url + (self.locals.url.indexOf('?') !== -1 ? '&' : '?') + 'page='
-			};
-
-			self.locals.count = count;
+			if(r)
+				return self.locals.result[r._id] = sanitize(r).html;
 
 			next.call(self);
 		});
