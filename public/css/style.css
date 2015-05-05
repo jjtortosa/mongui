@@ -106,6 +106,7 @@ thead th, .lcaption .thead th{
 	background-color: #eeefff;
 	border-right: 1px solid;
 	padding: 0 8px;
+	min-width: 150px;
 }
 #rightC{
 	width: 85%;

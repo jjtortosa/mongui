@@ -135,10 +135,6 @@ MongoMng.prototype.currentOp = function(q, cb){
 	});
 };
 
-MongoMng.prototype.setCollection = function(colname, cb){
-	this.collection = this.db.collection(colname);
-};
-
 MongoMng.prototype.parseId = function(id){
 	return MongoMng.parseId(id);
 };
@@ -174,13 +170,8 @@ module.exports = function(app){
 			if(match && match[2]){
 				res.locals.dbname = match[2];
 
-				req.mongoMng.useDb(match[2]);
-
-				if(match[3]){
+				if(match[3])
 					res.locals.collection = match[3];
-
-					req.mongoMng.setCollection(match[3]);
-				}
 			}
 		}
 

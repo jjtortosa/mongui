@@ -31,6 +31,9 @@ function EMongo(req){
 	this.dbname = this.locals.dbname;
 
 	this.db = req.mongoMng.useDb(this.dbname);
+
+	if(this.locals.collection)
+		this.collection = this.db.collection(this.locals.collection);
 }
 
 EMongo.limit = 10;
@@ -303,7 +306,7 @@ EMongo.prototype.processCollection = function(next){
 
 	var page = parseInt(req.query.page) || 1;
 
-	var cursor = this.mng.collection
+	var cursor = this.collection
 		.find(query, fields)
 		.sort(sort).limit(10)
 		.skip((page -1) * EMongo.limit);
