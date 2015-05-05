@@ -1,5 +1,7 @@
 {
 	"action": "Action",
+	"active": "Active",
+	"all": "All",
 	"allcoll": "All",
 	"collection": "Collection",
 	"collections": "Collections",

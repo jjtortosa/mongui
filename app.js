@@ -53,7 +53,7 @@ app.use(session(conf.cookieSession));
 app.use(require('./modules/setup'));
 app.use(require('./modules/access'));
 app.use(require('./modules/multilang')(app));
-app.use(require('./modules/mongomng'));
+app.use(require('./modules/mongomng')(app));
 
 app.use('/', routes);
 

@@ -3,9 +3,9 @@ form
 		input(name="op",type="hidden",value=op)
 
 	input#p-all(type="radio",name="all",value="1",checked=all,onchange="this.form.submit()")
-	label(for="p-all") Todos
+	label.radio(for="p-all")=ml.all
 	input#p-active(type="radio",name="all",value="0",checked=!all,onchange="this.form.submit()")
-	label(for="p-active") Sólo activos
+	label.radio(for="p-active")=ml.active
 	
 
 table.lcaption

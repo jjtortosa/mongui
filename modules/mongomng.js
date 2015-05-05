@@ -49,9 +49,6 @@ MongoMng.prototype.admin = function(){
 };
 
 MongoMng.prototype.listDbs = function(cb){
-	if(this.databases)
-		return cb.call(self, null, this.databases);
-
 	var self = this
 	,	count = 0;
 
@@ -66,23 +63,21 @@ MongoMng.prototype.listDbs = function(cb){
 				db.collections = collections.length;
 
 				if(++count === result.databases.length)
-					cb.call(self, null, self.databases);
+					cb.call(self, null, result.databases);
 			});
 		});
 
 		result.databases.sort(function(a,b){
 			return a.name > b.name ? 1 : -1;
 		});
-
-		self.databases = result.databases;
 	});
 };
 
-MongoMng.prototype.getCollections = function(cb){
+MongoMng.prototype.getCollections = function(db, cb){
 	var self = this
 	,	collections = [];
 
-	this.db.collections(function(err, r){
+	this.useDb(db).collections(function(err, r){
 		if(err)
 			return cb.call(self, err);
 
@@ -153,36 +148,43 @@ MongoMng.parseId = function(id){
 };
 
 
-module.exports = function(req, res, next){
-	res.locals.reqpath = req.path;
-
-	var conf = req.app.get('conf')
-	,	uri = 'mongodb://';
-
-	if(conf.mongouser && conf.mongopass)
-		uri += conf.mongouser + ':' + conf.mongopass + '@';
-
-	var match = decodeURI(req.path).match(/^\/(db|import)\/([^\/]+)\/?([^\/]*)/);
-
-	if(match){
-		res.locals.dbname = match && match[2];
-		res.locals.collection = match && match[3];
-	}
-
-	uri += (conf.host || 'localhost') + (res.locals.dbname ? '/' + res.locals.dbname : '');
+module.exports = function(app){
+	var conf = app.get('conf')
+	,	uri = 'mongodb://' + (conf.host || 'localhost');
 
 	MongoClient.connect(uri, function(err, db){
 		if(err)
-			return next(err);
+			return console.error(err);
 
-		req.mongoMng = new MongoMng(db);
+		var mongoMng = new MongoMng(db);
 
-		if(res.locals.collection)
-			req.mongoMng.setCollection(res.locals.collection);
+		app.set('mongoMng', mongoMng);
+
+		console.info('MongoDb - Connected');
+
+		app.emit('dbconnected');
+	});
+
+	return function(req, res, next){
+		req.mongoMng = app.get('mongoMng');
+
+		var match = decodeURI(req.path).match(/^\/(db|import)\/([^\/]+)\/?([^\/]*)/);
+
+		if(match){
+			if(match && match[2]){
+				res.locals.dbname = match[2];
+
+				req.mongoMng.useDb(match[2]);
+
+				if(match[3]){
+					res.locals.collection = match[3];
+
+					req.mongoMng.setCollection(match[3]);
+				}
+			}
+		}
 
 		res.locals.path = req.path;
-
-		debug('MongoDb - Connected' + (res.locals.dbname ? ' to db "' + res.locals.dbname + '"' : ''))	;
 
 		if(req.path === 'login' || (req.method === 'post' && req.path.indexOf('import') !== 1))
 			return next();
@@ -195,7 +197,7 @@ module.exports = function(req, res, next){
 
 			next(err);
 		});
-	});
+	};
 };
 
 function human(n){

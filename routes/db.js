@@ -27,6 +27,10 @@ function EMongo(req){
 
 	if(!this.locals.collection && !this.locals.op)
 		this.locals.op = 'stats';
+
+	this.dbname = this.locals.dbname;
+
+	this.db = req.mongoMng.useDb(this.dbname);
 }
 
 EMongo.limit = 10;
@@ -245,7 +249,7 @@ EMongo.prototype.getCollections = function(next){
 
 	this.locals.collections = [];
 
-	this.mng.getCollections(function(err, collections){
+	this.mng.getCollections(this.dbname, function(err, collections){
 		if(err || !collections)
 			return next.call(self, err, collections);
 

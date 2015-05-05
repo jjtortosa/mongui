@@ -24,7 +24,7 @@ module.exports = function(req, res){
 
 				res.locals.message = err.message;
 
-				req.mongoMng.getCollections(function(err, collections){
+				req.mongoMng.getCollections(res.locals.dbname, function(err, collections){
 					res.render('collerror', {collections: collections});
 				});
 			});

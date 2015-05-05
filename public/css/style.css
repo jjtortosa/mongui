@@ -227,3 +227,7 @@ ul.list li{
 #coll-export input[type="submit"]{
 	margin: 20px 0;
 }
+
+label.radio{
+	margin-right: 10px;
+}
