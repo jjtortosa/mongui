@@ -38,4 +38,6 @@ router.get('/:sec', function(req, res, next){
 	}
 });
 
+router.post('/ajax/:op', require('./ajax'));
+
 module.exports = router;

@@ -1,7 +1,7 @@
 extends collection
 
 block collection-content
-	table#indexes.lcaption(style="width:auto")
+	table#indexes.lcaption(style="width:auto",data-drop-msg=ml.dropIndexConfirm)
 		thead
 			tr
 				th=ml.name
@@ -18,5 +18,5 @@ block collection-content
 								li=k+': '+v
 					td=i.unique&&"✓"
 					td
-						a(href="#drop-todo")=ml.drop
+						a.drop(href="#",data-name=i.name)=ml.drop
 								

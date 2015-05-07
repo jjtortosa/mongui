@@ -202,6 +202,11 @@ EMongo.prototype.colStats = function(next){
 
 				self.locals.indexes = r;
 
+				if(!self.locals.scripts)
+					self.locals.scripts = [];
+
+				self.locals.scripts.push('/js/indexes.js');
+
 				next.call(self);
 			});
 

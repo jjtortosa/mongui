@@ -361,7 +361,7 @@ $(function(){
 	});
 
 	$('[href="truncate"]').click(function() {
-		if(confirm($(this).attr('data-msg').replace('%s', collection))){
+		if(confirm(this.dataset.msg.replace('%s', collection))){
 			$('#op').val('truncate');
 
 			$('#post').submit();
@@ -370,7 +370,7 @@ $(function(){
 	});
 
 	$('[href="drop"]').click(function() {
-		if(confirm($(this).attr('data-msg').replace('%s', collection))){
+		if(confirm(this.dataset.msg.replace('%s', collection))){
 			$('#op').val('drop');
 
 			$('#post').submit();
@@ -379,7 +379,7 @@ $(function(){
 	});
 
 	$('#db-repair').click(function() {
-		if(confirm($(this).attr('data-msg').replace('%s', db))){
+		if(confirm(this.dataset.msg.replace('%s', db))){
 			var data = {
 				command: '{repairDatabase: 1}',
 				db: $('[name="db"]').val()
@@ -399,7 +399,7 @@ $(function(){
 	});
 
 	$('#dropdb').click(function() {
-		if(confirm($(this).attr('data-msg').replace('%s', db))){
+		if(confirm(this.dataset.msg.replace('%s', db))){
 			$('#dbop').val('dropdb');
 
 			$('#post').submit();

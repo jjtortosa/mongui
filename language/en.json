@@ -8,6 +8,7 @@
 	"browse": "Browse",
 	"dbs": "Databases",
 	"drop": "Drop",
+	"dropIndexConfirm": "Are you sure to drop the index '%s'?",
 	"home": "Home",
 	"importSuccess": "Data has been imported successfully",
 	"indexes": "Indexes",

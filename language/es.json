@@ -8,6 +8,7 @@
 	"browse": "Consultar",
 	"dbs": "Bases de datos",
 	"drop": "Eliminar",
+	"dropIndexConfirm": "¿Estás seguro de eliminar el índice '%s'?",
 	"home": "Inicio",
 	"importSuccess": "La importación se ha realizado con éxito",
 	"indexes": "Índices",
