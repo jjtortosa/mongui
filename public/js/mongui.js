@@ -2,35 +2,35 @@
 $(function(){
 	var db = $('#db').val(),
 		collection = $('#collection').val();
-	
+
 	$('.exp').click(function(){
 		var title = $(this).html() === 'Expandir' ? 'Colapsar' : 'Expandir';
-		
+
 		$(this).html(title).parents('.result-box').find('.result').toggleClass('expanded');
 		return false;
 	});
-	
+
 	$(document).click(function(){
 		$('#field_menu').hide();
 	});
-	
+
 	$('#query-form').submit(function(){
 		var $f = $(this);
-		
+
 		$('#sort-order [name^="sortFields"]').each(function(){
 			if(this.value)
 				$f.append('<input type="hidden" name="sort[' + this.value + ']" value="' + $(this).next().val() + '"/>');
 		});
 	});
-	
+
 	$('#results').on('click', '[data-action="delete-row"]', function(e){
 		e.preventDefault();
-		
+
 		var id = $(this).parents('.result-box:first')[0].id;
-		
+
 		if(!confirm('Are you sure to delete the item with id "' + id + '"?'))
 			return;
-		
+
 		$.ajax({
 			data: {
 				op: 'deleteRow',
@@ -42,27 +42,27 @@ $(function(){
 		}).done(function(d){
 			if(d.error)
 				return $.alert(d.error);
-			
+
 			if(d.affected === 1){
 				$('#' + id).slideUp();
-				
+
 				//actualizamos número de registros en la colección
 				var $numspan = $('#collections>.active>span');
-				
+
 				$numspan.text($numspan.text().replace(/\d+/, function(n){ return --n; }));
 			}
 		});
 	}).on('click', '[data-action="new-field"]', function(e){
 		e.preventDefault();
-		
+
 		fieldMethods.fieldCreate({
 			id: $(this).parents('.result-box:first')[0].id
 		});
 	}).on('click', '[data-action="duplicate"]', function(e){
 		e.preventDefault();
-		
+
 		var id = $(this).parents('.result-box:first')[0].id;
-		
+
 		$.ajax({
 			data: {
 				op: 'duplicate',
@@ -74,52 +74,52 @@ $(function(){
 		}).done(function(d){
 			if(d.error)
 				return $.alert(d.error);
-			
+
 			$('#criteria').val('{\n\t_id: ObjectId("' + d._id + '")\n}');
 			$('#actsel').val(['find']);
-			
+
 			$('#query-form').submit();
 		});
 	}).on('click', '.r-key', function(){
 		$('.r-key.selected').removeClass('selected');
-		
+
 		var $a = $(this).addClass('selected'),
 			pos = $a.position();
-		
+
 		if($a.text() !== '_id'){
 			pos.left += $a.width() + 4;
 
 			$('#field_menu').css(pos).show().data({target: $a});
 		}
-		
+
 		return false;
 	}).on('click', '.moretext', function(e){
 		e.preventDefault();
-		
+
 		var $a = $('#field_menu a[href="#fieldUpdate"]');
-		
+
 		$a.parent().data('target', $(this).parent().prev());
-		
+
 		$a.click();
 	});
-	
+
 	$('#field_menu a').click(function(){
 		var $a = $(this),
 			$target = $a.parent().data('target'),
 			func = $a.attr('href').substr(1),
 			parent = $target.attr('data-parent');
-		
+
 		$a.parent().hide();
-	
+
 		fieldMethods[func]({
 			field: (parent ? parent + '.' : '') + $target.text(),
 			id: $target.parents('.result-box:first').attr('id'),
 			target: $target
 		});
-		
+
 		return false;
 	});
-	
+
 	var $updateDialog = $('#update-dialog').dialog({
 		autoOpen: false,
 		width: 540,
@@ -135,7 +135,7 @@ $(function(){
 			}
 		}
 	});
-	
+
 	var fieldMethods = {
 		fieldCreate: function(o){
 			var data = {
@@ -144,18 +144,18 @@ $(function(){
 				db: db,
 				collection: collection
 			};
-			
+
 			$('#dialog-field-name').show();
-			
+
 			$('#data_key').val('');
-			
+
 			var $dt = $('#data_type');
-			
+
 			if(!$dt.val())
 				$dt.val('');
-			
+
 			$dt.change();
-			
+
 			$('#update-dialog')
 				.dialog('open')
 				.dialog('option', 'title', 'Add new field')
@@ -168,11 +168,11 @@ $(function(){
 		},
 		fieldUpdate: function(o){
 			$('#data_key').val(o.field);
-			
-			fieldMethods.getField(o.id, o.field, function(d){
+
+			fieldMethods.getField(o.id, o.field, function(d){console.log(d)
 				$('#data_type').val(d.inputType).change();
 				$('#data_value').attr('data-name', o.field).attr('data-id', o.id);
-				
+
 				switch(d.inputType){
 					case 'mixed':
 					case 'string':
@@ -187,9 +187,9 @@ $(function(){
 					default:
 						$('#data_value input').val(d.val);
 				}
-			
+
 				$('#dialog-field-name').hide();
-				
+
 				$('#update-dialog')
 					.dialog('open')
 					.dialog('option', 'title', 'Modify field "' + o.field + '"')
@@ -200,30 +200,30 @@ $(function(){
 			$('#sort-order [name^="sortFields"]').each(function(){
 				this.value = '';
 			});
-			
+
 			$('#sort-order [name="sortFields[0]"]')
 				.val(o.field)
 				.next().val([1]);
-		
+
 			$('#query-form').submit();
 		},
 		fieldSortDesc: function(o){
 			$('#sort-order [name^="sortFields"]').each(function(){
 				this.value = '';
 			});
-			
+
 			$('#sort-order [name="sortFields[0]"]')
 				.val(o.field)
 				.next().val([-1]);
-		
+
 			$('#query-form').submit();
 		},
 		fieldRename: function(o){
 			var name = prompt('New name for field ' + o.field);
-			
+
 			if(!name)
 				return;
-			
+
 			$.ajax({
 				url: '/db/' + db + '/' + collection,
 				data: {
@@ -238,14 +238,14 @@ $(function(){
 			}).done(function(d){
 				if(d.error)
 					return $.alert(d.error);
-			
+
 				o.target.html(name);
 			});
 		},
 		fieldRemove: function(o){
 			if(!confirm('Are you sure to remove field "' + o.field + '"?'))
 				return;
-			
+
 			$.ajax({
 				url: '/db/' + db + '/' + collection,
 				data: {
@@ -262,12 +262,12 @@ $(function(){
 
 				if(d.affected === 1){
 					$(o.target[0].nextSibling).remove();//text node ': '
-					
+
 					o.target.next().remove();//span content value
-					
+
 					if(o.target[0].previousSibling.nodeValue[0]===',')
 						$(o.target[0].previousSibling).remove();
-					
+
 					o.target.remove();
 				}
 			});
@@ -293,10 +293,10 @@ $(function(){
 					value: $('#data_value').find('>*').val(),
 					type: $('#data_type').val()
 				};
-			
+
 			if(!data.field)
 				return $.alert('No name');
-			
+
 			$.ajax({
 				url: '/db/' + db + '/' + collection,
 				data: data,
@@ -304,25 +304,25 @@ $(function(){
 			}).done(function(d){
 				if(d.error)
 					return $.alert(d.error);
-				
+
 				if(!$target){//es un nuevo campo
 					var $last = $('#' + data.id + '>.result>span:last');
-					
+
 					$last.append(',\n\t');
-					
+
 					$target = $('<a class="r-key" href="#" data-type="' + data.type + '">' + data.key + '</a>')
 						.insertAfter($last);
-				
+
 					$target.after(': <span>');
 				}
-				
+
 				$target.next().html(data.value);
-				
+
 				cb();
 			});
 		}
 	};
-	
+
 	$('#data_type').change(function(){
 		var val = $(this).val(),
 			$dv = $('#data_value').empty().parent().toggle(val !== 'null').end();
@@ -345,7 +345,7 @@ $(function(){
 
 	$('form#command').submit(function(e){
 		e.preventDefault();
-	
+
 		$.ajax({
 			url: '/command',
 			type: 'post',
@@ -356,35 +356,35 @@ $(function(){
 		}).done(function(d){
 			$('#command-result').show().find('pre').text(JSON.stringify(d, null, '\t'));
 		});
-		
+
 		return false;
 	});
-	
+
 	$('[href="truncate"]').click(function() {
 		if(confirm($(this).attr('data-msg').replace('%s', collection))){
 			$('#op').val('truncate');
-			
+
 			$('#post').submit();
 		}
 		return false;
 	});
-	
+
 	$('[href="drop"]').click(function() {
 		if(confirm($(this).attr('data-msg').replace('%s', collection))){
 			$('#op').val('drop');
-			
+
 			$('#post').submit();
 		}
 		return false;
 	});
-	
+
 	$('#db-repair').click(function() {
 		if(confirm($(this).attr('data-msg').replace('%s', db))){
 			var data = {
 				command: '{repairDatabase: 1}',
 				db: $('[name="db"]').val()
 			};
-			
+
 			$.ajax({
 				url: '/command',
 				type: 'post',
@@ -397,20 +397,20 @@ $(function(){
 		}
 		return false;
 	});
-	
+
 	$('#dropdb').click(function() {
 		if(confirm($(this).attr('data-msg').replace('%s', db))){
 			$('#dbop').val('dropdb');
-			
+
 			$('#post').submit();
 		}
-		
+
 		return false;
 	});
-	
+
 	if($('.result-box').size() === 1)
 		$('.exp').click();
-	
+
 	$('#explain').click(function(){
 		$.ajax({
 			url: location.pathname,
@@ -421,32 +421,32 @@ $(function(){
 		}).done(function(d){
 			if(d.error)
 				return $.alert(d.error);
-			
+
 			$('.paginator').remove();
-			
+
 			var $r = $('#results').empty()
 			,	$t = $('<table style="width:auto" class="lcaption"><thead><tr><th colspan="2">explain()</th></tr></thead><tbody></tbody></table>')
 					.appendTo($r).find('tbody');
-			
+
 			$.each(d, function(k){
 				$t.append('<tr><th>' + k + '</td><td><pre>' + JSON.stringify(this, null, '\t') + '</pre></td></tr>');
 			});
 		});
 	});
-	
+
 	$(window).resize(function(){
 		$('#leftC .auto-height').height($(this).height()-28);
 		$('#rightC .auto-height').height($(this).height()-54);
 	}).resize();
-	
+
 	$('#command-examples a').click(function(){
 		$('[name="command"]').val($(this).html());
-		
+
 		$('#command').submit();
-		
+
 		return false;
 	});
-	
+
 	var $msgDialog = $('#msg-dialog').dialog({
 		autoOpen: false,
 		title: 'Mongui',
@@ -457,7 +457,7 @@ $(function(){
 			}
 		}
 	});
-	
+
 	$.alert = function(msg){
 		$msgDialog.find('#msg-body').html(msg).end().dialog('open');
 	};

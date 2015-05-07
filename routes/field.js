@@ -4,10 +4,13 @@ var ObjectId = require('mongodb').ObjectID,
 	MongoDoc = require('../modules/mongodoc');
 
 module.exports = function(req, res, next){
-	var col = req.mongoMng.db.collection(req.params.collection)
+	if(!ObjectId.isValid(req.params.id))
+		return next();
+
+	var col = req.collection
 	,	fields = {_id: false}
 	,	field = req.params.field
-	,	id = req.mongoMng.parseId(req.params.id);
+	,	id = ObjectId(req.params.id);
 
 	fields[field] = true;
 
