@@ -55,8 +55,8 @@ thead th, .lcaption .thead th{
 }
 .breadcrumb{
 	font-size: 1.12em;
-	margin: 4px;
-	padding: 4px;
+	margin: 4px 0;
+	padding: 4px 0;
 	border-bottom: 1px solid #5f6d9a;
 }
 .dbplus{
@@ -70,8 +70,8 @@ thead th, .lcaption .thead th{
 }
 .actions{
 	border-bottom: 1px solid;
-	padding: 4px;
-	margin: 4px;
+	padding: 4px 0;
+	margin: 4px 0;
 }
 .header{
 	position: fixed;
@@ -195,7 +195,9 @@ textarea{
 #indexes tr td:nth-child(n+3){
 	text-align: center;
 }
-
+#duplicate_tr{
+	display: none;
+}
 #dbs li a{
 	display: block;
 	padding: 3px 3px 3px 20px;

@@ -13,7 +13,6 @@ block content
 	form#post(style="display:none",method="post",action="/db/"+dbname+"/"+collection)
 		input#op(type="hidden",name="op")
 	.actions
-		br
 		a(href="/db/"+dbname+"/"+collection,class={active:!op})=ml.browse
 		|  | 
 		a(href="/db/"+dbname+"/"+collection+"/insert",class={active:op==="insert"})=ml.insert

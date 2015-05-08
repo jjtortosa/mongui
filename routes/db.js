@@ -211,6 +211,11 @@ EMongo.prototype.colStats = function(next){
 			});
 
 			break;
+		case 'create-index':
+			this.view = 'create-index';
+			self.locals.scripts.push('/js/create-index.js');
+			next.call(self);
+			break;
 		case 'rename':
 			this.view = 'rename';
 			next.call(this);

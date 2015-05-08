@@ -1,6 +1,8 @@
 extends collection
 
 block collection-content
+	.actions
+		a(href="create-index")=ml.createIndex
 	table#indexes.lcaption(style="width:auto",data-drop-msg=ml.dropIndexConfirm)
 		thead
 			tr

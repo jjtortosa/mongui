@@ -78,7 +78,6 @@ module.exports = function(req, res){
 			});
 			break;
 		case 'deleteRow':
-			console.log(query);
 			col.remove(query, function(err, r){
 				res.send({error: err && err.message, affected: r});
 			});
@@ -111,8 +110,6 @@ module.exports = function(req, res){
 			break;
 
 		case 'duplicate':
-//			console.log(req.body)
-
 			col.findOne(query, function(err, doc){
 				if(err)
 					return res.send({error: err});
@@ -141,6 +138,47 @@ module.exports = function(req, res){
 					return res.json({error: err.message});
 
 				res.json(r === 1 ? req.body.name : {error: 'not modified'});
+			});
+			break;
+
+		case 'create-index':
+			var fields = req.body.fields
+			,	order = req.body.order;
+
+			if(typeof fields === 'string')
+				fields = [fields];
+
+			if(typeof order === 'string')
+				order = [order];
+
+			var attr = {};
+
+			fields.forEach(function(field, i){
+				attr[field] = order[i] === 'asc' ? 1 : -1;
+			});
+
+			var options = {
+				background: 1,
+				safe: 1
+			};
+
+			if(req.body.is_unique){
+				options.unique = 1;
+
+				if(req.body.drop_duplicate)
+					options.dropDups = 1;
+			}
+
+			var name = req.body.name.trim();
+
+			if(name)
+				options.name = name;
+
+			col.ensureIndex(attr, options, function(err, name){
+				if(err)
+					return next(err);
+
+				res.redirect(req.path + '/indexes');
 			});
 			break;
 
