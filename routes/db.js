@@ -1,4 +1,4 @@
-/* global require, module */
+/* global require, module, Error */
 
 "use strict";
 
@@ -288,13 +288,16 @@ EMongo.prototype.processCollection = function(next){
 	var self = this
 	,	req = this.req
 	,	query = {}
-	,	fields = req.query.fields || {}
+	,	fields = req.query.fields || []
 	,	sort = req.query.sort || {_id: -1};
 
 	this.locals.criteria = req.query.criteria || '{\n\t\n}';
 
 	this.locals.page = req.query.page || 1;
 
+	if(typeof fields === 'string')
+		fields = [fields];
+	console.log(req.query.fields)
 	if(req.query.criteria){
 		query = this.getQuery();
 
@@ -306,6 +309,7 @@ EMongo.prototype.processCollection = function(next){
 	}
 
 	this.locals.sortFields = new Array(4);
+	this.locals.fields = fields;
 
 	var i = 0;
 
@@ -321,40 +325,63 @@ EMongo.prototype.processCollection = function(next){
 		.sort(sort).limit(10)
 		.skip((page -1) * EMongo.limit);
 
-	cursor.count(function(err, count){
+	this.nativeFields(function(err, nativeFields){
 		if(err)
 			return next.call(self, err);
-
-		if(!count){
-			self.locals.message = 'No records found';
-
-			return next.call(self);
-		}
-
-		var pagesCount = Math.floor(count/EMongo.limit) + 1;
-
-		self.locals.url = req.url.replace(/&page=\d*/, '');
-
-		self.locals.paginator = {
-			page: page,
-			first: Math.max(1, page-6),
-			last: Math.min(pagesCount, page+6),
-			total: pagesCount,
-			url: self.locals.url + (self.locals.url.indexOf('?') !== -1 ? '&' : '?') + 'page='
-		};
-
-		self.locals.count = count;
-		self.locals.result = new Object();
-
-		cursor.each(function(err, r){
+		
+		self.locals.nativeFields = nativeFields;
+		
+		cursor.count(function(err, count){
 			if(err)
 				return next.call(self, err);
 
-			if(r)
-				return self.locals.result[r._id] = sanitize(r).html;
+			if(!count){
+				self.locals.message = 'No records found';
 
-			next.call(self);
+				return next.call(self);
+			}
+
+			var pagesCount = Math.floor(count/EMongo.limit) + 1;
+
+			self.locals.url = req.url.replace(/&page=\d*/, '');
+
+			self.locals.paginator = {
+				page: page,
+				first: Math.max(1, page-6),
+				last: Math.min(pagesCount, page+6),
+				total: pagesCount,
+				url: self.locals.url + (self.locals.url.indexOf('?') !== -1 ? '&' : '?') + 'page='
+			};
+
+			self.locals.count = count;
+			self.locals.result = new Object();
+
+			cursor.each(function(err, r){
+				if(err)
+					return next.call(self, err);
+
+				if(r)
+					return self.locals.result[r._id] = sanitize(r).html;
+
+				next.call(self);
+			});
 		});
+	});
+};
+
+EMongo.prototype.nativeFields = function(cb){
+	this.collection.findOne(function(err, doc){
+		if(err || !doc)
+			return cb(err);
+		
+		var fields = new Array();
+		
+		Object.keys(doc).forEach(function(k){
+			if(k !== '_id')
+				fields.push(k);
+		});
+		
+		cb(null, fields);
 	});
 };
 

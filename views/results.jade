@@ -1,29 +1,38 @@
 extends collection
 
 block collection-content
-	#query-form-container
-		form#query-form
-			textarea#criteria(name="criteria",rows="5",cols="70")=criteria
-			br.clear
-			input(type="submit")
-			|  | 
-			input#explain(type="button",value=ml.explain)
-			|  | 
-			label(for="actsel")=ml.action+": "
-			select#actsel(name="action")
-				option find
-				option(selected=action==="remove") remove
-				option(selected=action==="update") update
+	form#query-form
+		table
+			tr#query-form-container
+				td
+					textarea#criteria(name="criteria",rows="5",cols="50")=criteria
+					br.clear
+					input(type="submit")
+					|  | 
+					input#explain(type="button",value=ml.explain)
+					|  | 
+					label(for="actsel")=ml.action+": "
+					select#actsel(name="action")
+						option find
+						option(selected=action==="remove") remove
+						option(selected=action==="update") update
 		
-		if sortFields
-			#sort-order=ml.sort
-				each s,i in sortFields
-					div
-						input(name="sortFields["+i+"]",value=s&&s.name)
-						select(name="order["+i+"]")
-							option(value="1") ASC
-							option(value="-1",selected=s&&s.order===-1) DESC
-		br.clear
+				if sortFields
+					td=ml.sort
+						#sort-order
+							each s,i in sortFields
+								div
+									input(name="sortFields["+i+"]",value=s&&s.name)
+									select(name="order["+i+"]")
+										option(value="1") ASC
+										option(value="-1",selected=s&&s.order===-1) DESC
+
+				td#native-fields=ml.fields
+					ul
+						each field in nativeFields
+							li: label
+								input(type="checkbox",name="fields",value=field,checked=fields.indexOf(field)!==-1)
+								=field
 	
 	if result
 		.paginator

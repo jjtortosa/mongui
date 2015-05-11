@@ -133,20 +133,38 @@ textarea{
 .lcaption tbody th:after{
 	content: ': ';
 }
+#query-form{
+	text-align: center;
+}
 #query-form-container{
 	padding: 8px;
 	background-color: #eeefff;
 }
-#query-form{
-	float: left;
-}
 #sort-order{
 	text-align: center;
-	display: inline-block;
-	margin-left: 12px;
+	width: 212px;
 }
 #sort-order>*>*{
 	margin: 2px;
+}
+#native-fields{
+	margin-left: 12px;
+}
+#native-fields ul{
+	background-color: #fff;
+	border: 1px inset;
+	min-height: 86px;
+	overflow: auto;
+	text-align: left;
+	min-width: 220px;
+}
+#native-fields li{
+	display: inline-block;
+	margin-right: 16px;
+	min-width: 90px;
+}
+#native-fields label{
+	display: inline-block;
 }
 #field_menu{
 	display: none;

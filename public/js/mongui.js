@@ -21,6 +21,8 @@ $(function(){
 			if(this.value)
 				$f.append('<input type="hidden" name="sort[' + this.value + ']" value="' + $(this).next().val() + '"/>');
 		});
+	}).find('[name="fields"]').change(function(){
+		$(this.form).submit();
 	});
 
 	$('#results').on('click', '[data-action="delete-row"]', function(e){
@@ -135,6 +137,8 @@ $(function(){
 			}
 		}
 	});
+	
+	var fields;
 
 	var fieldMethods = {
 		fieldCreate: function(o){
@@ -169,7 +173,7 @@ $(function(){
 		fieldUpdate: function(o){
 			$('#data_key').val(o.field);
 
-			fieldMethods.getField(o.id, o.field, function(d){console.log(d)
+			fieldMethods.getField(o.id, o.field, function(d){
 				$('#data_type').val(d.inputType).change();
 				$('#data_value').attr('data-name', o.field).attr('data-id', o.id);
 
@@ -276,10 +280,32 @@ $(function(){
 			console.error('Todo: fieldClear');
 		},
 		fieldHide: function(o){
-			console.error('Todo: fieldHide');
+			fieldMethods.getFields();
+			
+			if(fields.indexOf(o.field) === -1)
+				return;
+			
+			location.search = location.search.replace(new RegExp('[\\?&]fields=' + o.field), '');
 		},
 		fieldShow: function(o){
-			console.error('Todo: fieldShow');
+			fieldMethods.getFields();
+			
+			if(fields.indexOf(o.field) !== -1)
+				return;
+			
+			location.search += (location.search ? '&' : '?' ) + 'fields=' + o.field;
+		},
+		getFields: function(){
+			if(fields)
+				return fields;
+			
+			fields = location.search.match(/fields=[^&]+/g) || [];
+			
+			fields.forEach(function(field, i){
+				fields[i] = field.replace(/fields=/, '');
+			});
+			
+			return fields;
 		},
 		doUpdate: function(cb){
 			var ddata = $updateDialog.data()
