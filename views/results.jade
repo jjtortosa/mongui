@@ -26,13 +26,13 @@ block collection-content
 									select(name="order["+i+"]")
 										option(value="1") ASC
 										option(value="-1",selected=s&&s.order===-1) DESC
-
-				td#native-fields=ml.fields
-					ul
-						each field in nativeFields
-							li: label
-								input(type="checkbox",name="fields",value=field,checked=fields.indexOf(field)!==-1)
-								=field
+				if(nativeFields)
+					td#native-fields=ml.fields
+						ul
+							each field in nativeFields
+								li: label
+									input(type="checkbox",name="fields",value=field,checked=fields.indexOf(field)!==-1)
+									=field
 	
 	if result
 		.paginator
