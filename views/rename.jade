@@ -3,14 +3,12 @@ extends collection
 block collection-content
 	form(method="post",action=path)
 		br
-		label Renombrar 
-			span='"'+collection+'"'
-		br
-		br
-		label Nombre: 
-			input(name="name",required)
-		br
-		br
+		p=ml.rename 
+			span=' "'+collection+'"'
+		p
+			label Nombre: 
+				input(name="name",required)
+
 		input(type="hidden",name="op",value="renameCollection")
 		input(type="hidden",name="db",value=dbname)
 		input(type="hidden",name="collection",value=collection)

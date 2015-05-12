@@ -182,7 +182,43 @@ module.exports = function(req, res){
 			});
 			break;
 
+		case 'duplicateCollection':
+			col.indexes(function(err, r){//return res.send(req.body)
+				if(err)
+					return next(err);
+				
+				var error
+				,	count = 0
+				,	newcol = req.db.collection(req.body.name);
+				
+				r.forEach(function(idx){
+					var options = {};
+					
+					['unique', 'name', 'background', 'dropDups'].forEach(function(n){
+						if(idx[n] !== undefined)
+							options[n] = idx[n];
+					});
+					
+					
+					newcol.ensureIndex(idx.key, options, function(err){
+						if(err)
+							return error = err;
+						
+						if(++count === r.length)
+							doCopyCollection();
+					});
+				});
+				
+				function doCopyCollection(){
+					if(err)
+						return next(err);
+					
+					req.db.command('')
+				}
+			});
+			break;
+			
 		default:
-			res.send('Op "' + req.body.op + '" not found');
+			res.send('Collection: Op "' + req.body.op + '" not found');
 	}
 };
