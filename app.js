@@ -28,6 +28,9 @@ confLocations.some(function(loc){
 	return !!(file = fs.existsSync(loc) && loc);
 });
 
+if(!file)
+	throw new Error('Config file not found');
+
 var conf = require(file);
 
 console.info('Config file "%s" loaded', file);
