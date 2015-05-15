@@ -7,7 +7,7 @@ block content
 		a.icon.icon-db(href="/db/"+dbname)=dbname
 		span.gtt  
 		span.icon.icon-collection=collection
-
+	#header-sep
 	input#db(type="hidden",value=dbname)
 	input#collection(type="hidden",value=collection)
 	form#post(style="display:none",method="post",action="/db/"+dbname+"/"+collection)

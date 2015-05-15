@@ -64,7 +64,10 @@ html
 							a(href="/replication",class={active: path==="/replication"})=ml.replication
 						#header-sep
 
-					block content
+						#content
+							block content
+					else
+						block content
 		
 		footer
 			a(href="/readme") Readme

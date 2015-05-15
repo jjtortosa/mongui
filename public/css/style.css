@@ -53,11 +53,14 @@ table.lcaption td{
 thead th, .lcaption .thead th{
 	background-color: #eee;
 }
-.breadcrumb{
-	font-size: 1.12em;
-	margin: 4px 0;
-	padding: 4px 0;
+.breadcrumb, .header{
 	border-bottom: 1px solid #5f6d9a;
+	background-color: whitesmoke;
+	padding: 4px;
+	font-size: 1.12em;
+	position: fixed;
+	margin-top: 0;
+	width: 100%;
 }
 .dbplus{
 	display: block;
@@ -66,20 +69,14 @@ thead th, .lcaption .thead th{
 .result-box{
 	padding: 0 4px;
 	border: 2px solid gray;
-	margin: 5px 0;
+	margin: 5px;
 }
 .actions{
 	border-bottom: 1px solid;
-	padding: 4px 0;
-	margin: 4px 0;
+	padding: 4px;
+	margin-top: 4px;
 }
 .header{
-	position: fixed;
-	background-color: whitesmoke;
-	margin-top: 0;
-	width: 100%;
-	padding: 4px;
-	border-bottom: 1px solid #ccc;
 }
 #header-sep{
 	height: 25px;
@@ -110,7 +107,10 @@ thead th, .lcaption .thead th{
 }
 #rightC{
 	width: 85%;
-	padding: 0 8px;
+	padding: 0;
+}
+#content{
+	padding: 8px;
 }
 .auto-height{
 	overflow-y: auto;
