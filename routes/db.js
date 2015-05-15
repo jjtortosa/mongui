@@ -156,7 +156,19 @@ EMongo.prototype.dbStats = function(next){
 			break;
 		case 'auth':
 			this.view = 'dbauth';
-			next.call(this);
+			this.db.collection('system.users').find(function(err, users){
+				self.locals.users = [];
+				
+				users.each(function(err, user){
+					if(err || !user)
+						return next.call(self);
+					
+					self.locals.users.push(user);
+				});
+			});
+			break;
+		case 'add-user':
+			this.view = 'adduser'
 			break;
 		default:
 			req.res.status(404).send('op ' + this.locals.op + ' not defined');

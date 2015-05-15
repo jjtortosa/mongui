@@ -1,4 +1,18 @@
 extends db
 
 block dbbody
-	p TODO!
+	#content
+		table#users
+			thead
+				tr
+					th User
+					th Read only
+					th Actions
+			tbody
+				each user in users
+					tr
+						td user.user
+						td user.readOnly
+						td: a.delete(href="#",data-id=user._id)
+
+		a(href="?op=add-user") Add user

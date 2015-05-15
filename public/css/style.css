@@ -252,3 +252,13 @@ ul.list li{
 label.radio{
 	margin-right: 10px;
 }
+
+
+/* users */
+
+#users{
+	margin-bottom: 30px;
+}
+#users th{
+	padding: 3px 12px;	
+}
