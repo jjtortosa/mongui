@@ -6,8 +6,5 @@
 		"keys": ["tobo!", "keyboard"],
 		"cookie": { "maxAge": "3600000" }
 	},
-	"users": {
-		"test": "1234"
-	},
 	"port": 3101
 }
