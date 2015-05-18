@@ -7,7 +7,7 @@ function ISODate(d){
 	return new Date(d);
 }
 
-module.exports = function(req, res){
+module.exports = function(req, res, next){
 	var col = req.collection
 	,	dbpath = '/db/' + req.db.databaseName + '/';
 
@@ -24,7 +24,7 @@ module.exports = function(req, res){
 
 				res.locals.message = err.message;
 
-				req.db.getCollections(res.locals.dbname, function(err, collections){
+				req.mongoMng.getCollections(res.locals.dbname, function(err, collections){
 					res.render('collerror', {collections: collections});
 				});
 			});
@@ -182,39 +182,76 @@ module.exports = function(req, res){
 			});
 			break;
 
-		case 'duplicateCollection':
-			col.indexes(function(err, r){//return res.send(req.body)
+		case 'dup':
+			req.mongoMng.getCollections(res.locals.dbname, function(err, collections){
 				if(err)
 					return next(err);
 				
-				var error
-				,	count = 0
-				,	newcol = req.db.collection(req.body.name);
+				if(collections.some(function(col_){
+					return col_.name === req.body.name;
+				}))
+					return res.redirect(req.path + '?err=Collection "' + req.body.name + '" already exists');
 				
-				r.forEach(function(idx){
-					var options = {};
-					
-					['unique', 'name', 'background', 'dropDups'].forEach(function(n){
-						if(idx[n] !== undefined)
-							options[n] = idx[n];
-					});
-					
-					
-					newcol.ensureIndex(idx.key, options, function(err){
-						if(err)
-							return error = err;
-						
-						if(++count === r.length)
-							doCopyCollection();
-					});
-				});
-				
-				function doCopyCollection(){
+				col.indexes(function(err, r){//return res.send(req.body)
 					if(err)
 						return next(err);
-					
-					req.db.command('');
-				}
+
+					var error
+					,	count = 0
+					,	newcol = req.db.collection(req.body.name);
+
+					r.forEach(function(idx){
+						var options = {};
+
+						['unique', 'name', 'background', 'dropDups'].forEach(function(n){
+							if(idx[n] !== undefined)
+								options[n] = idx[n];
+						});
+
+
+						newcol.ensureIndex(idx.key, options, function(err){
+							if(err)
+								return error = err;
+
+							if(++count === r.length)
+								doCopyCollection();
+						});
+					});
+
+					function doCopyCollection(){
+						if(err)
+							return next(err);
+
+						col.find(function(err, cursor){
+							if(err)
+								return next(err);
+
+							cursor.count(function(err, count){
+								if(err)
+									return next(err);
+
+								var count_ = 0;
+
+								cursor.each(function(err, o){
+									if(err)
+										return next(err);
+
+									if(!o)
+										return;
+
+									newcol.insert(o, {w: 1}, function(err){
+										if(err)
+											return next(err);
+
+										if(++count_ === count){
+											res.redirect('/db/' + req.db.databaseName + '/' + req.body.name);
+										}
+									});
+								});
+							});
+						});
+					}
+				});
 			});
 			break;
 			

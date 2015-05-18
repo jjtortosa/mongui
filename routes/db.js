@@ -235,7 +235,7 @@ EMongo.prototype.colStats = function(next){
 			break;
 		case 'create-index':
 			this.view = 'create-index';
-			self.locals.scripts.push('/js/create-index.js');
+			this.locals.scripts.push('/js/create-index.js');
 			next.call(self);
 			break;
 		case 'rename':
@@ -244,6 +244,7 @@ EMongo.prototype.colStats = function(next){
 			break;
 		case 'dup':
 			this.view = 'dup';
+			this.locals.err = req.query.err;
 			next.call(this);
 			break;
 		case 'insert':
@@ -310,16 +311,18 @@ EMongo.prototype.processCollection = function(next){
 	var self = this
 	,	req = this.req
 	,	query = {}
-	,	fields = req.query.fields || []
+	,	fields = req.query.fields || new Array()
 	,	sort = req.query.sort || {_id: -1};
 
 	this.locals.criteria = req.query.criteria || '{\n\t\n}';
 
 	this.locals.page = req.query.page || 1;
 
-	if(typeof fields === 'string')
-		fields = [fields];
-	console.log(req.query.fields)
+	if(req.query.fields && typeof this.locals.fields === 'string')
+		req.query.fields = [req.query.fields];
+	
+	this.locals.fields = req.query.fields || new Array();
+
 	if(req.query.criteria){
 		query = this.getQuery();
 
@@ -331,7 +334,6 @@ EMongo.prototype.processCollection = function(next){
 	}
 
 	this.locals.sortFields = new Array(4);
-	this.locals.fields = fields;
 
 	var i = 0;
 
