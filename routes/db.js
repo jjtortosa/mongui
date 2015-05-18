@@ -156,19 +156,29 @@ EMongo.prototype.dbStats = function(next){
 			break;
 		case 'auth':
 			this.view = 'dbauth';
-			this.db.collection('system.users').find(function(err, users){
-				self.locals.users = [];
+			self.locals.scripts.push('/js/auth.js');
+					
+			//admin db
+			req.mongoMng.db.collection('system.users').find({db: self.locals.dbname}, function(err, users){
+				if(err)
+					return next.call(self, err);
 				
+				self.locals.users = [];
+
 				users.each(function(err, user){
 					if(err || !user)
 						return next.call(self);
-					
+
 					self.locals.users.push(user);
 				});
 			});
 			break;
 		case 'add-user':
-			this.view = 'adduser'
+			this.view = 'adduser';
+			this.locals.err = req.query.err;
+			this.locals.username = req.query.username;
+			
+			next.call(self);
 			break;
 		default:
 			req.res.status(404).send('op ' + this.locals.op + ' not defined');

@@ -2,15 +2,17 @@ extends collection
 
 block collection-content
 	#content
-		form(method="post",action=path)
-			br
-			p=ml.duplicate 
-				span=' "'+collection+'"'
-			p
-				label Nombre: 
-					input(name="name",required)
+		h3 TO DO!
+		//
+			form(method="post",action=path)
+				br
+				p=ml.duplicate 
+					span=' "'+collection+'"'
+				p
+					label Nombre: 
+						input(name="name",required)
 
-			input(type="hidden",name="op",value="duplicateCollection")
-			input(type="hidden",name="db",value=dbname)
-			input(type="hidden",name="collection",value=collection)
-			input(type="submit")
+				input(type="hidden",name="op",value="duplicateCollection")
+				input(type="hidden",name="db",value=dbname)
+				input(type="hidden",name="collection",value=collection)
+				input(type="submit")

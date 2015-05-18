@@ -1,6 +1,7 @@
 {
 	"action": "Action",
 	"active": "Active",
+	"addOrReplace": "Add or Replace",
 	"all": "All",
 	"allcoll": "All",
 	"collection": "Collection",
@@ -21,6 +22,8 @@
 	"login": "Login",
 	"name": "Name",
 	"operation": "Operation",
+	"password": "Password",
+	"processes": "Processes",
 	"replication": "Replication",
 	"server": "Server",
 	"serverResponse": "Response from Server: ",
@@ -34,7 +37,6 @@
 	"duplicate": "Duplicate",
 	"remove": "Eliminar",
 	"removedup": "Remove duplicates",
-	"processes": "Processes",
 	"newCollection": "New collection",
 	"command": "Command",
 	"export": "Export",
@@ -54,6 +56,7 @@
 	"dropCollectionMsg": "Are you sure to drop collection '%s'?",
 	"dropDbMsg": "Are you sure to drop db '%s'?",
 	"repairDbMsg": "Are you sure to repair database '%s'?",
+	"username": "User Name",
 	"userNotFound": "User not found",
 	"wrongPass": "Wrong password"
 }

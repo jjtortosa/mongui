@@ -6,13 +6,18 @@ block dbbody
 			thead
 				tr
 					th User
-					th Read only
+					th Roles
 					th Actions
 			tbody
 				each user in users
 					tr
-						td user.user
-						td user.readOnly
-						td: a.delete(href="#",data-id=user._id)
+						td=user.user
+						td
+							if user.roles
+								each role in user.roles
+									div=role.role
+										if role.db != dbname
+											span=" ("+role.db+")"
+						td: a.icon.icon-trash(href="#",data-db=user.db,data-user=user.user)
 
 		a(href="?op=add-user") Add user

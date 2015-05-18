@@ -1,6 +1,7 @@
 {
 	"action": "Acción",
 	"active": "Activos",
+	"addOrReplace": "Agregar o reemplazar",
 	"all": "Todos",
 	"allcoll": "Todas",
 	"collection": "Colección",
@@ -21,6 +22,8 @@
 	"login": "Iniciar sesión",
 	"name": "Nombre",
 	"operation": "Operación",
+	"password": "Constraseña",
+	"processes": "Procesos",
 	"replication": "Replicación",
 	"server": "Servidor",
 	"serverResponse": "Respuesta del servidor: ",
@@ -34,7 +37,6 @@
 	"duplicate": "Duplicar",
 	"remove": "Eliminar",
 	"removedup": "Eliminar duplicados",
-	"processes": "Procesos",
 	"newCollection": "Nueva colección",
 	"command": "Comando",
 	"export": "Exportar",
@@ -54,6 +56,7 @@
 	"dropCollectionMsg": "¿Estás seguro de eliminar la colección '%s'?",
 	"dropDbMsg": "¿Seguro que quieres eliminar toda la base de datos '%s'?",
 	"repairDbMsg": "¿Seguro que quieres reparar la base de datos '%s'?",
+	"username": "Nombre de usuario",
 	"userNotFound": "Usuario no encontrado",
 	"wrongPass": "Contraseña incorrecta"
 }

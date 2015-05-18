@@ -6,9 +6,6 @@ block content
 		input#dbop(type="hidden",name="op")
 
 	.header
-		span DB: 
-		b=dbname
-		br
 		a(href="/db/"+dbname,class={active:op==="stats"})=ml.statistics
 		|  | 
 		a(href="/db/"+dbname+"?op=processlist",class={active:op==="processlist"})=ml.processes

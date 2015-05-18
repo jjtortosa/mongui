@@ -213,12 +213,12 @@ module.exports = function(req, res){
 					if(err)
 						return next(err);
 					
-					req.db.command('')
+					req.db.command('');
 				}
 			});
 			break;
 			
 		default:
-			res.send('Collection: Op "' + req.body.op + '" not found');
+			next();
 	}
 };

@@ -1,0 +1,47 @@
+extends db
+
+block dbbody
+	#content
+		if err
+			h3(style="color:red")=err
+
+		p: a(href="http://docs.mongodb.org/manual/reference/built-in-roles/")="["+ml.doc+"]"
+		
+		form(method="post",action=path)
+			div=ml.username+":"
+			input(name="username",value=username)
+			br
+			br
+			div=ml.password+":"
+			input(type="password",name="password")
+			br
+			br
+			div Roles:
+			select(name="roles",multiple,size=24)
+				optgroup(label="User")
+					option(selected) read
+					option readWrite
+				optgroup(label="Administration")
+					option dbAdmin
+					option dbOwner
+					option userAdmin
+				optgroup(label="Cluster Administration")
+					option clusterAdmin
+					option clusterManager
+					option clusterMonitor
+					option hostManager
+				optgroup(label="Backup/Restore")
+					option backup
+					option restore
+				optgroup(label="All DB")
+					option readAnyDatabase
+					option readWriteAnyDatabase
+					option userAdminAnyDatabase
+					option dbAdminAnyDatabase
+				optgroup(label="Super User")
+					option userAdminAnyDatabase
+					option root
+			br
+			br
+			input(type="hidden",name="op",value="adduser")
+			input(type="submit",value=ml.addOrReplace)

@@ -5,13 +5,13 @@ module.exports = function(req, res, next){
 	
 	switch(req.body.op){
 		case 'dropdb':
-			req.mongoMng.db.dropDatabase(function(err, a){
+			req.db.dropDatabase(function(err, a){
 				req.res.redirect('/');
 			});
 			break;
 		
 		case 'repair':
-			req.mongoMng.useDb(res.locals.dbname).command({repairDatabase: 1}, function(err, r){
+			req.db.command({repairDatabase: 1}, function(err, r){
 				res.locals.result = err || r;
 				res.send(err || r);
 			});
@@ -22,7 +22,7 @@ module.exports = function(req, res, next){
 			if(!req.body.colname)
 				return res.redirect(dbpath + '?op=newcollection');
 			
-			req.mongoMng.db.createCollection(req.body.colname, function(){
+			req.db.createCollection(req.body.colname, function(){
 				res.redirect(dbpath + '/' + req.body.colname);
 			});
 			break;
@@ -38,6 +38,26 @@ module.exports = function(req, res, next){
 			});
 			break;
 		
+		case 'adduser':
+			var roles = req.body.roles;
+			
+			if(typeof roles === 'string')
+				roles = [roles];
+			
+			req.db.addUser(req.body.username, req.body.password, {roles: roles}, function(err){
+				res.redirect(err ? req.path + '?op=add-user&username=' + req.body.username + '&err=' + err.message : '?op=auth');
+			});
+			break;
+			
+		case 'removeUser':
+			req.db.removeUser(req.body.user, function(err, result){
+				if(err)
+					return res.json({error: err.message});
+				
+				res.send(result);
+			});
+			break;
+			
 		default:
 			next();
 	}

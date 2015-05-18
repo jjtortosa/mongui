@@ -18,6 +18,9 @@
 .icon-db:before{
 	background-image: url("../img/database.png");
 }
+.icon-trash:before{
+	background-image: url("../img/trash.png");
+}
 .icon-collection:before{
 	background-image: url("../img/collection.png");
 }
