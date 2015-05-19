@@ -76,7 +76,8 @@ thead th, .lcaption .thead th{
 	padding: 4px;
 	margin-top: 4px;
 }
-.header{
+.msg{
+	margin: 12px;
 }
 #header-sep{
 	height: 25px;
@@ -118,7 +119,7 @@ thead th, .lcaption .thead th{
 	padding-top: 8px;
 }
 textarea{
-	height: 100px;
+	height: 82px;
 }
 .lcaption th, .lcaption td{
 	border: 1px solid #ddd;
@@ -139,6 +140,9 @@ textarea{
 #query-form-container{
 	padding: 8px;
 	background-color: #eeefff;
+}
+#update-operators{
+	display: none;
 }
 #sort-order{
 	text-align: center;

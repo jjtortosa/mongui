@@ -5,8 +5,17 @@ block collection-content
 		table
 			tr#query-form-container
 				td
+					a(href="http://docs.mongodb.org/manual/tutorial/query-documents/", target="_blank")=ml.queryConditions
+					| : 
+					br
 					textarea#criteria(name="criteria",rows="5",cols="50")=criteria
-					br.clear
+					br
+					#update-operators
+						a(href="http://docs.mongodb.org/manual/tutorial/modify-documents/", target="_blank")=ml.updateOperators
+						| : 
+						br
+						textarea(name="update",rows="5",cols="50")=update
+						br
 					input(type="submit")
 					|  | 
 					input#explain(type="button",value=ml.explain)
@@ -14,11 +23,11 @@ block collection-content
 					label(for="actsel")=ml.action+": "
 					select#actsel(name="action")
 						option find
-						option(selected=action==="remove") remove
-						option(selected=action==="update") update
+						option(selected=action=="remove") remove
+						option(selected=action=="update") update
 		
 				if sortFields
-					td=ml.sort
+					td=ml.sort+':'
 						#sort-order
 							each s,i in sortFields
 								div
@@ -27,7 +36,7 @@ block collection-content
 										option(value="1") ASC
 										option(value="-1",selected=s&&s.order===-1) DESC
 				if(nativeFields)
-					td#native-fields=ml.fields
+					td#native-fields=ml.fields+':'
 						ul
 							each field in nativeFields
 								li: label
@@ -50,7 +59,7 @@ block collection-content
 				|  &nbsp; 
 
 			if count
-				span="Records found: "+count
+				span=message
 
 		#results
 			each r,id in result
@@ -79,7 +88,7 @@ block collection-content
 			a(href="#fieldHide")=ml.hide
 			a(href="#fieldShow")=ml.show
 	else if message
-		p=message
+		p.msg=message
 
 	#update-dialog
 		table(class="lcaption")

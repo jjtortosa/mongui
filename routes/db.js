@@ -95,6 +95,13 @@ EMongo.prototype.process = function(next){
 				});
 			}
 			break;
+			
+		case 'update':
+			this.getCollections(function(){
+				this.doUpdate(next);
+			});
+			break;
+			
 		case 'find':
 		default:
 			this.getCollections(function(){
@@ -297,7 +304,12 @@ EMongo.prototype.getCollections = function(next){
 
 EMongo.prototype.getQuery = function(){
 	var query;
-
+	
+	this.locals.criteria = this.req.query.criteria || '{\n\t\n}';
+	
+	if(!this.req.query.criteria)
+		return {};
+	
 	try{
 		eval('query=' + this.req.query.criteria.replace(/[\t\n\r]/g, ''));
 
@@ -307,40 +319,41 @@ EMongo.prototype.getQuery = function(){
 	}
 };
 
+EMongo.prototype.getUpdateOperators = function(){
+	var ret;
+
+	this.locals.update = this.req.query.update || "{\n\t'$set': {\n\t\t\n\t}\n}";
+
+	if(!this.req.query.update)
+		return;
+	
+	try{
+		eval('ret=' + this.req.query.update.replace(/[\t\n\r]/g, ''));
+
+		return ret;
+	} catch(e){
+		return e;
+	}
+};
+
 EMongo.prototype.processCollection = function(next){
 	var self = this
 	,	req = this.req
 	,	query = {}
-	,	fields = req.query.fields || new Array()
-	,	sort = req.query.sort || {_id: -1};
+	,	fields = this.queryFields()
+	,	sort = this.sortFields();
 
-	this.locals.criteria = req.query.criteria || '{\n\t\n}';
-
+	this.getUpdateOperators();
+	
 	this.locals.page = req.query.page || 1;
 
-	if(req.query.fields && typeof this.locals.fields === 'string')
-		req.query.fields = [req.query.fields];
-	
-	this.locals.fields = req.query.fields || new Array();
+	query = this.getQuery();
 
-	if(req.query.criteria){
-		query = this.getQuery();
+	if(query instanceof Error)
+		return next.call(self, query);
 
-		if(query instanceof Error)
-			return next.call(self, query);
-
-		if(!query)
-			return next.call(self, new Error('Invalid query'));
-	}
-
-	this.locals.sortFields = new Array(4);
-
-	var i = 0;
-
-	for(var k in sort){
-		sort[k] = parseInt(sort[k]);
-		this.locals.sortFields[i++] = {name: k, order: sort[k]};
-	}
+	if(!query)
+		return next.call(self, new Error('Invalid query'));
 
 	var page = parseInt(req.query.page) || 1;
 
@@ -349,18 +362,16 @@ EMongo.prototype.processCollection = function(next){
 		.sort(sort).limit(10)
 		.skip((page -1) * EMongo.limit);
 
-	this.nativeFields(function(err, nativeFields){
+	this.nativeFields(function(err){
 		if(err)
 			return next.call(self, err);
-		
-		self.locals.nativeFields = nativeFields;
 		
 		cursor.count(function(err, count){
 			if(err)
 				return next.call(self, err);
 
 			if(!count){
-				self.locals.message = 'No records found';
+				self.locals.message = self.locals.ml.noRecordsFound;
 
 				return next.call(self);
 			}
@@ -378,6 +389,7 @@ EMongo.prototype.processCollection = function(next){
 			};
 
 			self.locals.count = count;
+			self.locals.message = self.locals.ml.recordsFound.replace('%d', count);
 			self.locals.result = new Object();
 
 			cursor.each(function(err, r){
@@ -393,7 +405,76 @@ EMongo.prototype.processCollection = function(next){
 	});
 };
 
+EMongo.prototype.doUpdate = function(next){
+	var self = this
+	,	req = this.req
+	,	query = {}
+	,	update = this.getUpdateOperators();
+	
+	if(update instanceof Error){
+		update.message = 'Update conditions error: ' + update.message;
+		
+		return next.call(self, update);
+	}
+	
+	if(!update)
+		return next.call(self, new Error('Invalid update operators'));
+
+	if(req.query.criteria){
+		query = this.getQuery();
+
+		if(query instanceof Error)
+			return next.call(self, query);
+
+		if(!query)
+			return next.call(self, new Error('Invalid query'));
+	}
+	
+	this.collection.update(query, update, {multi: true}, function(err, count, status){
+		if(err)
+			return next.call(self, err);
+
+		if(status.ok)
+			self.locals.message = req.res.locals.ml.rowsAffected + ': ' + count;
+		
+		self.queryFields();
+		self.sortFields();
+		
+		self.nativeFields(function(err){
+			next.call(self, err);
+		});
+	});
+};
+
+EMongo.prototype.queryFields = function(){
+	var req = this.req;
+	
+	if(req.query.fields && typeof this.locals.fields === 'string')
+		req.query.fields = [req.query.fields];
+	
+	this.locals.fields = req.query.fields || new Array();
+	
+	return this.locals.fields;
+};
+
+EMongo.prototype.sortFields = function(){
+	var sort = this.req.query.sort || {_id: -1};
+
+	this.locals.sortFields = new Array(4);
+
+	var i = 0;
+
+	for(var k in sort){
+		sort[k] = parseInt(sort[k]);
+		this.locals.sortFields[i++] = {name: k, order: sort[k]};
+	}
+	
+	return sort;
+};
+
 EMongo.prototype.nativeFields = function(cb){
+	var self = this;
+	
 	this.collection.findOne(function(err, doc){
 		if(err || !doc)
 			return cb(err);
@@ -404,6 +485,8 @@ EMongo.prototype.nativeFields = function(cb){
 			if(k !== '_id')
 				fields.push(k);
 		});
+		
+		self.locals.nativeFields = fields;
 		
 		cb(null, fields);
 	});

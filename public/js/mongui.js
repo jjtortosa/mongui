@@ -104,6 +104,10 @@ $(function(){
 
 		$a.click();
 	});
+	
+	$('#actsel').change(function(){
+		$('#update-operators').toggle(this.value === 'update');
+	}).change();
 
 	$('#field_menu a').click(function(){
 		var $a = $(this),
