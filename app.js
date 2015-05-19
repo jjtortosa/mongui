@@ -1,7 +1,6 @@
 /* global module, __dirname, process, require */
 
 var express = require('express')
-,	fs = require('fs')
 ,	path = require('path')
 ,	favicon = require('serve-favicon')
 ,	logger = require('morgan')
@@ -9,31 +8,11 @@ var express = require('express')
 ,	bodyParser = require('body-parser')
 ,	session = require('cookie-session')
 ,	routes = require('./routes')
-,	pmx = require('pmx')
-,	confLocations = [
-		'/etc/mongui',
-		'/usr/local/etc/mongui',
-		path.join(process.env.HOME, '.mongui'),
-		path.join(process.env.PWD, 'mongui'),
-		__dirname
-	];
+,	pmx = require('pmx');
 
 pmx.init();
 
-var file;
-
-confLocations.some(function(loc){
-	loc += '/config.json';
-
-	return !!(file = fs.existsSync(loc) && loc);
-});
-
-if(!file)
-	throw new Error('Config file not found');
-
-var conf = require(file);
-
-console.info('Config file "%s" loaded', file);
+var conf = require('./modules/config')();
 
 var app = express();
 
