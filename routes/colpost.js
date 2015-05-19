@@ -57,7 +57,7 @@ module.exports = function(req, res, next){
 					value = Number(req.body.value);
 					break;
 				case 'binary':
-					value = new Buffer(req.body.value, 'binary');
+					value = new Buffer(req.body.value, 'base64');
 					break;
 				case 'boolean':
 				case 'mixed':
@@ -72,7 +72,7 @@ module.exports = function(req, res, next){
 			}
 
 			update.$set[req.body.field] = value;
-
+			
 			col.update(query, update, function(err, r){
 				res.send({error: err && err.message, affected: r});
 			});

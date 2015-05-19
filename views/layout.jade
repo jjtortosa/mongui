@@ -49,7 +49,7 @@ html
 										if col.count
 											span=" ("+col.count+")"
 				td#rightC
-					if(!dbname)
+					if(!dbname && ml)
 						.header
 							a(href="/",class={active: path==="/"})=ml.server
 							|  | 
@@ -84,4 +84,5 @@ html
 		#msg-dialog
 			p#msg-body
 		
-		input#serverResponse(type="hidden",value=ml.serverResponse)
+		if ml
+			input#serverResponse(type="hidden",value=ml.serverResponse)

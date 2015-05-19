@@ -182,6 +182,7 @@ $(function(){
 					case 'string':
 					case 'binary':
 						$('#data_value textarea').val(d.val);
+						return $.alert('To do!');
 						break;
 					case 'boolean':
 						$('#data_value select').val([d.val]);
@@ -322,14 +323,19 @@ $(function(){
 
 			if(!data.field)
 				return $.alert('No name');
-
+			console.log(111);
 			$.ajax({
 				url: '/db/' + db + '/' + collection,
 				data: data,
-				type: 'POST'
+				type: 'POST',
+				error: function(e){
+					$.alert('Server error: ' + e.statusText);
+				}
 			}).done(function(d){
 				if(d.error)
 					return $.alert(d.error);
+				
+				console.log(d);
 
 				if(!$target){//es un nuevo campo
 					var $last = $('#' + data.id + '>.result>span:last');

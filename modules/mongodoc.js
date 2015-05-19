@@ -48,24 +48,29 @@ MongoDoc.prototype.getInputType = function(){
 };
 
 MongoDoc.prototype.val4edit = function(){
-	if(this.type === 'ObjectID')
-		return 'ObjectId("' + this.val + '")';
+	switch(this.type){
+		case 'ObjectID':
+			return 'ObjectId("' + this.val + '")';
 	
-	if(this.type === 'Date')
-		return 'ISODate("' + this.val.toISOString() + '")';
+		case 'Date':
+			return 'ISODate("' + this.val.toISOString() + '")';
 	
-	if(this.type === 'DBRef'){
-		var ref = this.val.toJSON();
-		
-		ref.$id = 'ObjectId("' + ref.$id + '")';
-		
-		var ret = JSON.stringify(ref, null, '\t');
-		
-		return ret.replace(/"(ObjectId\()\\("[^\\]+)\\"\)"/g, '$1$2")');
+		case 'DBRef':
+			var ref = this.val.toJSON();
+
+			ref.$id = 'ObjectId("' + ref.$id + '")';
+
+			var ret = JSON.stringify(ref, null, '\t');
+
+			return ret.replace(/"(ObjectId\()\\("[^\\]+)\\"\)"/g, '$1$2")');
+		case 'Binary':
+			return this.val.toJSON();
 	}
 	
-	if(this.inputType === 'mixed')
-		return JSON.stringify(this.val, null, '\t');
+	switch(this.inputType){
+		case 'mixed':
+			return JSON.stringify(this.val, null, '\t');
+	}
 	
 	return this.val;
 };
