@@ -64,7 +64,7 @@ MongoDoc.prototype.val4edit = function(){
 
 			return ret.replace(/"(ObjectId\()\\("[^\\]+)\\"\)"/g, '$1$2")');
 		case 'Binary':
-			return this.val.toJSON();
+			return this.val.toString('hex');
 	}
 	
 	switch(this.inputType){

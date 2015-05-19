@@ -182,7 +182,6 @@ $(function(){
 					case 'string':
 					case 'binary':
 						$('#data_value textarea').val(d.val);
-						return $.alert('To do!');
 						break;
 					case 'boolean':
 						$('#data_value select').val([d.val]);

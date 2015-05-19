@@ -57,7 +57,11 @@ module.exports = function(req, res, next){
 					value = Number(req.body.value);
 					break;
 				case 'binary':
-					value = new Buffer(req.body.value, 'base64');
+					try{
+						value = new Buffer(req.body.value, 'hex');
+					} catch(err){
+						return res.send({error: err.message});
+					}
 					break;
 				case 'boolean':
 				case 'mixed':
