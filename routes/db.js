@@ -449,7 +449,7 @@ EMongo.prototype.doUpdate = function(next){
 EMongo.prototype.queryFields = function(){
 	var req = this.req;
 	
-	if(req.query.fields && typeof this.locals.fields === 'string')
+	if(req.query.fields && typeof req.query.fields === 'string')
 		req.query.fields = [req.query.fields];
 	
 	this.locals.fields = req.query.fields || new Array();
