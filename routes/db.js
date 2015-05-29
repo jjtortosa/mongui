@@ -130,6 +130,7 @@ EMongo.prototype.dbStats = function(next){
 				next.call(self);
 			});
 			break;
+			
 		case 'processlist':
 			this.view = 'processlistdb';
 
@@ -139,28 +140,34 @@ EMongo.prototype.dbStats = function(next){
 				next.call(self);
 			});
 			break;
+			
 		case 'newcollection':
 			this.view = 'newcollection';
 			next.call(this);
 			break;
+			
 		case 'command':
 			this.view = 'dbcommand';
 			next.call(self);
 			break;
+			
 		case 'export':
 			this.view = 'export';
 			this.locals.selected = req.query.collections;
 			this.locals.scripts.push('/js/export.js');
 			next.call(this);
 			break;
+			
 		case 'import':
 			this.view = 'import';
 			next.call(this);
 			break;
+			
 		case 'repair':
 			this.view = 'repair';
 			next.call(this);
 			break;
+			
 		case 'auth':
 			this.view = 'dbauth';
 			self.locals.scripts.push('/js/auth.js');
@@ -180,6 +187,7 @@ EMongo.prototype.dbStats = function(next){
 				});
 			});
 			break;
+			
 		case 'add-user':
 			this.view = 'adduser';
 			this.locals.err = req.query.err;
@@ -187,6 +195,14 @@ EMongo.prototype.dbStats = function(next){
 			
 			next.call(self);
 			break;
+			
+		case 'dup':
+			this.view = 'dupdb';
+			this.locals.err = req.query.err;
+			this.locals.name = req.query.name;
+			next.call(this);
+			break;
+			
 		default:
 			req.res.status(404).send('op ' + this.locals.op + ' not defined');
 	}
@@ -250,7 +266,7 @@ EMongo.prototype.colStats = function(next){
 			next.call(this);
 			break;
 		case 'dup':
-			this.view = 'dup';
+			this.view = 'dupcollection';
 			this.locals.err = req.query.err;
 			next.call(this);
 			break;

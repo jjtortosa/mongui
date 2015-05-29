@@ -1,0 +1,15 @@
+extends db
+
+block dbbody
+	if err
+		h4(style="color:red")=err
+
+	form(method="post",action=path)
+		h3=ml.duplicate 
+			span=' "'+dbname+'"'
+		p
+			label Nombre: 
+				input(name="name",value=name,required)
+
+		input(type="hidden",name="op",value="dup")
+		input(type="submit")

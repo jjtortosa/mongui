@@ -22,6 +22,8 @@ block content
 		|  | 
 		a(href="/db/"+dbname+"?op=auth",class={active:op==="auth"})=ml.auth
 		|  | 
+		a(href="/db/"+dbname+"?op=dup",class={active:op==="dup"})=ml.duplicate
+		|  | 
 		a#dropdb(href="#",data-msg=ml.dropDbMsg)=ml.remove
 	
 	#header-sep-db

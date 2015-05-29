@@ -58,6 +58,34 @@ module.exports = function(req, res, next){
 			});
 			break;
 			
+		case 'dup':
+			var name = req.body.name.trim();
+			
+			function dupErr(err){
+				res.redirect('?op=dup&name=' + name + '&err=' + err);
+			}
+			
+			if(!name)
+				return dupErr('');
+			
+			if(res.locals.dbs.some(function(db){
+				return db.name === name;
+			}))
+				return dupErr('Database "' + name + '" already exists');
+			
+			req.mongoMng.admin().command({
+				copydb: 1,
+				fromdb: req.db.databaseName,
+				todb: name
+			}, function(err, r){
+				if(err)
+					return dupErr(err);
+				
+				res.redirect('/db/' + name)
+			});
+			
+			break;
+			
 		default:
 			next();
 	}

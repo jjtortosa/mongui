@@ -1,23 +1,22 @@
 extends db
 
 block dbbody
-	#content
-		table#users
-			thead
+	table#users
+		thead
+			tr
+				th User
+				th Roles
+				th Actions
+		tbody
+			each user in users
 				tr
-					th User
-					th Roles
-					th Actions
-			tbody
-				each user in users
-					tr
-						td=user.user
-						td
-							if user.roles
-								each role in user.roles
-									div=role.role
-										if role.db != dbname
-											span=" ("+role.db+")"
-						td: a.icon.icon-trash(href="#",data-db=user.db,data-user=user.user)
+					td=user.user
+					td
+						if user.roles
+							each role in user.roles
+								div=role.role
+									if role.db != dbname
+										span=" ("+role.db+")"
+					td: a.icon.icon-trash(href="#",data-db=user.db,data-user=user.user)
 
-		a(href="?op=add-user") Add user
+	a(href="?op=add-user") Add user
