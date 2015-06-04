@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	#dbsPage(data-role="page")
+		div(data-role="header",data-position="fixed")
+			h1 Databases
+		div(role="main",class="ui-content")
+			ul#collections(data-role="listview")
+				each col in collections
+					li(class={active:col.name===collection})
+						a(href="/db/"+dbname+"/"+col.name)=col.name
+							if col.count
+								span.ui-li-count=col.count

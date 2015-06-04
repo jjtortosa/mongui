@@ -1,7 +1,10 @@
+/* global module */
+
 "use strict";
 
 module.exports = function(req, res, next){
-//	return res.status(401).send('forbidden');
+	if(req.useMobile)
+		return res.render('mobile/dbs');
 	
 	req.mongoMng.serverInfo(function(err, info){
 		if(err)

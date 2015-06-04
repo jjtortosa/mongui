@@ -1,0 +1,13 @@
+extends layout
+
+block content
+	#dbsPage(data-role="page")
+		div(data-role="header")
+			h1 Databases
+		div(role="main",class="ui-content")
+			ul#dbs(data-role="listview")
+				each db in dbs
+					li(class={active:db.name===dbname})
+						a(href="/db/"+db.name)=db.name
+							if db.collections
+								span=" ("+db.collections+")"

@@ -16,14 +16,22 @@ router.all('/createdb', require('./createdb'));
 /* html */
 router.all('/command', require('./command'));
 router.get('/dbs', require('./dbs'));
-router.get('/db/:db', db);
-router.post('/db/:db', require('./dbpost'));
+
+router.route('/db/:db')
+	.get(db)
+	.post(require('./dbpost'));
+
 router.post('/import/:db', multipartMiddleware, require('./import'));
-router.get('/db/:db/:collection', db);
-router.get('/db/:db/:collection/:op', db);
+
+router.route('/db/:db/:collection')
+	.get(db)
+	.post(require('./colpost'));
+
+router.route('/db/:db/:collection/:op')
+	.get(db)
+	.post(require('./colpost'));
+
 router.get('/db/:db/:collection/:op/:msg', db);
-router.post('/db/:db/:collection', require('./colpost'));
-router.post('/db/:db/:collection/:op', require('./colpost'));
 
 router.all('/login', require('./login'));
 router.all('/logout', require('./logout'));

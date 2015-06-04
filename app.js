@@ -8,6 +8,7 @@ var express = require('express')
 ,	bodyParser = require('body-parser')
 ,	session = require('cookie-session')
 ,	routes = require('./routes')
+,	device = require('express-device')
 ,	pmx = require('pmx');
 
 pmx.init();
@@ -27,10 +28,10 @@ app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(logger('dev'));
-//app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ limit: '1gb', extended: false }));
 app.use(cookieParser());
 app.use(session(conf.cookieSession));
+app.use(device.capture());
 
 app.use(require('./modules/setup'));
 app.use(require('./modules/access'));

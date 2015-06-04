@@ -1,4 +1,4 @@
-/* global module, process, __dirname */
+/* global module, process, __dirname, require */
 
 var path = require('path')
 ,	fs = require('fs')
@@ -30,7 +30,13 @@ module.exports = function(){
 	
 	console.info('Config file "%s" loaded', file);
 	
-	return require(file);
+	var ret = require(file);
+	
+	//compat
+	if(!ret.useMobile)
+		ret.useMobile = require('../config-default').useMobile;
+	
+	return ret;
 };
 
 function copyFile(source, target, cb) {

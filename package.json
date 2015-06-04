@@ -4,7 +4,7 @@
   "version": "0.2.3",
   "scripts": {
     "start": "node ./bin/www",
-	"install": "node ./bin/install"
+    "install": "node ./bin/install"
   },
   "main": "./bin/www",
   "dependencies": {
@@ -14,6 +14,7 @@
     "cookie-session": "^1.1.0",
     "debug": "~2.1.1",
     "express": "~4.10.6",
+    "express-device": "^0.3.11",
     "html-entities": "^1.1.2",
     "jade": "~1.9.1",
     "marked": "^0.3.3",

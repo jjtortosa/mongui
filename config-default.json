@@ -9,5 +9,6 @@
 	"users": {
 		"test": "1234"
 	},
+	"useMobile": ["phone", "tablet", "tv"],
 	"port": 3101
 }

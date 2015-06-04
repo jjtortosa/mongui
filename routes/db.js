@@ -14,7 +14,7 @@ function EMongo(req){
 	});
 
 	this.view = 'results';
-
+	this.useMobile = req.useMobile;
 	this.locals = req.res.locals;
 
 	merge(this.locals, {
@@ -25,7 +25,7 @@ function EMongo(req){
 		scripts: []
 	});
 
-	if(!this.locals.collection && !this.locals.op)
+	if(!this.locals.collection && !this.locals.op && !this.useMobile)
 		this.locals.op = 'stats';
 
 	this.dbname = this.locals.dbname;
@@ -105,9 +105,14 @@ EMongo.prototype.process = function(next){
 		case 'find':
 		default:
 			this.getCollections(function(){
-				if(!this.locals.collection)
-					return this.dbStats(next);
-
+				if(!this.locals.collection){
+					if(!this.useMobile)
+						return this.dbStats(next);
+					
+					this.view = 'mobile/collections'
+					return next.call(self);
+				}
+				
 				if(this.locals.op)
 					return this.colStats(next);
 
