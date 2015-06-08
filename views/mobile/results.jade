@@ -3,16 +3,36 @@ extends layout
 block content
 	#resultsPage(data-role="page")
 		div(data-role="header",data-position="fixed")
-			a.ui-btn.ui-icon-carat-l.ui-alt-icon.ui-btn-icon-notext.ui-corner-all(href='/')
-			h1=dbname+" - "+ml.collections
+			a.ui-btn.ui-icon-carat-l.ui-alt-icon.ui-btn-icon-notext.ui-corner-all(href='/db/'+dbname)
+			h1=dbname+" - "+collection
 			div(data-role="navbar")
 				ul
-					li: a(href="#query",data-icon="search")
+					li: a#queryNav(href="#",data-icon="search")
 					//-
 						li: a(href="#sort",data-icon="recycle")
 						li: a(href="#fields",data-icon="grid")
-					li: a.ui-btn-active(href="#results",data-icon="bullets")
+					li: a#resultNav.ui-btn-active(href="#",data-icon="bullets")
 		div(role="main",class="ui-content")
+			form#mobile-query-form-container
+				a(href="http://docs.mongodb.org/manual/tutorial/query-documents/", target="_blank")=ml.queryConditions
+				| : 
+				br
+				textarea#criteria(name="criteria",rows="5",cols="50")=criteria
+				.ui-field-contain
+					label(for="actsel")=ml.action+": "
+					select#actsel(name="action",data-native-menu="false")
+						option(value="find") find
+						option(value="remove",selected=action=="remove") remove
+						option(value="update",selected=action=="update") update
+				#update-operators
+					a(href="http://docs.mongodb.org/manual/tutorial/modify-documents/", target="_blank")=ml.updateOperators
+					| : 
+					br
+					textarea(name="update",rows="5",cols="50")=update
+					br
+				input(type="submit",value=ml.submit)
+				
+				
 			#results
 				if result
 					.paginator

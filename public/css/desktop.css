@@ -3,3 +3,8 @@ body {
   margin: 0;
   font: 12px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
+.paginator{
+	padding: 6px 12px;
+	margin: 4px;
+	font-size: 1.2em;
+}

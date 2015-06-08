@@ -4,3 +4,10 @@
 .ui-icon-db:after{
 	background-image: url("../img/database.png");
 }
+
+#mobile-query-form-container{
+	display: none;
+}
+#update-operators textarea{
+	height: 125px;
+}

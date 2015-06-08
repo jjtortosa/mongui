@@ -92,6 +92,7 @@ thead th, .lcaption .thead th{
 	max-height: 162px;
 	overflow-y: hidden;
 	white-space: pre-wrap;
+	padding: 4px 4px 0 4px;
 }
 .result a.selected{
 	font-weight: bold;
@@ -183,11 +184,6 @@ textarea{
 }
 #field_menu a{
 	display: block;
-}
-.paginator{
-	padding: 6px 12px;
-	margin: 4px;
-	font-size: 1.2em;
 }
 #update-dialog{
 	padding: 0;
