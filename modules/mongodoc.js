@@ -1,3 +1,5 @@
+/* global module, global */
+
 function MongoDoc(val){
 	this.val = val;
 	
@@ -84,3 +86,7 @@ MongoDoc.prototype.toSend = function(){
 };
 
 module.exports = MongoDoc;
+
+global.ISODate = function(a){
+	return new Date(a);
+};
