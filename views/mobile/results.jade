@@ -1,0 +1,47 @@
+extends layout
+
+block content
+	#resultsPage(data-role="page")
+		div(data-role="header",data-position="fixed")
+			a.ui-btn.ui-icon-carat-l.ui-alt-icon.ui-btn-icon-notext.ui-corner-all(href='/')
+			h1=dbname+" - "+ml.collections
+			div(data-role="navbar")
+				ul
+					li: a(href="#query",data-icon="search")
+					//-
+						li: a(href="#sort",data-icon="recycle")
+						li: a(href="#fields",data-icon="grid")
+					li: a.ui-btn-active(href="#results",data-icon="bullets")
+		div(role="main",class="ui-content")
+			#results
+				if result
+					.paginator
+						if(count>10)
+							if paginator.page === 1
+								a(disabled) «
+							else
+								a(href=paginator.url+"1") «
+
+							- var n = paginator.first
+
+							while n<= paginator.last
+								|  &nbsp; 
+								a(href=paginator.url+n,class={active:n===paginator.page})=n++
+
+							|  &nbsp; 
+							if paginator.last===paginator.page
+								a(disabled) »
+							else
+								a(href=paginator.url+paginator.total) »
+							|  &nbsp; 
+
+						if count
+							span=message
+
+					#results
+						each r,id in result
+							.result-box(id=id)
+								.result!=r
+				else if message
+					p.msg=message
+	

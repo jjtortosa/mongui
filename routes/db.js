@@ -13,10 +13,10 @@ function EMongo(req){
 		mng: {value: req.mongoMng}
 	});
 
-	this.view = 'results';
 	this.useMobile = req.useMobile;
+	this.view = 'results';
 	this.locals = req.res.locals;
-
+	
 	merge(this.locals, {
 		title: 'EucaMongo',
 		action: req.params.action || req.query.action,
@@ -109,7 +109,7 @@ EMongo.prototype.process = function(next){
 					if(!this.useMobile)
 						return this.dbStats(next);
 					
-					this.view = 'mobile/collections';
+					this.view = 'collections';
 					
 					return next.call(self);
 				}
@@ -419,7 +419,7 @@ EMongo.prototype.processCollection = function(next){
 					return next.call(self, err);
 
 				if(r)
-					return self.locals.result[r._id] = sanitize(r).html;
+					return self.locals.result[r._id] = sanitizeObj(r, '', null, true);
 
 				next.call(self);
 			});
@@ -515,7 +515,12 @@ EMongo.prototype.nativeFields = function(cb){
 };
 
 EMongo.prototype.render = function(){
-	this.req.res.render(this.view, this.locals);
+	var view = this.view;
+	
+	if(this.useMobile)
+		view = 'mobile/' + view;
+	
+	this.req.res.render(view, this.locals);
 };
 
 module.exports = function(req, res, next){
@@ -568,9 +573,9 @@ function sanitize(obj, indent, parent){
 	return {type: 'mixed', html: obj.toString()};
 }
 
-function sanitizeObj(obj, indent, parent){
-	var ret = '{\n',
-		nb = indent + '\t',
+function sanitizeObj(obj, indent, parent, removeBrackets){
+	var ret = removeBrackets ? '' : '{\n',
+		nb = indent + (removeBrackets ? '' : '\t'),
 		keys = Object.keys(obj),
 		dataParent = parent ? ' data-parent="' + parent + '"' : '',
 		newParent = (parent ? parent + '.' : '');
@@ -586,7 +591,10 @@ function sanitizeObj(obj, indent, parent){
 		ret += '\n';
 	});
 
-	return ret + indent + '}';
+	if(!removeBrackets)
+		ret += indent + '}';
+	
+	return ret;
 }
 
 function sanitizeArray(arr, indent){

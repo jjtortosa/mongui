@@ -66,15 +66,18 @@ thead th, .lcaption .thead th{
 	display: block;
 	width: 4em;
 }
-.result-box{
-	padding: 0 4px;
-	border: 2px solid gray;
-	margin: 5px;
-}
 .actions{
 	border-bottom: 1px solid;
 	padding: 4px;
 	margin-top: 4px;
+}
+.result-box{
+	padding: 4px;
+	border: 2px solid gray;
+	margin: 5px;
+}
+.result-box .actions{
+	margin-top: 0;
 }
 .msg{
 	margin: 12px;
