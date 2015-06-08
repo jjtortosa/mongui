@@ -109,7 +109,8 @@ EMongo.prototype.process = function(next){
 					if(!this.useMobile)
 						return this.dbStats(next);
 					
-					this.view = 'mobile/collections'
+					this.view = 'mobile/collections';
+					
 					return next.call(self);
 				}
 				
@@ -399,7 +400,7 @@ EMongo.prototype.processCollection = function(next){
 
 			var pagesCount = Math.floor(count/EMongo.limit) + 1;
 
-			self.locals.url = req.url.replace(/&page=\d*/, '');
+			self.locals.url = req.url.replace(/[?&]page=\d*/, '');
 
 			self.locals.paginator = {
 				page: page,

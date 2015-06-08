@@ -9,6 +9,11 @@ a {
 a:hover{
 	color: #0099FF;
 }
+a[disabled]{
+	pointer-events: none;
+	opacity: .6;
+}
+
 li.active>a, a.active{
 	font-weight: bold;
 }

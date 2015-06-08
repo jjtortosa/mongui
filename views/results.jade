@@ -46,7 +46,10 @@ block collection-content
 	if result
 		.paginator
 			if(count>10)
-				a(href=paginator.url+"1") «
+				if paginator.page === 1
+					a(disabled) «
+				else
+					a(href=paginator.url+"1") «
 
 				- var n = paginator.first
 
@@ -55,7 +58,10 @@ block collection-content
 					a(href=paginator.url+n,class={active:n===paginator.page})=n++
 
 				|  &nbsp; 
-				a(href=paginator.url+paginator.total) »
+				if paginator.last===paginator.page
+					a(disabled) »
+				else
+					a(href=paginator.url+paginator.total) »
 				|  &nbsp; 
 
 			if count
