@@ -550,7 +550,7 @@ function sanitize(obj, indent, parent){
 		return {type: 'mixed', html: 'ObjectId("' + obj + '")'};
 
 	if(obj.constructor.name === 'Date')
-		return {type: 'mixed', html: 'ISODate("' + obj.toISOString() + '")'};
+		return {type: 'mixed', html: isNaN(obj) ? obj.toString() : 'ISODate("' + obj.toISOString() + '")'};
 
 	if(obj.constructor.name === 'Binary')
 		return {type: 'binary', html: '"&lt;Mongo Binary Data&gt;"'};
