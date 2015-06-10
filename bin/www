@@ -6,22 +6,38 @@
  * Module dependencies.
  */
 
-var app = require('../app');
-var debug = require('debug')('mongui:server');
-var http = require('http');
+var app = require('../app')
+,	fs = require('fs')
+,	debug = require('debug')('mongui:server');
+
 
 /**
  * Get port from environment and store in Express.
  */
 
-var port = parseInt(process.env.PORT, 10) || process.argv[2] || app.get('conf').port;
+var conf = app.get('conf');
+var port = parseInt(process.env.PORT, 10) || process.argv[2] || conf.port;
+
 app.set('port', port);
 
 /**
  * Create HTTP server.
  */
 
-var server = http.createServer(app);
+var server;
+
+if(conf.ssl){
+	var https = require('https');
+	var config = {
+		key: fs.readFileSync(conf.ssl.key),
+		cert: fs.readFileSync(conf.ssl.cert)
+	};
+	
+	server = https.createServer(config, app);
+} else {
+	var http = require('http');
+	server = http.createServer(app);
+}
 
 /**
  * Listen on provided port, on all network interfaces.
