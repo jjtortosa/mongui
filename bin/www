@@ -12,13 +12,14 @@ var app = require('../app')
 
 
 /**
- * Get port from environment and store in Express.
+ * Get port from environment and store in Express and process.env.
  */
 
 var conf = app.get('conf');
-var port = parseInt(process.env.PORT, 10) || process.argv[2] || conf.port;
 
-app.set('port', port);
+process.env.PORT = parseInt(process.env.PORT, 10) || process.argv[2] || conf.port;
+
+app.set('port', process.env.PORT);
 
 /**
  * Create HTTP server.
@@ -44,7 +45,7 @@ if(conf.ssl){
  */
 
 app.on('dbconnected', function(){
-	server.listen(port);
+	server.listen(process.env.PORT);
 });
 
 server.on('error', onError);
@@ -63,11 +64,11 @@ function onError(error) {
   // handle specific listen errors with friendly messages
   switch (error.code) {
     case 'EACCES':
-      console.error('Port ' + port + ' requires elevated privileges');
+      console.error('Port ' + process.env.PORT + ' requires elevated privileges');
       process.exit(1);
       break;
     case 'EADDRINUSE':
-      console.error('Port ' + port + ' is already in use');
+      console.error('Port ' + process.env.PORT + ' is already in use');
       process.exit(1);
       break;
     default:
