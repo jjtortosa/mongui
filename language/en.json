@@ -4,6 +4,8 @@
 	"addOrReplace": "Add or Replace",
 	"all": "All",
 	"allcoll": "All",
+	"buildInfo": "Compilation Information",
+	"cmdLine": "Command Line",
 	"collection": "Collection",
 	"collections": "Collections",
 	"create": "Create",

@@ -2,6 +2,13 @@ extends db
 
 block dbbody
 	#db-content
+		ul#command-examples
+			li: a(href="#listCommands") {listCommands: 1}
+			if dbname === "admin"
+				li: a(href="#getCmdLineOpts") {getCmdLineOpts: 1}
+			li: a(href="#buildinfo") {buildinfo: 1}
+			li: a(href="#ping") {ping: 1}
+
 		form#command
 			textarea(name="command",cols="60",rows="6") {listCommands: 1}
 			br

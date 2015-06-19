@@ -107,15 +107,31 @@ MongoMng.prototype.serverInfo = function(cb){
 	,	admin = this.admin();
 
     admin.profilingLevel(function(err, level){
-        if(err) return cb.call(self, err);
+		if(err) return cb.call(self, err);
 
         admin.serverInfo(function(err, info){
-            if(err) return cb.call(self, err);
+			if(err) return cb.call(self, err);
 
-            cb.call(self, null, {
-                info: info,
-                level: level
-            });
+			admin.command({getCmdLineOpts: 1}, function(err, opt){
+				if(err) return cb.call(self, err);
+				
+				var d = opt.documents[0]
+				,	p = d.parsed;
+				
+				var cmd = {
+					argv: d.argv.join(' '),
+					config: p.config,
+					bindIp: p.net.bindIp,
+					dbPath: p.storage.dbPath,
+					log: p.systemLog.path
+				};
+				
+				cb.call(self, null, {
+					info: info,
+					level: level,
+					cmd: cmd
+				});
+			});
         });
     });
 };

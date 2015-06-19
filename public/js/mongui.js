@@ -478,9 +478,10 @@ $(function(){
 		$('[name="command"]').val($(this).html());
 
 		$('#command').submit();
-
-		return false;
 	});
+	
+	if($('form#command').size() && location.hash)
+		$('#command-examples a[href="' + location.hash + '"]').click();
 
 	var $msgDialog = $('#msg-dialog').dialog({
 		autoOpen: false,
