@@ -121,7 +121,7 @@ MongoMng.prototype.serverInfo = function(cb){
 				var cmd = {
 					argv: d.argv.join(' '),
 					config: p.config,
-					bindIp: p.net.bindIp,
+					net: JSON.stringify(p.net),
 					dbPath: p.storage.dbPath,
 					log: p.systemLog.path
 				};
