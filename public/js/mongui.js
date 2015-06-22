@@ -4,7 +4,7 @@ $(function(){
 		collection = $('#collection').val();
 
 	$('.exp').click(function(){
-		var title = $(this).html() === 'Expandir' ? 'Colapsar' : 'Expandir';
+		var title = $(this).html() === monguiLang.expand ? monguiLang.colapse : monguiLang.expand;
 
 		$(this).html(title).parents('.result-box').find('.result').toggleClass('expanded');
 		return false;
@@ -326,7 +326,10 @@ $(function(){
 
 			if(!data.field)
 				return $.alert('No name');
-			console.log(111);
+			
+			if(data.type === 'number' && !data.value)
+				data.value = 0;
+			
 			$.ajax({
 				url: '/db/' + db + '/' + collection,
 				data: data,
@@ -343,9 +346,9 @@ $(function(){
 				if(!$target){//es un nuevo campo
 					var $last = $('#' + data.id + '>.result>span:last');
 
-					$last.append(',\n\t');
+					$last.append(',\n');
 
-					$target = $('<a class="r-key" href="#" data-type="' + data.type + '">' + data.key + '</a>')
+					$target = $('<a class="r-key" href="#" data-type="' + data.type + '">' + data.field + '</a>')
 						.insertAfter($last);
 
 					$target.after(': <span>');
@@ -370,6 +373,9 @@ $(function(){
 				break;
 			case 'boolean':
 				$dv.append('<select><option value="true">True</option><option value="false">False</option></select>');
+				break;
+			case 'number':
+				$dv.append('<input type="number">');
 				break;
 			case 'null':
 				break;
