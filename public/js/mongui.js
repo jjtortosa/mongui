@@ -476,7 +476,7 @@ $(function(){
 	});
 
 	$(window).resize(function(){
-		$('#leftC .auto-height').height($(this).height()-28);
+//		$('#leftC .auto-height').height($(this).height()-28);
 		$('#rightC .auto-height').height($(this).height()-54);
 	}).resize();
 
