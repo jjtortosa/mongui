@@ -97,6 +97,7 @@ module.exports = function(req, res, next){
 			break;
 		case 'insert':
 			var redirect = req.path + '?op=insert&json=' + encodeURIComponent(req.body.json);
+			
 			try{
 				var json;
 
@@ -105,8 +106,8 @@ module.exports = function(req, res, next){
 				if(!Object.keys(json).length)
 					return req.res.redirect(req.path);
 
-				col.insert(json, function(err, doc){
-					res.redirect(redirect + '&msg=ok');
+				col.insert(json, function(err){
+					res.redirect(redirect + '&msg=' + (err ? err.message : 'ok'));
 				});
 			} catch(e){
 				res.redirect(redirect + '&msg=parseError');

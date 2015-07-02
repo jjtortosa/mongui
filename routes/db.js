@@ -48,23 +48,6 @@ EMongo.prototype.process = function(next){
 				req.res.send(err || a);
 			});
 			break;
-		case 'insert':
-			var redirect = req.path + '?op=insert&json=' + encodeURIComponent(req.body.json);
-			try{
-				var json;
-
-				eval('json = ' + req.body.json);
-
-				if(!Object.keys(json).length)
-					return req.res.redirect(req.path);
-
-				this.collection.insert(json, function(err, doc){
-					req.res.redirect(redirect + '&msg=ok');
-				});
-			} catch(e){
-				req.res.redirect(redirect + '&msg=parseError');
-			}
-			break;
 		case 'explain':
 			var query = this.getQuery();
 
@@ -289,6 +272,8 @@ EMongo.prototype.colStats = function(next){
 				case 'ok':
 					self.locals.msg = 'Object successfully inserted';
 					break;
+				default:
+					self.locals.msg = msg;
 			}
 
 			next.call(this);
