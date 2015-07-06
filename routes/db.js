@@ -25,15 +25,15 @@ function EMongo(req){
 		scripts: []
 	});
 
-	if(!this.locals.collection && !this.locals.op && !this.useMobile)
+	if(this.locals.collection){
+		this.collection = req.collection;
+		this.locals.scripts.push('/js/search-string.js');
+	} else if(!this.locals.collection && !this.locals.op && !this.useMobile)
 		this.locals.op = 'stats';
 
 	this.dbname = this.locals.dbname;
 
 	this.db = req.db;
-
-	if(this.locals.collection)
-		this.collection = req.collection;
 }
 
 EMongo.limit = 10;
@@ -500,7 +500,7 @@ EMongo.prototype.nativeFields = function(cb){
 
 EMongo.prototype.render = function(){
 	var view = this.view;
-	
+
 	if(this.useMobile)
 		view = 'mobile/' + view;
 	
