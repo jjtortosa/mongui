@@ -1,3 +1,4 @@
+/* global monguiLang */
 
 $(function(){
 	var db = $('#db').val(),
@@ -88,11 +89,9 @@ $(function(){
 		var $a = $(this).addClass('selected'),
 			pos = $a.position();
 
-		if($a.text() !== '_id'){
-			pos.left += $a.width() + 4;
+		pos.left += $a.width() + 4;
 
-			$('#field_menu').css(pos).show().data({target: $a});
-		}
+		$('#field_menu').css(pos).show().data({target: $a});
 
 		return false;
 	}).on('click', '.moretext', function(e){

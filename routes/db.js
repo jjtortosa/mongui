@@ -489,8 +489,7 @@ EMongo.prototype.nativeFields = function(cb){
 		var fields = new Array();
 		
 		Object.keys(doc).forEach(function(k){
-			if(k !== '_id')
-				fields.push(k);
+			fields.push(k);
 		});
 		
 		self.locals.nativeFields = fields;
