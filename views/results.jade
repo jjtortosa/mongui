@@ -3,31 +3,40 @@ extends collection
 block collection-content
 	form#query-form
 		table
-			tr#query-form-container
-				td
-					a(href="http://docs.mongodb.org/manual/tutorial/query-documents/", target="_blank")=ml.queryConditions
-					| : 
-					br
-					textarea#criteria(name="criteria",rows="5",cols="50")=criteria
-					br
+			tr
+				td#query-box
+					#query-operators
+						a(href="http://docs.mongodb.org/manual/tutorial/query-documents/", target="_blank")=ml.queryConditions
+						| : 
+						br
+						textarea#criteria(name="criteria",rows="5",cols="50")=criteria
+						br
 					#update-operators
 						a(href="http://docs.mongodb.org/manual/tutorial/modify-documents/", target="_blank")=ml.updateOperators
 						| : 
 						br
 						textarea(name="update",rows="5",cols="50")=update
 						br
+					#by-id
+						label Id: 
+							input(name="byid",value=byid,size=26,style={"font-size":"1.1em"})
+					#distinct-field
+						label Distinct Field: 
+							input(name="distinct",value=distinct)
 					input(type="submit")
 					|  | 
 					input#explain(type="button",value=ml.explain)
 					|  | 
 					label(for="actsel")=ml.action+": "
 					select#actsel(name="action")
-						option find
+						option(selected=action=="find") find
+						option(selected=action=="findById") findById
+						option(selected=action=="distinct") distinct
 						option(selected=action=="remove") remove
 						option(selected=action=="update") update
 		
 				if sortFields
-					td=ml.sort+':'
+					td#sort-order-td=ml.sort+':'
 						#sort-order
 							each s,i in sortFields
 								div
@@ -93,6 +102,18 @@ block collection-content
 			span ------
 			a(href="#fieldHide")=ml.hide
 			a(href="#fieldShow")=ml.show
+	else if distinctResult && distinctResult.length
+		table#distinct-result.lcaption
+			thead
+				tr
+					th Count
+					th=distinct
+			tbody
+				each d in distinctResult
+					tr
+						td=d.count
+						td: a(href="?criteria="+d.criteria)=d.val
+			
 	else if message
 		p.msg=message
 

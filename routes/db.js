@@ -19,8 +19,10 @@ function EMongo(req){
 	
 	merge(this.locals, {
 		title: 'EucaMongo',
-		action: req.params.action || req.query.action,
+		action: req.params.action || req.query.action || 'find',
 		op: req.params.op || req.query.op,
+		byid: req.query.byid,
+		distinct: req.query.distinct,
 		err: req.params.err,
 		scripts: []
 	});
@@ -85,6 +87,13 @@ EMongo.prototype.process = function(next){
 			});
 			break;
 			
+		case 'distinct':
+			this.getCollections(function(){
+				this.distinct(next);
+			});
+			break;
+			
+		case 'findById':
 		case 'find':
 		default:
 			this.getCollections(function(){
@@ -103,6 +112,39 @@ EMongo.prototype.process = function(next){
 				this.processCollection(next);
 			});
 	}
+};
+
+EMongo.prototype.distinct = function(next){
+	var distinct = this.locals.distinct.trim();
+	
+	if(!distinct){
+		return next.call(this);
+	}
+	
+	var self = this;
+	
+	this.collection.aggregate([{ $group: { _id: "$" + distinct, count:{$sum:1}}  }], function(err, r){
+		console.log(r);
+		if(err)
+			return next(err);
+		
+		if(!r.length)
+			self.locals.message = self.locals.ml.noRecordsFound;
+		else {
+			r.forEach(function(o){
+				o.val = JSON.stringify(o._id);
+				o.criteria = '{"' + distinct + '":' + o.val + '}';
+			});
+			
+			r.sort(function(a, b){
+				return b.count - a.count;
+			});
+			
+			self.locals.distinctResult = r;
+		}
+		
+		next.call(self);
+	});
 };
 
 EMongo.prototype.dbStats = function(next){
@@ -314,6 +356,9 @@ EMongo.prototype.getQuery = function(){
 	
 	this.locals.criteria = this.req.query.criteria || '{\n\t\n}';
 	
+	if(this.locals.action === "findById")
+		return {_id: ObjectId(this.locals.byid)};
+	
 	if(!this.req.query.criteria)
 		return {};
 	
@@ -396,8 +441,10 @@ EMongo.prototype.processCollection = function(next){
 			};
 
 			self.locals.count = count;
-			self.locals.message = self.locals.ml.recordsFound.replace('%d', count);
 			self.locals.result = new Object();
+			
+			if(self.locals.action !== 'findById')
+				self.locals.message = self.locals.ml.recordsFound.replace('%d', count);
 
 			cursor.each(function(err, r){
 				if(err)

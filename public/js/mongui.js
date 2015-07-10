@@ -106,7 +106,28 @@ $(function(){
 	
 	$('#actsel').change(function(){
 		$('#update-operators').toggle(this.value === 'update');
+		$('#sort-order-td').toggle(this.value === 'find');
+		$('#native-fields').toggle(this.value.indexOf('find') === 0);
+		$('#query-operators').toggle(this.value !== 'findById');
+		$('#by-id').toggle(this.value === 'findById');
+		$('#distinct-field').toggle(this.value === 'distinct');
+		
+		switch($(this).val()){
+			case 'find':
+//				$('#criteria').focus();
+				break;
+			case 'findById':
+				$('#by-id input').select();
+				break;
+			case 'distinct':
+				$('#distinct-field input').select();
+				break;
+		}
 	}).change();
+	
+	$('#by-id').focus(function(){
+		$(this).select();
+	});
 
 	$('#field_menu a').click(function(){
 		var $a = $(this),

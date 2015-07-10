@@ -100,6 +100,12 @@ thead th, .lcaption .thead th{
 .expanded{
 	max-height: none;
 }
+#distinct-result {
+	margin: 20px;
+}
+#distinct-result td:first-child{
+	text-align: right;
+}
 #main-t{
 	width: 100%;
 	margin-bottom: 21px;
@@ -138,15 +144,25 @@ textarea{
 .lcaption tbody th:after{
 	content: ': ';
 }
+#query-box{
+	min-width: 300px;
+}
 #query-form{
 	text-align: center;
+	background-color: #eeefff;
 }
 #query-form-container{
-	padding: 8px;
-	background-color: #eeefff;
 }
 #update-operators{
 	display: none;
+}
+#by-id{
+	display: none;
+	padding: 20px;
+}
+#distinct-field{
+	display: none;
+	padding: 12px;
 }
 #sort-order{
 	text-align: center;
