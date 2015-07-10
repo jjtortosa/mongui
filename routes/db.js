@@ -124,7 +124,6 @@ EMongo.prototype.distinct = function(next){
 	var self = this;
 	
 	this.collection.aggregate([{ $group: { _id: "$" + distinct, count:{$sum:1}}  }], function(err, r){
-		console.log(r);
 		if(err)
 			return next(err);
 		
