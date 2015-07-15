@@ -190,6 +190,7 @@ EMongo.prototype.dbStats = function(next){
 			
 		case 'import':
 			this.view = 'import';
+			this.locals.msg = req.query.msg;
 			next.call(this);
 			break;
 			

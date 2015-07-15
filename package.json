@@ -1,7 +1,7 @@
 {
   "name": "mongui",
   "description": "MongoDB user interface",
-  "version": "0.2.9",
+  "version": "0.2.11",
   "scripts": {
     "start": "node ./bin/www",
     "install": "node ./bin/install"
@@ -23,7 +23,8 @@
     "morgan": "~1.5.1",
     "pmx": "^0.3.5",
     "serve-favicon": "~2.2.0",
-    "tar.gz": "^0.1.1"
+    "tar.gz": "^0.1.1",
+    "tmp": "0.0.26"
   },
   "bin": {
     "mongui": "./bin/www"
