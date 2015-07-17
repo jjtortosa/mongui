@@ -1,7 +1,6 @@
 /* global module */
 
 var fs = require('fs')
-,	tmp = require("tmp")
 ,	mongorestore = require('../modules/mongorestore.js');
 
 module.exports = function(req, res, next){
