@@ -7,7 +7,6 @@ var path = require('path')
 	'/etc/mongui',
 	'/usr/local/etc/mongui',
 	path.join(process.env.HOME, '.mongui'),
-	path.join(process.env.PWD, 'mongui'),
 	dir
 ];
 
