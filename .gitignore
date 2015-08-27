@@ -1,7 +1,7 @@
-node_modules/
+node_modules
 .DS_Store
 .nbinfo
 pakmanaged.js
 npm-debug.log
 config.json
-/nbproject/private/
+nbprojects
