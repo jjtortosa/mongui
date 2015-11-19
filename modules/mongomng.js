@@ -115,11 +115,10 @@ MongoMng.prototype.serverInfo = function(cb){
 			admin.command({getCmdLineOpts: 1}, function(err, opt){
 				if(err) return cb.call(self, err);
 				
-				var d = opt.documents[0]
-				,	p = d.parsed;
+				var p = opt.parsed;
 				
 				var cmd = {
-					argv: d.argv.join(' '),
+					argv: opt.argv.join(' '),
 					config: p.config,
 					net: JSON.stringify(p.net),
 					dbPath: p.storage.dbPath,
