@@ -58,8 +58,8 @@ MongoMng.prototype.listDbs = function(cb){
 
 		result.databases.forEach(function(db){
 			db.sizeOnDisk = human(db.sizeOnDisk);
-
-			self.useDb(db.name).collectionNames(function(err, collections){
+			
+			self.useDb(db.name).listCollections().toArray(function(err, collections){
 				db.collections = collections.length;
 
 				if(++count === result.databases.length)
