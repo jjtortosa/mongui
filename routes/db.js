@@ -409,14 +409,11 @@ EMongo.prototype.processCollection = function(next){
 
 	var page = parseInt(req.query.page) || 1;
 
-	var cursor = this.collection
-		.find(query, fields)
-		.sort(sort).limit(10)
-		.skip((page -1) * EMongo.limit);
-
 	this.nativeFields(function(err){
 		if(err)
 			return next.call(self, err);
+
+		var cursor = self.collection.find(query, fields);
 		
 		cursor.count(function(err, count){
 			if(err)
@@ -446,15 +443,19 @@ EMongo.prototype.processCollection = function(next){
 			if(self.locals.action !== 'findById')
 				self.locals.message = self.locals.ml.recordsFound.replace('%d', count);
 
-			cursor.each(function(err, r){
-				if(err)
-					return next.call(self, err);
+			cursor
+				.sort(sort)
+				.limit(10)
+				.skip((page -1) * EMongo.limit)
+				.each(function(err, r){
+					if(err)
+						return next.call(self, err);
 
-				if(r)
-					return self.locals.result[r._id] = sanitizeObj(r, '', null, true);
+					if(r)
+						return self.locals.result[r._id] = sanitizeObj(r, '', null, true);
 
-				next.call(self);
-			});
+					next.call(self);
+				});
 		});
 	});
 };

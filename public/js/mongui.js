@@ -42,11 +42,11 @@ $(function(){
 				collection: collection
 			},
 			type: 'post'
-		}).done(function(d){
+		}).done(function(d){console.log(d);
 			if(d.error)
 				return $.alert(d.error);
 
-			if(d.affected === 1){
+			if(d.affected && d.affected.n === 1 && d.affected.ok === 1){
 				$('#' + id).slideUp();
 
 				//actualizamos número de registros en la colección
