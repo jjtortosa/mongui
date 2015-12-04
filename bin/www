@@ -28,13 +28,22 @@ app.set('port', process.env.PORT);
 var server;
 
 if(conf.ssl){
+	/**
+	* Create HTTPS server.
+	*/
+
+   var ssl = {};
+
+   for(var k in conf.ssl){
+	   if(k === 'ca')
+		   ssl[k] = [fs.readFileSync(conf.ssl[k][0])];
+	   else
+		   ssl[k] = fs.readFileSync(conf.ssl[k]);
+   }
+   
 	var https = require('https');
-	var config = {
-		key: fs.readFileSync(conf.ssl.key),
-		cert: fs.readFileSync(conf.ssl.cert)
-	};
 	
-	server = https.createServer(config, app);
+	server = https.createServer(ssl, app);
 } else {
 	var http = require('http');
 	server = http.createServer(app);

@@ -4,11 +4,19 @@
 	"mongopass": "",
 	"cookieSession": {
 		"keys": ["tobo!", "keyboard"],
-		"maxAge": "3600000"
+		"maxAge": 3600000000
 	},
 	"users": {
 		"test": "1234"
 	},
 	"useMobile": ["phone", "tablet", "tv"],
-	"port": 3101
+	"port": 3443,
+	"ssl_": {
+		"key": "/etc/letsencrypt/live/example.net/privkey.pem",
+		"cert": "/etc/letsencrypt/live/example.net/fullchain.pem",
+		"ca": [
+			"/etc/letsencrypt/live/example.net/chain.pem"
+		],
+		"dhparam": "/etc/nginx/dhparam.pem"
+	}
 }
