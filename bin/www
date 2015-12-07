@@ -35,9 +35,12 @@ if(conf.ssl){
    var ssl = {};
 
    for(var k in conf.ssl){
-	   if(k === 'ca')
-		   ssl[k] = [fs.readFileSync(conf.ssl[k][0])];
-	   else
+	   if(k === 'ca'){
+			ssl[k] = [];
+			conf.ssl[k].forEach(function(f){
+				ssl[k].push(fs.readFileSync(f));
+			});
+	   } else
 		   ssl[k] = fs.readFileSync(conf.ssl[k]);
    }
    
