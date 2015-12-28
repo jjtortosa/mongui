@@ -141,8 +141,8 @@ module.exports = function(req, res, next){
 			col.update(query, {$rename: rename}, function(err, r){
 				if(err)
 					return res.json({error: err.message});
-
-				res.json(r === 1 ? req.body.name : {error: 'not modified'});
+				
+				res.json(r.result.n === 1 ? req.body.name : {error: 'not modified'});
 			});
 			break;
 

@@ -247,17 +247,22 @@ $(function(){
 			$('#query-form').submit();
 		},
 		fieldRename: function(o){
-			var name = prompt('New name for field ' + o.field);
+			var p = o.field.lastIndexOf('.') + 1
+			,	basename = o.field.substr(p)
+			,	name = prompt('New name for field ' + o.field, basename);
 
-			if(!name)
+			if(!name || name === basename)
 				return;
 
+			var base = o.field.substr(0, p)
+			,	value = base + name;
+			
 			$.ajax({
 				url: '/db/' + db + '/' + collection,
 				data: {
 					op: 'renameField',
 					key: o.field,
-					name: name,
+					name: value,
 					id: o.id,
 					db: db,
 					collection: collection
@@ -288,13 +293,15 @@ $(function(){
 				if(d.error)
 					return $.alert(d.error);
 
-				if(d.affected === 1){
+				if(d.affected.n === 1){
 					$(o.target[0].nextSibling).remove();//text node ': '
 
 					o.target.next().remove();//span content value
 
 					if(o.target[0].previousSibling.nodeValue[0]===',')
 						$(o.target[0].previousSibling).remove();
+					else if(o.target[0].nextSibling.nodeValue[0]===',')
+						$(o.target[0].nextSibling).remove();
 
 					o.target.remove();
 				}
