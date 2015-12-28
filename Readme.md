@@ -62,7 +62,6 @@ Navigate to:
 - [html-entities](https://github.com/mdevils/node-html-entities): Faster HTML entities encode/decode library.
 - [jade](https://github.com/jadejs/jade): A clean, whitespace-sensitive template language for writing HTML
 - [mongodb](http://mongodb.github.io/node-mongodb-native/): MongoDB
-- [morgan](https://github.com/expressjs/morgan): http request logger middleware for node.js
 - [serve-favicon](https://github.com/expressjs/serve-favicon): favicon serving middleware with caching
 
 ## Dev Dependencies

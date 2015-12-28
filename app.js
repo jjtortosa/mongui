@@ -3,7 +3,6 @@
 var express = require('express')
 ,	path = require('path')
 ,	favicon = require('serve-favicon')
-,	logger = require('morgan')
 ,	cookieParser = require('cookie-parser')
 ,	bodyParser = require('body-parser')
 ,	session = require('cookie-session')
@@ -27,7 +26,6 @@ app.set('view engine', 'jade');
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(logger('dev'));
 app.use(bodyParser.urlencoded({ limit: '1gb', extended: false }));
 app.use(cookieParser());
 app.use(session(conf.cookieSession));
