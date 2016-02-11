@@ -1,6 +1,7 @@
 node_modules/
 .DS_Store
 .nbinfo
+.idea
 pakmanaged.js
 npm-debug.log
 config.json

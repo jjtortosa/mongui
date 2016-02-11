@@ -336,10 +336,9 @@ EMongo.prototype.colStats = function(next){
 };
 
 EMongo.prototype.getCollections = function(next){
-	var self = this
-	,	req = this.req;
+	var self = this;
 
-	this.locals.collections = new Array();
+	this.locals.collections = [];
 
 	this.mng.getCollections(this.dbname, function(err, collections){
 		if(err || !collections)
@@ -365,6 +364,7 @@ EMongo.prototype.getQuery = function(){
 	try{
 		eval('query=' + this.req.query.criteria.replace(/[\t\n\r]/g, ''));
 
+		//noinspection JSUnusedAssignment
 		return query;
 	} catch(e){
 		return e;
@@ -372,7 +372,6 @@ EMongo.prototype.getQuery = function(){
 };
 
 EMongo.prototype.getUpdateOperators = function(){
-	var ret;
 
 	this.locals.update = this.req.query.update || "{\n\t'$set': {\n\t\t\n\t}\n}";
 
@@ -380,8 +379,11 @@ EMongo.prototype.getUpdateOperators = function(){
 		return;
 	
 	try{
+		var ret;
+
 		eval('ret=' + this.req.query.update.replace(/[\t\n\r]/g, ''));
 
+		//noinspection JSUnresolvedVariable
 		return ret;
 	} catch(e){
 		return e;
@@ -438,7 +440,7 @@ EMongo.prototype.processCollection = function(next){
 			};
 
 			self.locals.count = count;
-			self.locals.result = new Object();
+			self.locals.result = {};
 			
 			if(self.locals.action !== 'findById')
 				self.locals.message = self.locals.ml.recordsFound.replace('%d', count);
@@ -485,12 +487,12 @@ EMongo.prototype.doUpdate = function(next){
 			return next.call(self, new Error('Invalid query'));
 	}
 	
-	this.collection.update(query, update, {multi: true}, function(err, count, status){
+	this.collection.update(query, update, {multi: true}, function(err, r){
 		if(err)
 			return next.call(self, err);
 
-		if(status.ok)
-			self.locals.message = req.res.locals.ml.rowsAffected + ': ' + count;
+		if(r.result.ok)
+			self.locals.message = req.res.locals.ml.rowsAffected + ': ' + r.result.nModified;
 		
 		self.queryFields();
 		self.sortFields();
@@ -507,7 +509,7 @@ EMongo.prototype.queryFields = function(){
 	if(req.query.fields && typeof req.query.fields === 'string')
 		req.query.fields = [req.query.fields];
 	
-	this.locals.fields = req.query.fields || new Array();
+	this.locals.fields = req.query.fields || [];
 	
 	return this.locals.fields;
 };
@@ -534,7 +536,7 @@ EMongo.prototype.nativeFields = function(cb){
 		if(err || !doc)
 			return cb(err);
 		
-		var fields = new Array();
+		var fields = [];
 		
 		Object.keys(doc).forEach(function(k){
 			fields.push(k);
