@@ -14,8 +14,9 @@ var ISODate = function(d){
 
 
 module.exports = function(req, res, next){
-	var col = req.collection
-	,	dbpath = '/db/' + req.db.databaseName + '/';
+	var col = req.collection;
+	var dbpath = '/db/' + req.db.databaseName + '/';
+	var update;
 
 	if(req.body.id)
 		var query = {_id: req.mongoMng.parseId(req.body.id)};
@@ -55,7 +56,7 @@ module.exports = function(req, res, next){
 			}
 			break;
 		case 'setField':
-			let update = {$set: {}};
+			update = {$set: {}};
 			let value;
 
 			switch(req.body.type){
@@ -93,8 +94,6 @@ module.exports = function(req, res, next){
 			});
 			break;
 		case 'deleteField':
-			let update;
-
 			eval('update = {$unset: {"' + req.body.key + '": ""}}');
 
 			col.update(query, update, function(err, r){
