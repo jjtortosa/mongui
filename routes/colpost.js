@@ -1,11 +1,17 @@
 /* global module, require, err */
 
-var ObjectId = require('mongodb').ObjectID
-,	MongoDoc = require('../modules/mongodoc');
+"use strict";
 
-function ISODate(d){
+// used when evaluating incoming expressions
+//noinspection JSUnusedLocalSymbols
+var ObjectId = require('mongodb').ObjectID;
+//noinspection JSUnusedLocalSymbols
+var MongoDoc = require('../modules/mongodoc');
+//noinspection JSUnusedLocalSymbols
+var ISODate = function(d){
 	return new Date(d);
-}
+};
+
 
 module.exports = function(req, res, next){
 	var col = req.collection
@@ -18,7 +24,7 @@ module.exports = function(req, res, next){
 
 	switch(res.locals.op){
 		case 'truncate':
-			col.remove({}, function(err, a){
+			col.remove({}, function(err){
 				if(!err)
 					return res.redirect(req.path);
 
@@ -49,8 +55,8 @@ module.exports = function(req, res, next){
 			}
 			break;
 		case 'setField':
-			var update = {$set: {}},
-				value;
+			let update = {$set: {}};
+			let value;
 
 			switch(req.body.type){
 				case 'number':
@@ -87,7 +93,7 @@ module.exports = function(req, res, next){
 			});
 			break;
 		case 'deleteField':
-			var update;
+			let update;
 
 			eval('update = {$unset: {"' + req.body.key + '": ""}}');
 
@@ -122,13 +128,29 @@ module.exports = function(req, res, next){
 				if(!doc)
 					return res.send({error: "Doc not found"});
 
+				// remove _id
 				delete doc._id;
 
-				col.insert(doc, function(err, doc){
+				// remove unique index fields
+				col.indexes(function(err, r){
 					if(err)
 						return res.send({error: err});
 
-					res.send(doc[0]);
+					r.forEach(function(idx){
+						if(idx.unique){
+							Object.keys(idx.key).forEach(function(k){
+								if(idx.key[k])
+									doc[k] = "unique index field " + Date.now();
+							});
+						}
+					});
+
+					col.insert(doc, function(err){
+						if(err)
+							return res.send({error: err.message});
+
+						res.send(doc);
+					});
 				});
 			});
 			break;
@@ -179,7 +201,7 @@ module.exports = function(req, res, next){
 			if(name)
 				options.name = name;
 
-			col.ensureIndex(attr, options, function(err, name){
+			col.ensureIndex(attr, options, function(err){
 				if(err)
 					return next(err);
 
