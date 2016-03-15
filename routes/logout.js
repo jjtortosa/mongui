@@ -1,6 +1,6 @@
 /* global module */
 
-module.exports = function(req, res, next){console.log(req.session.user);
+module.exports = function(req, res, next){
 	delete req.session.user;
 
 	res.redirect('/');

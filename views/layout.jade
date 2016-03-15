@@ -26,7 +26,7 @@ html
 					.auto-height
 						h3
 							if dbname
-								a(href="/") Db's
+								a(href="/dbs") Db's
 								| &nbsp;·&nbsp;
 								select(onchange="location.href='/db/'+this.value")
 									each db in dbs

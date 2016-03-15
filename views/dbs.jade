@@ -2,19 +2,19 @@ extends layout
 
 block content
 	#db-content
-		a(href="?op=createdb") Crear nueva base de datos
+		a(href="/createdb")=ml.createdb
 
 		table.lcaption(style="max-width:800px")#dbs
 			thead
 				tr(style="text-align:center")
-					th Nombre
-					th Tamaño
-					th Almacenamiento
-					th Tamaño de datos
-					th Tamaño de índice
-					th Índices
-					th Colecciones
-					th Objetos
+					th=ml.name
+					th=ml.size
+					th=ml.storage
+					th=ml.datasize
+					th=ml.indexsize
+					th=ml.indexes
+					th=ml.collections
+					th=ml.objects
 					th Ok
 			tbody(style="text-align:right")
 				each db in databases
@@ -27,4 +27,4 @@ block content
 						td=db.indexes
 						td=db.collections
 						td=db.objects
-						td!=db.ok
+						td=db.ok

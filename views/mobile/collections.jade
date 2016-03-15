@@ -3,8 +3,8 @@ extends layout
 block content
 	#dbsPage(data-role="page")
 		div(data-role="header",data-position="fixed")
-			a.ui-btn.ui-icon-carat-l.ui-alt-icon.ui-btn-icon-notext.ui-corner-all(href='/')
-			h1=dbname+" - "+ml.collections
+			a.ui-btn.ui-icon-carat-l.ui-alt-icon.ui-btn-icon-left.ui-corner-all(href='/') Db's
+			h1=dbname
 		div(role="main",class="ui-content")
 			ul#collections(data-role="listview")
 				each col in collections

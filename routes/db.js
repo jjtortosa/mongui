@@ -43,11 +43,6 @@ class EMongo {
 		var req = this.req;
 
 		switch (this.locals.action) {
-			case 'delete':
-				this.collection.remove({_id: req.param('id')}, function (err, a) {
-					req.res.send(err || a);
-				});
-				break;
 			case 'explain':
 				var query = this.getQuery();
 
@@ -149,6 +144,9 @@ class EMongo {
 				this.view = 'dbstats';
 
 				this.db.stats((err, stats) => {
+					if(stats.ok === 1)
+						stats.ok = "✓";
+
 					this.locals.dbStats = sanitizePlainObj(stats);
 
 					next.call(this);
@@ -296,9 +294,9 @@ class EMongo {
 				break;
 			case 'insert':
 				this.view = 'insert';
-				this.locals.json = req.param('json') || "{\n\n\n\n\n\n\n\n\n\n\n}";
+				this.locals.json = req.query.json || "{\n\n\n\n\n\n\n\n\n\n\n}";
 
-				var msg = req.param('msg');
+				var msg = req.query.msg;
 
 				switch (msg) {
 					case 'parseError':

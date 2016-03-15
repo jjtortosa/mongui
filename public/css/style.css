@@ -85,9 +85,6 @@ thead th, .lcaption .thead th{
 #header-sep{
 	height: 25px;
 }
-#header-sep-db{
-	height: 50px;
-}
 .result{
 	max-height: 162px;
 	overflow-y: hidden;

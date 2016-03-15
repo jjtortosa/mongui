@@ -12,7 +12,7 @@ module.exports = function(req, res, next){
 	try{
 		db = db.db(req.body.dbname);
 	} catch(e){
-		return res.redirect('/?op=createdb&err=' + encodeURI(e.message + '&db=' + req.body.dbname));
+		return res.redirect('/createdb?err=' + encodeURI(e.message + '&db=' + req.body.dbname));
 	}
 
 	db.createCollection('__dummy', {autoIndexId: false}, function(err, col){

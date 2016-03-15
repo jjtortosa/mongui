@@ -30,7 +30,7 @@ MongoMng.prototype.dbsInfo = function(cb){
 					db[k] = human(db[k]);
 				});
 
-				db.ok = db.ok && '&#10003;';
+				db.ok = db.ok && '✓';
 
 				if(++count === databases.length){
 					cb.call(self, null, databases);

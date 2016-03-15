@@ -1,11 +1,16 @@
 extends layout
 
 block content
+	.breadcrumb
+		a.icon.icon-home(href="/")=ml.home
+		span.gtt
+		a.icon.icon-db(href="/db/" + dbname)=dbname
+	#header-sep
 	form#post(style="display:none",method="post")
 		input#db(type="hidden",name="db",value=dbname)
 		input#dbop(type="hidden",name="op")
 
-	.header
+	.actions
 		a(href="/db/"+dbname,class={active:op==="stats"})=ml.statistics
 		|  | 
 		a(href="/db/"+dbname+"?op=processlist",class={active:op==="processlist"})=ml.processes
@@ -25,8 +30,7 @@ block content
 		a(href="/db/"+dbname+"?op=dup",class={active:op==="dup"})=ml.duplicate
 		|  | 
 		a#dropdb(href="#",data-msg=ml.dropDbMsg)=ml.remove
-	
-	#header-sep-db
+
 	#content
 		block dbbody
 
