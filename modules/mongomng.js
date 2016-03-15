@@ -1,163 +1,155 @@
-/* global require, module, decodeURI */
+"use strict";
 
 var MongoClient = require('mongodb').MongoClient
-,	ObjectId = require('mongodb').ObjectID
 ,	events = require('events')
 ,	debug = require('debug')('mongui:server')
 ,	assert = require('assert');
 
-function MongoMng(db) {
-	this.db = db;
-}
+class MongoMng extends events.EventEmitter {
+	constructor(db) {
+		super();
 
-MongoMng.prototype.__proto__ = events.EventEmitter.prototype;
+		this.db = db;
+	}
 
-MongoMng.prototype.dbsInfo = function(cb){
-	var self = this;
+	dbsInfo(cb) {
+		var self = this;
 
-	this.listDbs(function(err, databases){
-		if(err || !databases.length)
-			return cb.call(self, err, databases);
+		this.listDbs(function (err, databases) {
+			if (err || !databases.length)
+				return cb.call(self, err, databases);
 
-		var count = 0;
+			var count = 0;
 
-		databases.forEach(function(db){
-			self.useDb(db.name).stats(function(err, stats){
-				for(var i in stats)
-					db[i] = stats[i];
+			databases.forEach(function (db) {
+				self.useDb(db.name).stats(function (err, stats) {
+					for (var i in stats)
+						db[i] = stats[i];
 
-				['storageSize', 'dataSize', 'indexSize', ''].forEach(function(k){
-					db[k] = human(db[k]);
-				});
-
-				db.ok = db.ok && '✓';
-
-				if(++count === databases.length){
-					cb.call(self, null, databases);
-				}
-			});
-		});
-	});
-};
-
-MongoMng.prototype.useDb = function(n){
-	return this.db.db(n);
-};
-
-MongoMng.prototype.admin = function(){
-	return this.db.admin();
-};
-
-MongoMng.prototype.listDbs = function(cb){
-	var self = this
-	,	count = 0;
-
-	this.admin().listDatabases(function(err, result){
-		if(err)
-			return cb.call(self, err);
-
-		result.databases.forEach(function(db){
-			db.sizeOnDisk = human(db.sizeOnDisk);
-			
-			self.useDb(db.name).listCollections().toArray(function(err, collections){
-				db.collections = collections.length;
-
-				if(++count === result.databases.length)
-					cb.call(self, null, result.databases);
-			});
-		});
-
-		result.databases.sort(function(a,b){
-			return a.name > b.name ? 1 : -1;
-		});
-	});
-};
-
-MongoMng.prototype.getCollections = function(db, cb){
-	var self = this
-	,	collections = [];
-
-	this.useDb(db).collections(function(err, r){
-		if(err)
-			return cb.call(self, err);
-
-		if(!r.length)
-			return cb.call(self);
-
-		var count = 0;
-
-		r.forEach(function(c){
-			c.count(function(err, t){
-				collections.push({name: c.collectionName, count: t});
-
-				if(++count === r.length){
-					collections.sort(function(a,b){
-						return a.name > b.name ? 1 : -1;
+					['storageSize', 'dataSize', 'indexSize', ''].forEach(function (k) {
+						db[k] = human(db[k]);
 					});
 
-					cb.call(self, null, collections);
-				}
-			});
-		});
-	});
-};
+					db.ok = db.ok && '✓';
 
-MongoMng.prototype.serverInfo = function(cb){
-	var self = this
-	,	admin = this.admin();
-
-    admin.profilingLevel(function(err, level){
-		if(err) return cb.call(self, err);
-
-        admin.serverInfo(function(err, info){
-			if(err) return cb.call(self, err);
-
-			admin.command({getCmdLineOpts: 1}, function(err, opt){
-				if(err) return cb.call(self, err);
-				
-				var p = opt.parsed;
-				
-				var cmd = {
-					argv: opt.argv.join(' '),
-					config: p.config,
-					net: JSON.stringify(p.net),
-					dbPath: p.storage.dbPath,
-					log: p.systemLog.path
-				};
-				
-				cb.call(self, null, {
-					info: info,
-					level: level,
-					cmd: cmd
+					if (++count === databases.length) {
+						cb.call(self, null, databases);
+					}
 				});
 			});
-        });
-    });
-};
+		});
+	}
 
-MongoMng.prototype.serverStatus = function(cb){
-	this.admin().serverStatus(cb);
-};
+	useDb(n) {
+		return this.db.db(n);
+	}
 
-MongoMng.prototype.currentOp = function(q, cb){
-	var self = this;
+	admin() {
+		return this.db.admin();
+	}
 
-	if(q === true)
-		q = {$all: 1};
+	listDbs(cb) {
+		var self = this
+			, count = 0;
 
-	this.db.collection('$cmd.sys.inprog').findOne(q, function(err, data){
-		cb.call(self, err, data && data.inprog);
-	});
-};
+		this.admin().listDatabases(function (err, result) {
+			if (err)
+				return cb.call(self, err);
 
-MongoMng.prototype.parseId = function(id){
-	return MongoMng.parseId(id);
-};
+			result.databases.forEach(function (db) {
+				db.sizeOnDisk = human(db.sizeOnDisk);
 
-MongoMng.parseId = function(id){
-	return ObjectId.isValid(id) ? ObjectId(id) : id;
-};
+				self.useDb(db.name).listCollections().toArray(function (err, collections) {
+					db.collections = collections.length;
 
+					if (++count === result.databases.length)
+						cb.call(self, null, result.databases);
+				});
+			});
+
+			result.databases.sort(function (a, b) {
+				return a.name > b.name ? 1 : -1;
+			});
+		});
+	}
+
+	getCollections(db, cb) {
+		var self = this
+			, collections = [];
+
+		this.useDb(db).collections(function (err, r) {
+			if (err)
+				return cb.call(self, err);
+
+			if (!r.length)
+				return cb.call(self);
+
+			var count = 0;
+
+			r.forEach(function (c) {
+				c.count(function (err, t) {
+					collections.push({name: c.collectionName, count: t});
+
+					if (++count === r.length) {
+						collections.sort(function (a, b) {
+							return a.name > b.name ? 1 : -1;
+						});
+
+						cb.call(self, null, collections);
+					}
+				});
+			});
+		});
+	}
+
+	serverInfo(cb) {
+		var self = this
+			, admin = this.admin();
+
+		admin.profilingLevel(function (err, level) {
+			if (err) return cb.call(self, err);
+
+			admin.serverInfo(function (err, info) {
+				if (err) return cb.call(self, err);
+
+				admin.command({getCmdLineOpts: 1}, function (err, opt) {
+					if (err) return cb.call(self, err);
+
+					var p = opt.parsed;
+
+					var cmd = {
+						argv: opt.argv.join(' '),
+						config: p.config,
+						net: JSON.stringify(p.net),
+						dbPath: p.storage.dbPath,
+						log: p.systemLog.path
+					};
+
+					cb.call(self, null, {
+						info: info,
+						level: level,
+						cmd: cmd
+					});
+				});
+			});
+		});
+	}
+
+	serverStatus(cb) {
+		this.admin().serverStatus(cb);
+	}
+
+	currentOp(q, cb) {
+		var self = this;
+
+		if (q === true)
+			q = {$all: 1};
+
+		this.db.collection('$cmd.sys.inprog').findOne(q, function (err, data) {
+			cb.call(self, err, data && data.inprog);
+		});
+	}
+}
 
 module.exports = function(app){
 	var conf = app.get('conf')

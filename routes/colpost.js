@@ -19,7 +19,7 @@ module.exports = function(req, res, next){
 	var update;
 
 	if(req.body.id)
-		var query = {_id: req.mongoMng.parseId(req.body.id)};
+		var query = {_id: req.mongoMng.parseId(ObjectId.isValid(req.body.id) ? ObjectId(req.body.id) : req.body.id)};
 
 	res.locals.op = req.body.op || req.params.op;
 
