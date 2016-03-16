@@ -75,7 +75,7 @@ module.exports = function(db, collections, cb){
 				if(collections && collections.length === 1)
 					file += collections[0] + '_';
 				
-				file += Date.now() + '.tar.gz';
+				file += Date.now() + '.tgz';
 				
 				new tgz().compress(out, file, function(err){
 					cb(err, file);
