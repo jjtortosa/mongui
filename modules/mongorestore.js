@@ -1,37 +1,38 @@
-/* global module, require */
+"use strict";
 
-var spawn = require('child_process').spawn
-,	fs = require('fs')
-,	tmp = require("tmp")
-,	tgz = require('tar.gz');
+const spawn = require('child_process').spawn;
+const fs = require('fs');
+const tmp = require("tmp");
+const tgz = require('targz');
 
 
-module.exports = function(file, cb){
-	var options = {
+module.exports = function(file){
+	const options = {
 		unsafeCleanup: true	//removes the created temporary directory, even when it's not empty
 	};
-	
-	tmp.dir(options, function _tempDirCreated(err, path, cleanupCallback) {
-		if(err)
-			return cb(err);
-		
-		new tgz().extract(file, path, function(err){
-			if(err)
-				return cb(err);
 
-			err = '';
+	return new Promise((ok, ko) => {
+		tmp.dir(options, (err, path, cleanupCallback) => {
+			if (err)
+				return ko(err);
 
-			var process = spawn('mongorestore', ['--dir', path + '/dump', '--drop']);
+			tgz.decompress({src: file, dest: path}, err => {
+				if (err)
+					return ko(err);
 
-			//stderr no sólo contiene errores
-	//		process.stderr.on('data', function (data) {
-	//			err += data;
-	//		});
+				var process = spawn('mongorestore', ['--dir', path + '/dump', '--drop']);
 
-			process.on('exit', function (code) {
-				cleanupCallback();
-				
-				cb(err && new Error(err), code);
+				//stderr no sólo contiene errores
+				//		err = '';
+				//		process.stderr.on('data', function (data) {
+				//			err += data;
+				//		});
+
+				process.on('exit', code => {
+					cleanupCallback();
+
+					ok(code);
+				});
 			});
 		});
 	});

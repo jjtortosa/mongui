@@ -1,13 +1,13 @@
-/* global module */
+"use strict";
+
+const mongodump = require('../modules/mongodump');
 
 module.exports = function(req, res, next){
 	var dbpath = '/db/' + req.mongoMng.db.databaseName;
 	
 	switch(req.body.op){
 		case 'dropdb':
-			req.db.dropDatabase(function(err, a){
-				req.res.redirect('/');
-			});
+			req.db.dropDatabase(() => req.res.redirect('/'));
 			break;
 		
 		case 'repair':
@@ -28,14 +28,9 @@ module.exports = function(req, res, next){
 			break;
 			
 		case 'export':
-			var mongodump = require('../modules/mongodump.js');
-			
-			mongodump(req.params.db, JSON.parse(req.body.collections), function(err, file){
-				if(err)
-					return next(err);
-				
-				res.download(file);
-			});
+			mongodump(req.params.db, JSON.parse(req.body.collections))
+				.then(file => res.download(file))
+				.catch(next);
 			break;
 		
 		case 'adduser':
@@ -59,11 +54,9 @@ module.exports = function(req, res, next){
 			break;
 			
 		case 'dup':
-			var name = req.body.name.trim();
+			const name = req.body.name.trim();
 			
-			function dupErr(err){
-				res.redirect('?op=dup&name=' + name + '&err=' + err);
-			}
+			let dupErr = err => res.redirect('?op=dup&name=' + name + '&err=' + err);
 			
 			if(!name)
 				return dupErr('');
@@ -77,7 +70,7 @@ module.exports = function(req, res, next){
 				copydb: 1,
 				fromdb: req.db.databaseName,
 				todb: name
-			}, function(err, r){
+			}, function(err){
 				if(err)
 					return dupErr(err);
 				

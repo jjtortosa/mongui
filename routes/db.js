@@ -66,7 +66,7 @@ class EMongo {
 							if (err)
 								return next.call(this, err);
 
-							this.locals.message = r + ' records affected';
+							this.locals.message = r.n + ' records affected';
 
 							next.call(this);
 						});

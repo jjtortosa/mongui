@@ -1,7 +1,7 @@
 extends db
 
 block dbbody
-	p dump_xxxxx.tar.gz
+	p dump_xxxxx.tgz
 	form(method="post",enctype="multipart/form-data",action="/import/"+dbname)
 		input(type="hidden",name="op",value="import")
 		input(type="file", style="width:400px", name="dump", required, accept="application/gzip")
