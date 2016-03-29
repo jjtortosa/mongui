@@ -1,9 +1,9 @@
-/* global require, module */
+"use strict";
 
 var ObjectId = require('mongodb').ObjectID,
 	MongoDoc = require('../modules/mongodoc');
 
-module.exports = function(req, res, next){
+module.exports = function(req, res){
 	var col = req.collection
 	,	fields = {_id: false}
 	,	field = req.params.field
@@ -11,8 +11,10 @@ module.exports = function(req, res, next){
 	
 	if(ObjectId.isValid(req.params.id))
 		id = ObjectId(req.params.id);
-	
-	fields[field] = true;
+
+	let r = field.match(/^(.+)\.\d/);
+
+	fields[r ? r[1] : field] = true;
 
 	col.findOne({_id: id}, fields, function(err, r){
 		if(err || !r)

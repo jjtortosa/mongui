@@ -1,10 +1,11 @@
 /* global monguiLang */
 
 $(function(){
-	var db = $('#db').val(),
-		collection = $('#collection').val();
+	var db = $('#db').val();
+	var collection = $('#collection').val();
+	var $exp = $('.exp');
 
-	$('.exp').click(function(){
+	$exp.click(function(){
 		var title = $(this).html() === monguiLang.expand ? monguiLang.colapse : monguiLang.expand;
 
 		$(this).html(title).parents('.result-box').find('.result').toggleClass('expanded');
@@ -18,7 +19,7 @@ $(function(){
 	$('#query-form').submit(function(){
 		var $f = $(this);
 
-		$('#sort-order [name^="sortFields"]').each(function(){
+		$('#sort-order').find('[name^="sortFields"]').each(function(){
 			if(this.value)
 				$f.append('<input type="hidden" name="sort[' + this.value + ']" value="' + $(this).next().val() + '"/>');
 		});
@@ -50,7 +51,7 @@ $(function(){
 				$('#' + id).slideUp();
 
 				//actualizamos número de registros en la colección
-				var $numspan = $('#collections>.active>span');
+				var $numspan = $('#collections').find('>.active>span');
 
 				$numspan.text($numspan.text().replace(/\d+/, function(n){ return --n; }));
 			}
@@ -97,39 +98,44 @@ $(function(){
 	}).on('click', '.moretext', function(e){
 		e.preventDefault();
 
-		var $a = $('#field_menu a[href="#fieldUpdate"]');
+		var $a = $('#field_menu').find('a[href="#fieldUpdate"]');
 
 		$a.parent().data('target', $(this).parent().prev());
 
 		$a.click();
 	});
-	
+
+	var $byid = $('#by-id');
+
 	$('#actsel').change(function(){
 		$('#update-operators').toggle(this.value === 'update');
 		$('#sort-order-td').toggle(this.value === 'find');
 		$('#native-fields').toggle(this.value.indexOf('find') === 0);
 		$('#query-operators').toggle(this.value !== 'findById');
-		$('#by-id').toggle(this.value === 'findById');
-		$('#distinct-field').toggle(this.value === 'distinct');
-		
+		$byid.toggle(this.value === 'findById');
+
+		var $distinctField = $('#distinct-field');
+
+		$distinctField.toggle(this.value === 'distinct');
+
 		switch($(this).val()){
 			case 'find':
 //				$('#criteria').focus();
 				break;
 			case 'findById':
-				$('#by-id input').select();
+				$byid.find('input').select();
 				break;
 			case 'distinct':
-				$('#distinct-field input').select();
+				$distinctField.find('input').select();
 				break;
 		}
 	}).change();
-	
-	$('#by-id').focus(function(){
+
+	$byid.focus(function(){
 		$(this).select();
 	});
 
-	$('#field_menu a').click(function(){
+	$('#field_menu').find('a').click(function(){
 		var $a = $(this),
 			$target = $a.parent().data('target'),
 			func = $a.attr('href').substr(1),
@@ -199,21 +205,24 @@ $(function(){
 
 			fieldMethods.getField(o.id, o.field, function(d){
 				$('#data_type').val(d.inputType).change();
-				$('#data_value').attr('data-name', o.field).attr('data-id', o.id);
+
+				var $value = $('#data_value');
+
+				$value.attr('data-name', o.field).attr('data-id', o.id);
 
 				switch(d.inputType){
 					case 'mixed':
 					case 'string':
 					case 'binary':
-						$('#data_value textarea').val(d.val);
+						$value.find('textarea').val(d.val);
 						break;
 					case 'boolean':
-						$('#data_value select').val([d.val]);
+						$value.find('select').val([d.val]);
 						break;
 					case 'null':
 						break;
 					default:
-						$('#data_value input').val(d.val);
+						$value.find('input').val(d.val);
 				}
 
 				$('#dialog-field-name').hide();
@@ -225,22 +234,22 @@ $(function(){
 			});
 		},
 		fieldSortAsc: function(o){
-			$('#sort-order [name^="sortFields"]').each(function(){
-				this.value = '';
-			});
-
-			$('#sort-order [name="sortFields[0]"]')
+			$('#sort-order')
+				.find('[name^="sortFields"]')
+				.each(function(){this.value = '';})
+				.end()
+				.find('[name="sortFields[0]"]')
 				.val(o.field)
 				.next().val([1]);
 
 			$('#query-form').submit();
 		},
 		fieldSortDesc: function(o){
-			$('#sort-order [name^="sortFields"]').each(function(){
-				this.value = '';
-			});
-
-			$('#sort-order [name="sortFields[0]"]')
+			$('#sort-order')
+				.find('[name^="sortFields"]')
+				.each(function(){this.value = '';})
+				.end()
+				.find('[name="sortFields[0]"]')
 				.val(o.field)
 				.next().val([-1]);
 
@@ -307,7 +316,7 @@ $(function(){
 				}
 			});
 		},
-		fieldClear: function(o){
+		fieldClear: function(){
 			console.error('Todo: fieldClear');
 		},
 		fieldHide: function(o){
@@ -411,7 +420,9 @@ $(function(){
 		}
 	});
 
-	$('form#command').submit(function(e){
+	$formCommand = $('form#command');
+
+	$formCommand.submit(function(e){
 		e.preventDefault();
 
 		$.ajax({
@@ -477,7 +488,7 @@ $(function(){
 	});
 
 	if($('.result-box').size() === 1)
-		$('.exp').click();
+		$exp.click();
 
 	$('#explain').click(function(){
 		$.ajax({
@@ -504,17 +515,19 @@ $(function(){
 
 	$(window).resize(function(){
 //		$('#leftC .auto-height').height($(this).height()-28);
-		$('#rightC .auto-height').height($(this).height()-54);
+		$('#rightC').find('.auto-height').height($(this).height()-54);
 	}).resize();
 
-	$('#command-examples a').click(function(){
+	var $commandExamples = $('#command-examples');
+
+	$commandExamples.find('a').click(function(){
 		$('[name="command"]').val($(this).html());
 
 		$('#command').submit();
 	});
 	
-	if($('form#command').size() && location.hash)
-		$('#command-examples a[href="' + location.hash + '"]').click();
+	if($formCommand.size() && location.hash)
+		$commandExamples.find('a[href="' + location.hash + '"]').click();
 
 	var $msgDialog = $('#msg-dialog').dialog({
 		autoOpen: false,

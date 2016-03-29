@@ -560,7 +560,7 @@ function sanitize(obj, indent, parent){
 		return {type: 'null', html: null};
 
 	if(Array.isArray(obj))
-		return {type: 'array', html: sanitizeArray(obj, indent)};
+		return {type: 'array', html: sanitizeArray(obj, indent, parent)};
 
 	if(typeof obj === 'string')
 		return {type: 'string', html: '"' + sanitizeString(obj, parent) + '"'};
@@ -616,12 +616,12 @@ function sanitizeObj(obj, indent, parent, removeBrackets){
 	return ret;
 }
 
-function sanitizeArray(arr, indent){
+function sanitizeArray(arr, indent, parent){
 	var nb = indent + '\t',
 		tmp = [];
 
-	arr.forEach(function(a){
-		tmp.push(nb + sanitize(a, nb).html);
+	arr.forEach((a, i) => {
+		tmp.push(nb + sanitize(a, nb, parent + '.' + i).html);
 	});
 
 	return '[\n' + tmp.join(',\n') + '\n' + indent + ']';
