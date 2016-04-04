@@ -4,6 +4,7 @@ const spawn = require('child_process').spawn;
 const fs = require('fs');
 const tmp = require("tmp");
 const tgz = require('targz');
+const debug = require('debug')('mongui:restore');
 
 
 module.exports = function(file){
@@ -20,18 +21,23 @@ module.exports = function(file){
 				if (err)
 					return ko(err);
 
-				var process = spawn('mongorestore', ['--dir', path + '/dump', '--drop']);
+				const p = spawn('mongorestore', ['--dir', path, '--drop']);
 
-				//stderr no sólo contiene errores
-				//		err = '';
-				//		process.stderr.on('data', function (data) {
-				//			err += data;
-				//		});
+				// stderr no sólo contiene errores
+				err = '';
+				p.stderr.on('data', function (data) {
+					err += data;
+				});
 
-				process.on('exit', code => {
+				p.on('exit', code => {
+					debug('exit code %s', code);
+					debug(err);
 					cleanupCallback();
 
-					ok(code);
+					if(code === 1)
+						ko(new Error(err));
+					else
+						ok(code);
 				});
 			});
 		});

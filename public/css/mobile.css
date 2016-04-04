@@ -1,9 +1,6 @@
 #collections li a{
 	padding: 8px 4.6875em 8px 1em;
 }
-.ui-icon-db:after{
-	background-image: url("../img/database.png");
-}
 
 #mobile-query-form-container{
 	display: none;
