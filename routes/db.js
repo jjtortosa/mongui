@@ -1,5 +1,3 @@
-/* global require, module, Error */
-
 "use strict";
 
 var ObjectId = require('mongodb').ObjectID
@@ -450,9 +448,10 @@ class EMongo {
 	}
 
 	doUpdate(next) {
-		var req = this.req
-			, query = {}
-			, update = this.getUpdateOperators();
+		const req = this.req;
+
+		let query = {};
+		let update = this.getUpdateOperators();
 
 		if (update instanceof Error) {
 			update.message = 'Update conditions error: ' + update.message;
@@ -483,9 +482,7 @@ class EMongo {
 			this.queryFields();
 			this.sortFields();
 
-			this.nativeFields(function (err) {
-				next.call(this, err);
-			});
+			this.nativeFields(err => next.call(this, err));
 		});
 	}
 
@@ -596,13 +593,17 @@ function sanitizeObj(obj, indent, parent, removeBrackets){
 	var ret = removeBrackets ? '' : '{\n',
 		nb = indent + (removeBrackets ? '' : '\t'),
 		keys = Object.keys(obj),
-		dataParent = parent ? ' data-parent="' + parent + '"' : '',
 		newParent = (parent ? parent + '.' : '');
 
 	keys.forEach(function(k, i){
 		var s = sanitize(obj[k], nb, newParent + k);
 
-		ret += nb + '<a class="r-key"' + dataParent + ' href="#" data-type="' + s.type + '">' + k + '</a>: <span>' + s.html + '</span>';
+		ret += nb + '<a class="r-key"';
+		
+		if(parent)
+			ret += ' data-parent="' + parent + '"';
+		
+		ret += ' href="#" data-type="' + s.type + '">' + k + '</a>: <span>' + s.html + '</span>';
 
 		if(i < keys.length - 1)
 			ret += ',';
