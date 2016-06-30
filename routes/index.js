@@ -1,5 +1,3 @@
-/* global module */
-
 var express = require('express')
 ,	router = express.Router({strict: true})
 ,	db = require('./db')
