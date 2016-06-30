@@ -1,7 +1,7 @@
 {
   "name": "mongui",
   "description": "MongoDB user interface",
-  "version": "0.2.32",
+  "version": "0.2.33",
   "scripts": {
     "start": "node ./bin/www",
     "install": "node ./bin/install"
@@ -18,7 +18,6 @@
     "express-device": "^0.4.2",
     "html-entities": "^1.2.0",
     "jade": "^1.9.2",
-    "kerberos": "0.0.17",
     "marked": "^0.3.5",
     "merge-descriptors": "^1.0.1",
     "mongodb": "^2.1.21",
