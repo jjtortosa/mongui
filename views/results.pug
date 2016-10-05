@@ -103,6 +103,8 @@ block collection-content
 			a(href="#fieldHide")=ml.hide
 			a(href="#fieldShow")=ml.show
 	else if distinctResult && distinctResult.length
+		p.msg=message
+
 		table#distinct-result.lcaption
 			thead
 				tr
@@ -113,7 +115,7 @@ block collection-content
 					tr
 						td=d.count
 						td: a(href="?criteria="+d.criteria)=d.val
-			
+
 	else if message
 		p.msg=message
 

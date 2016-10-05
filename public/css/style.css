@@ -81,6 +81,7 @@ thead th, .lcaption .thead th{
 }
 .msg{
 	margin: 12px;
+	font-size: 14px;
 }
 #header-sep{
 	height: 25px;
@@ -98,7 +99,7 @@ thead th, .lcaption .thead th{
 	max-height: none;
 }
 #distinct-result {
-	margin: 20px;
+	margin: 1em;
 }
 #distinct-result td:first-child{
 	text-align: right;

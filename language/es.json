@@ -33,7 +33,7 @@
 	"password": "Constraseña",
 	"processes": "Procesos",
 	"queryConditions": "Condiciones de la consulta",
-	"recordsFound": "%d Registros encontrados",
+	"results": "%d resultados",
 	"replication": "Replicación",
 	"rowsAffected": "Filas afectadas",
 	"server": "Servidor",

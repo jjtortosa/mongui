@@ -1,14 +1,14 @@
-/* global module, __dirname, process, require */
+"use strict";
 
-var express = require('express')
-,	path = require('path')
-,	favicon = require('serve-favicon')
-,	cookieParser = require('cookie-parser')
-,	bodyParser = require('body-parser')
-,	session = require('cookie-session')
-,	routes = require('./routes')
-,	device = require('express-device')
-,	pmx = require('pmx');
+const express = require('express');
+const path = require('path');
+const favicon = require('serve-favicon');
+const cookieParser = require('cookie-parser');
+const bodyParser = require('body-parser');
+const session = require('cookie-session');
+const routes = require('./routes');
+const device = require('express-device');
+const pmx = require('pmx');
 
 pmx.init();
 
@@ -21,7 +21,7 @@ app.set('version', require('./package.json').version);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
+app.set('view engine', 'pug');
 
 app.use(favicon(__dirname + '/public/favicon.ico'));
 app.use(express.static(path.join(__dirname, 'public')));

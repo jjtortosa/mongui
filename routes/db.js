@@ -128,6 +128,8 @@ class EMongo {
 				});
 
 				this.locals.distinctResult = r;
+				this.locals.count = r.length;
+				this.locals.message = this.locals.ml.results.replace('%d', r.length);
 			}
 
 			next.call(this);
@@ -428,7 +430,7 @@ class EMongo {
 				this.locals.result = {};
 
 				if (this.locals.action !== 'findById')
-					this.locals.message = this.locals.ml.recordsFound.replace('%d', count);
+					this.locals.message = this.locals.ml.results.replace('%d', count);
 
 				cursor
 					.sort(sort)
