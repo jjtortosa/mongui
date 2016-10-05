@@ -2,44 +2,43 @@
 
 const spawn = require('child_process').spawn;
 const fs = require('fs');
-const tmp = require("tmp");
-const tgz = require('targz');
+const tmp = require("./tmp");
+const tgz = require('./targz');
 const debug = require('debug')('mongui:restore');
+//noinspection JSUnusedLocalSymbols
+const l = console.log.bind(console);
 
 
-module.exports = function(file){
+module.exports = function(db, file){
 	const options = {
 		unsafeCleanup: true	//removes the created temporary directory, even when it's not empty
 	};
 
-	return new Promise((ok, ko) => {
-		tmp.dir(options, (err, path, cleanupCallback) => {
-			if (err)
-				return ko(err);
+	return tmp.dir(options)
+		.then(r => {
+			const path = r.name;
+			const cleanupCallback = r.removeCallback;
 
-			tgz.decompress({src: file, dest: path}, err => {
-				if (err)
-					return ko(err);
+			return tgz.decompress({src: file, dest: path})
+				.then(() => new Promise((ok, ko) => {
+					const p = spawn('mongorestore', ['--db', db, '--dir', path, '--drop']);
 
-				const p = spawn('mongorestore', ['--dir', path, '--drop']);
+					// stderr no sólo contiene errores
+					let err = '';
+					p.stderr.on('data', function (data) {
+						err += data;
+					});
 
-				// stderr no sólo contiene errores
-				err = '';
-				p.stderr.on('data', function (data) {
-					err += data;
-				});
+					p.on('exit', code => {
+						debug('exit code %s', code);
+						debug(err);
+						cleanupCallback();
 
-				p.on('exit', code => {
-					debug('exit code %s', code);
-					debug(err);
-					cleanupCallback();
-
-					if(code === 1)
-						ko(new Error(err));
-					else
-						ok(code);
-				});
-			});
+						if(code === 1)
+							ko(new Error(err));
+						else
+							ok(code);
+					});
+				}));
 		});
-	});
 };

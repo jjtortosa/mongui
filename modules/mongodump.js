@@ -1,38 +1,32 @@
 "use strict";
 
 const spawn = require('child_process').spawn;
-const fs = require('fs');
+const fs = require('mz/fs');
 const rmdir = require("./rmdir");
 const out = '/tmp/dump';
-const tgz = require('targz');
+const tgz = require('./targz');
 
+/**
+ * @todo error handling
+ * @param {array} args
+ * @returns {Promise}
+ */
+const dump = args => {
+	return new Promise((ok) => {
+		args.push('--out');
+		args.push(out);
 
-const dump = (args, cb) => {
-	args.push('--out');
-	args.push(out);
+		const mongodump = spawn('mongodump', args);
 
-	var err = ''
-	,	mongodump = spawn('mongodump', args);
-
-//    mongodump.stdout.on('data', function (data) {
-//      console.log('stdout: ' + data);
-//    });
-//    mongodump.stderr.on('data', function (data) {
-//		err += data;
-//    });
-
-    mongodump.on('exit', function (code) {
-		cb(err && new Error(err), code);
-    });
-
+		mongodump.on('exit', ok);
+	});
 };
 
 module.exports = function(db, collections){
 	if(typeof collections === 'string')
 		collections = [collections];
 	
-	var processes = []
-	,	count = 0;
+	const processes = [];
 	
 	if(!db)
 		processes.push([]);
@@ -43,37 +37,22 @@ module.exports = function(db, collections){
 			processes.push(['--db', db, '--collection', c]);
 		});
 	}
-	
-	if(fs.existsSync(out))
-		rmdir(out);
-	
-	var lastError;
 
-	return new Promise((ok, ko) => {
-		processes.forEach(function (args) {
-			dump(args, function (err) {
-				if (err)
-					lastError = err;
+	return fs.access(out, fs.constants.R_OK | fs.constants.W_OK)
+		.then(() => rmdir(out), () => {})
+		.then(() => Promise.all(processes.map(args => dump(args))))
+		.then(() => fs.readdir(out))
+		.then(files => {
+			if(!files.length)
+				throw new Error('dump not found');
 
-				if (++count === processes.length) {
-					if (lastError)
-						return ko(lastError);
+			let file = '/tmp/dump_';
 
-					if (!fs.readdirSync(out).length)
-						return ko(new Error('dump not found'));
+			if (collections && collections.length === 1)
+				file += collections[0] + '_';
 
-					var file = '/tmp/dump_';
+			file += Date.now() + '.tgz';
 
-					if (collections && collections.length === 1)
-						file += collections[0] + '_';
-
-					file += Date.now() + '.tgz';
-
-					tgz.compress({src: out, dest: file}, err => {
-						err ? ko(err) : ok(file);
-					});
-				}
-			});
+			return tgz.compress({src: out + '/' + db, dest: file}).then(() => file);
 		});
-	});
 };
