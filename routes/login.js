@@ -1,12 +1,12 @@
-/* global module */
+"use strict";
 
-module.exports = function(req, res, next){
-	var conf = req.app.get('conf');
+module.exports = function(req, res){
+	const conf = req.app.get('conf');
 	
 	if(!conf.users || !Object.keys(conf.users).length)
 		res.redirect('/');
 	
-	var redirect = req.session.referer || '/';
+	const redirect = req.session.referer || '/';
 	
 	if(req.method === 'POST'){
 		res.locals.user = req.body.user;

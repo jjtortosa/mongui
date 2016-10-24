@@ -7,8 +7,8 @@ block content
 				tr
 					th(colspan="3") Replication (replSetGetStatus())
 			tbody
-				if(!info.length)
-					tr: td No replica set
+				if(message)
+					tr: td=message
 				else
 					each i,k in info
 						tr

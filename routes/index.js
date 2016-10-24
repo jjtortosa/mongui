@@ -1,8 +1,8 @@
-var express = require('express')
-,	router = express.Router({strict: true})
-,	db = require('./db')
-,	multipart = require('connect-multiparty')
-,	multipartMiddleware = multipart();
+const express = require('express');
+const router = express.Router({strict: true});
+const db = require('./db');
+const multipart = require('connect-multiparty');
+const multipartMiddleware = multipart();
 
 /* GET home page. */
 router.get('/', require('./home'));

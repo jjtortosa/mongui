@@ -132,12 +132,12 @@ class MongoMng extends events.EventEmitter {
 			});
 	}
 
-	serverStatus(cb) {
-		this.admin().serverStatus(cb);
+	serverStatus() {
+		return this.admin().serverStatus();
 	}
 
 	currentOp(q) {
-			return this.db.command({currentOp: q});
+		return this.db.command({currentOp: q});
 	}
 }
 

@@ -1,36 +1,37 @@
 "use strict";
 
-var ObjectId = require('mongodb').ObjectID,
-	MongoDoc = require('../modules/mongodoc');
+const ObjectId = require('mongodb').ObjectID;
+const MongoDoc = require('../modules/mongodoc');
 
-module.exports = function(req, res){
-	var col = req.collection
-	,	fields = {_id: false}
-	,	field = req.params.field
-	,	id = req.params.id;
-	
-	if(ObjectId.isValid(req.params.id))
-		id = ObjectId(req.params.id);
+module.exports = function(req, res, next){
+	if(!ObjectId.isValid(req.params.id))
+		return next(); // not found
 
-	let r = field.match(/^(.+)\.\d/);
+	const col = req.collection;
+	const fields = {_id: false};
+	const field = req.params.field;
+	const id = ObjectId(req.params.id);
+	const r = field.match(/^(.+)\.\d/);
 
 	fields[r ? r[1] : field] = true;
 
-	col.findOne({_id: id}, fields, function(err, r){
-		if(err || !r)
-			return res.json(err || r);
+	col.findOne({_id: id}, fields)
+		.then(r => {
+			if(!r)
+				return res.send(r);
 
-		var ret = r;
+			let ret = r;
 
-		field.split('.').forEach(function(part){
-			if(part === '$id')
-				part = 'oid';
+			field.split('.').forEach(part => {
+				if(part === '$id')
+					part = 'oid';
 
-			ret = ret[part];
-		});
+				ret = ret[part];
+			});
 
-		ret = new MongoDoc(ret);
+			ret = new MongoDoc(ret);
 
-		res.json(err||ret.toSend());
-	});
+			res.json(ret.toSend());
+		})
+		.catch(err => res.json(err));
 };
