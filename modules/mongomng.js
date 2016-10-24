@@ -1,9 +1,9 @@
 "use strict";
 
-var MongoClient = require('mongodb').MongoClient
-,	events = require('events')
-,	debug = require('debug')('mongui:server')
-,	assert = require('assert');
+const MongoClient = require('mongodb').MongoClient;
+const events = require('events');
+const debug = require('debug')('mongui:server');
+const assert = require('assert');
 
 class MongoMng extends events.EventEmitter {
 	constructor(db) {
@@ -102,52 +102,42 @@ class MongoMng extends events.EventEmitter {
 		});
 	}
 
-	serverInfo(cb) {
-		var self = this
-			, admin = this.admin();
+	serverInfo() {
+		const admin = this.admin();
+		const ret = {};
 
-		admin.profilingLevel(function (err, level) {
-			if (err) return cb.call(self, err);
+		return admin.profilingLevel()
+			.then(level => {
+				ret.level = level;
 
-			admin.serverInfo(function (err, info) {
-				if (err) return cb.call(self, err);
+				return admin.serverInfo();
+			})
+			.then(info => {
+				ret.info = info;
 
-				admin.command({getCmdLineOpts: 1}, function (err, opt) {
-					if (err) return cb.call(self, err);
+				return admin.command({getCmdLineOpts: 1});
+			})
+			.then(opt => {
+				const p = opt.parsed;
 
-					var p = opt.parsed;
+				ret.cmd = {
+					argv: opt.argv.join(' '),
+					config: p.config,
+					net: JSON.stringify(p.net),
+					dbPath: p.storage.dbPath,
+					log: p.systemLog.path
+				};
 
-					var cmd = {
-						argv: opt.argv.join(' '),
-						config: p.config,
-						net: JSON.stringify(p.net),
-						dbPath: p.storage.dbPath,
-						log: p.systemLog.path
-					};
-
-					cb.call(self, null, {
-						info: info,
-						level: level,
-						cmd: cmd
-					});
-				});
+				return ret;
 			});
-		});
 	}
 
 	serverStatus(cb) {
 		this.admin().serverStatus(cb);
 	}
 
-	currentOp(q, cb) {
-		var self = this;
-
-		if (q === true)
-			q = {$all: 1};
-
-		this.db.collection('$cmd.sys.inprog').findOne(q, function (err, data) {
-			cb.call(self, err, data && data.inprog);
-		});
+	currentOp(q) {
+			return this.db.command({currentOp: q});
 	}
 }
 

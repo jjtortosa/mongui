@@ -53,21 +53,19 @@ html
 					if(!dbname && ml)
 						.header
 							a(href="/",class={active: path==="/"})=ml.server
-							|  | 
+							|  |
 							a(href="/serverstatus",class={active: path==="/serverstatus"})=ml.status
-							|  | 
+							|  |
 							a(href="/dbs",class={active: path==="/dbs"})=ml.dbs
-							|  | 
+							|  |
 							a(href="/processlist",class={active: path==="/processlist"})=ml.processes
-							|  | 
+							|  |
 							a(href="/command",class={active: path==="/command"})=ml.command
-							|  | 
+							|  |
 							a(href="/replication",class={active: path==="/replication"})=ml.replication
 						#header-sep
 
-						#content
-							block content
-					else
+					#content
 						block content
 		
 		footer

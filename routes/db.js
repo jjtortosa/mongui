@@ -156,11 +156,13 @@ class EMongo {
 			case 'processlist':
 				this.view = 'processlistdb';
 
-				this.db.collection('$cmd.sys.inprog').findOne({ns: new RegExp('^' + this.locals.dbname + '.')}, (err, data) => {
-					this.locals.processlist = data.inprog;
+				req.mongoMng.currentOp({ns: new RegExp('^' + this.locals.dbname + '.')})
+					.then(data => {
+						this.locals.processlist = data.inprog;
 
-					next.call(this);
-				});
+						next.call(this);
+					})
+					.catch(err => next.call(this, err));
 				break;
 
 			case 'newcollection':

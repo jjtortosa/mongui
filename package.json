@@ -1,7 +1,7 @@
 {
   "name": "mongui",
   "description": "MongoDB user interface",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "scripts": {
     "start": "node ./bin/www",
     "install": "node ./bin/install"
@@ -9,10 +9,10 @@
   "main": "./bin/www",
   "dependencies": {
     "body-parser": "^1.15.2",
-    "bson": "^0.4.23",
+    "bson": "^0.5.6",
     "connect-multiparty": "^2.0.0",
     "cookie-parser": "^1.4.3",
-    "cookie-session": "^1.2.0",
+    "cookie-session": "^2.0.0-alpha.1",
     "debug": "^2.2.0",
     "es6-promisify": "^5.0.0",
     "express": "^4.14.0",
@@ -26,7 +26,7 @@
     "pug": "^2.0.0-beta6",
     "serve-favicon": "^2.2.1",
     "targz": "^1.0.1",
-    "tmp": "0.0.28"
+    "tmp": "0.0.29"
   },
   "bin": {
     "mongui": "./bin/www"
