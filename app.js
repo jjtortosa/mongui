@@ -8,13 +8,10 @@ const bodyParser = require('body-parser');
 const session = require('cookie-session');
 const routes = require('./routes');
 const device = require('express-device');
-const pmx = require('pmx');
 
-pmx.init();
+const conf = require('./modules/config')();
 
-var conf = require('./modules/config')();
-
-var app = express();
+const app = express();
 
 app.set('conf', conf);
 app.set('version', require('./package.json').version);
@@ -40,7 +37,7 @@ app.use('/', routes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
-    var err = new Error('Not Found');
+    const err = new Error('Not Found');
     err.status = 404;
     next(err);
 });
@@ -72,7 +69,5 @@ else {
 		next(err);
 	});
 }
-
-app.use(pmx.expressErrorHandler());
 
 module.exports = app;
