@@ -1,9 +1,8 @@
 "use strict";
 
-var ObjectId = require('mongodb').ObjectID
-,	assert = require('assert')
-,	Entities = require('html-entities').AllHtmlEntities
-,	merge = require('merge-descriptors');
+const ObjectId = require('mongodb').ObjectID;
+let assert = require('assert');
+const Entities = require('html-entities').AllHtmlEntities, merge = require('merge-descriptors');
 
 class EMongo {
 	constructor(req) {
@@ -38,11 +37,11 @@ class EMongo {
 	}
 
 	process(next) {
-		var req = this.req;
+		const req = this.req;
 
 		switch (this.locals.action) {
 			case 'explain':
-				var query = this.getQuery();
+				let query = this.getQuery();
 
 				if (!query)
 					return req.res.json({error: 'Invalid query'});
@@ -106,38 +105,41 @@ class EMongo {
 	}
 
 	distinct(next) {
-		var distinct = this.locals.distinct.trim();
+		const distinct = this.locals.distinct.trim();
 
 		if (!distinct)
 			return next.call(this);
 
-		this.collection.aggregate([{$group: {_id: "$" + distinct, count: {$sum: 1}}}], (err, r) => {
-			if (err)
-				return next(err);
+		const $match = {$match: this.getQuery()};
+		const $group = {$group: {_id: "$" + distinct, count: {$sum: 1}}};
 
-			if (!r.length)
-				this.locals.message = this.locals.ml.noRecordsFound;
-			else {
-				r.forEach(o => {
-					o.val = JSON.stringify(o._id);
-					o.criteria = '{"' + distinct + '":' + o.val + '}';
-				});
+		this.collection.aggregate([$match, $group])
+			.toArray()
+			.then(r => {
+				if (!r.length)
+					this.locals.message = this.locals.ml.noRecordsFound;
+				else {
+					r.forEach(o => {
+						o.val = JSON.stringify(o._id);
+						o.criteria = '{"' + distinct + '":' + o.val + '}';
+					});
 
-				r.sort((a, b) => {
-					return b.count - a.count;
-				});
+					r.sort((a, b) => {
+						return b.count - a.count;
+					});
 
-				this.locals.distinctResult = r;
-				this.locals.count = r.length;
-				this.locals.message = this.locals.ml.results.replace('%d', r.length);
-			}
+					this.locals.distinctResult = r;
+					this.locals.count = r.length;
+					this.locals.message = this.locals.ml.results.replace('%d', r.length);
+				}
 
-			next.call(this);
-		});
+				next.call(this);
+			})
+			.catch(next);
 	}
 
 	dbStats(next) {
-		var req = this.req;
+		const req = this.req;
 
 		switch (this.locals.op) {
 			case 'stats':
@@ -234,7 +236,7 @@ class EMongo {
 	}
 
 	colStats(next) {
-		var req = this.req;
+		const req = this.req;
 
 		switch (this.locals.op) {
 			case 'stats':
@@ -298,7 +300,7 @@ class EMongo {
 				this.view = 'insert';
 				this.locals.json = req.query.json || "{\n\n\n\n\n\n\n\n\n\n\n}";
 
-				var msg = req.query.msg;
+				const msg = req.query.msg;
 
 				switch (msg) {
 					case 'parseError':
@@ -342,7 +344,7 @@ class EMongo {
 	}
 
 	getQuery() {
-		var query;
+		let query;
 
 		this.locals.criteria = this.req.query.criteria || '{\n\t\n}';
 
@@ -369,7 +371,7 @@ class EMongo {
 			return;
 
 		try {
-			var ret;
+			let ret;
 
 			eval('ret=' + this.req.query.update.replace(/[\t\n\r]/g, ''));
 
@@ -381,10 +383,9 @@ class EMongo {
 	}
 
 	processCollection(next) {
-		var req = this.req
-			, query = {}
-			, fields = this.queryFields()
-			, sort = this.sortFields();
+		const req = this.req;
+		let query = {};
+		const fields = this.queryFields(), sort = this.sortFields();
 
 		this.getUpdateOperators();
 
@@ -398,13 +399,13 @@ class EMongo {
 		if (!query)
 			return next.call(this, new Error('Invalid query'));
 
-		var page = parseInt(req.query.page) || 1;
+		const page = parseInt(req.query.page) || 1;
 
 		this.nativeFields(err => {
 			if (err)
 				return next.call(this, err);
 
-			var cursor = this.collection.find(query, fields);
+			const cursor = this.collection.find(query, fields);
 
 			cursor.count((err, count) => {
 				if (err)
@@ -416,7 +417,7 @@ class EMongo {
 					return next.call(this);
 				}
 
-				var pagesCount = Math.floor(count / EMongo.limit) + 1;
+				const pagesCount = Math.floor(count / EMongo.limit) + 1;
 
 				this.locals.url = req.url.replace(/[?&]page=\d*/, '');
 
@@ -491,7 +492,7 @@ class EMongo {
 	}
 
 	queryFields() {
-		var req = this.req;
+		const req = this.req;
 
 		if (req.query.fields && typeof req.query.fields === 'string')
 			req.query.fields = [req.query.fields];
@@ -502,13 +503,13 @@ class EMongo {
 	}
 
 	sortFields() {
-		var sort = this.req.query.sort || {_id: -1};
+		const sort = this.req.query.sort || {_id: -1};
 
 		this.locals.sortFields = new Array(4);
 
-		var i = 0;
+		let i = 0;
 
-		for (var k in sort) {
+		for (let k in sort) {
 			sort[k] = parseInt(sort[k]);
 			this.locals.sortFields[i++] = {name: k, order: sort[k]};
 		}
@@ -521,7 +522,7 @@ class EMongo {
 			if (err || !doc)
 				return cb(err);
 
-			var fields = [];
+			const fields = [];
 
 			Object.keys(doc).forEach(k => fields.push(k));
 
@@ -532,7 +533,7 @@ class EMongo {
 	}
 
 	render() {
-		var view = this.view;
+		let view = this.view;
 
 		if (this.useMobile)
 			view = 'mobile/' + view;
@@ -576,7 +577,7 @@ function sanitize(obj, indent, parent){
 		return {type: 'binary', html: '"&lt;Mongo Binary Data&gt;"'};
 
 	if(obj.constructor.name === 'DBRef'){
-		var dbref = {
+		const dbref = {
 			$ref: obj.namespace,
 			$id: obj.oid
 		};
@@ -594,13 +595,13 @@ function sanitize(obj, indent, parent){
 }
 
 function sanitizeObj(obj, indent, parent, removeBrackets){
-	var ret = removeBrackets ? '' : '{\n',
-		nb = indent + (removeBrackets ? '' : '\t'),
+	let ret = removeBrackets ? '' : '{\n';
+	const nb = indent + (removeBrackets ? '' : '\t'),
 		keys = Object.keys(obj),
 		newParent = (parent ? parent + '.' : '');
 
 	keys.forEach(function(k, i){
-		var s = sanitize(obj[k], nb, newParent + k);
+		const s = sanitize(obj[k], nb, newParent + k);
 
 		ret += nb + '<a class="r-key"';
 		
@@ -622,7 +623,7 @@ function sanitizeObj(obj, indent, parent, removeBrackets){
 }
 
 function sanitizeArray(arr, indent, parent){
-	var nb = indent + '\t',
+	const nb = indent + '\t',
 		tmp = [];
 
 	arr.forEach((a, i) => {
@@ -633,7 +634,7 @@ function sanitizeArray(arr, indent, parent){
 }
 
 function sanitizePlainObj(obj){
-	for(var k in obj){
+	for(let k in obj){
 		switch(typeof obj[k]){
 			case 'number':
 				if(obj[k] < 1024)
@@ -656,8 +657,8 @@ function sanitizePlainObj(obj){
 }
 
 function sanitizeString(s, parent){
-	var ent = new Entities()
-	,	ret = ent.encode(s);
+	const ent = new Entities();
+	let ret = ent.encode(s);
 
 	if(ret.length > 240)
 		ret = ret.substr(0, 240) + ' <a href="' + parent + '" class="moretext">[...]</a>';
