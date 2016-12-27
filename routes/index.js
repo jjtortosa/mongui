@@ -34,8 +34,6 @@ router.get('/db/:db/:collection/:op/:msg', db);
 router.all('/login', require('./login'));
 router.all('/logout', require('./logout'));
 
-router.get('/readme', require('./readme.md'));
-
 router.get('/:sec', function(req, res, next){
 	try{
 		require('./' + req.params.sec)(req, res, next);
