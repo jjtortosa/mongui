@@ -4,22 +4,23 @@
 
 // used when evaluating incoming expressions
 //noinspection JSUnusedLocalSymbols
-var ObjectId = require('mongodb').ObjectID;
+const ObjectId = require('mongodb').ObjectID;
 //noinspection JSUnusedLocalSymbols
-var MongoDoc = require('../modules/mongodoc');
+let MongoDoc = require('../modules/mongodoc');
 //noinspection JSUnusedLocalSymbols
-var ISODate = function(d){
+let ISODate = function (d) {
 	return new Date(d);
 };
 
 
 module.exports = function(req, res, next){
-	var col = req.collection;
-	var dbpath = '/db/' + req.db.databaseName + '/';
-	var update;
+	const col = req.collection;
+	const dbpath = '/db/' + req.db.databaseName + '/';
+	const query = {_id: req.body.id};
+	let update;
 
-	if(req.body.id)
-		var query = {_id: ObjectId.isValid(req.body.id) ? ObjectId(req.body.id) : req.body.id};
+	if(req.body.id && req.body.id.length === 24  && ObjectId.isValid(req.body.id))
+		query._id = ObjectId(req.body.id);
 
 	res.locals.op = req.body.op || req.params.op;
 
@@ -38,7 +39,7 @@ module.exports = function(req, res, next){
 			break;
 		case 'drop':
 			col.drop(function(err){
-				var red = err ? req.path + '?err=' + err.message : '/db/' + res.locals.dbname;
+				const red = err ? req.path + '?err=' + err.message : '/db/' + res.locals.dbname;
 
 				req.res.redirect(red);
 			});
@@ -101,10 +102,10 @@ module.exports = function(req, res, next){
 			});
 			break;
 		case 'insert':
-			var redirect = req.path + '?op=insert&json=' + encodeURIComponent(req.body.json);
+			const redirect = req.path + '?op=insert&json=' + encodeURIComponent(req.body.json);
 			
 			try{
-				var json;
+				let json;
 
 				eval('json = ' + req.body.json);
 
@@ -155,7 +156,7 @@ module.exports = function(req, res, next){
 			break;
 
 		case 'renameField':
-			var rename = {};
+			const rename = {};
 
 			rename[req.body.key] = req.body.name;
 
@@ -168,8 +169,7 @@ module.exports = function(req, res, next){
 			break;
 
 		case 'create-index':
-			var fields = req.body.fields
-			,	order = req.body.order;
+			let fields = req.body.fields, order = req.body.order;
 
 			if(typeof fields === 'string')
 				fields = [fields];
@@ -177,13 +177,13 @@ module.exports = function(req, res, next){
 			if(typeof order === 'string')
 				order = [order];
 
-			var attr = {};
+			const attr = {};
 
 			fields.forEach(function(field, i){
 				attr[field] = order[i] === 'asc' ? 1 : -1;
 			});
 
-			var options = {
+			const options = {
 				background: 1,
 				safe: 1
 			};
@@ -195,7 +195,7 @@ module.exports = function(req, res, next){
 					options.dropDups = 1;
 			}
 
-			var name = req.body.name.trim();
+			const name = req.body.name.trim();
 
 			if(name)
 				options.name = name;
@@ -222,12 +222,12 @@ module.exports = function(req, res, next){
 					if(err)
 						return next(err);
 
-					var error
-					,	count = 0
-					,	newcol = req.db.collection(req.body.name);
+					let error;
+					let count = 0;
+					const newcol = req.db.collection(req.body.name);
 
 					r.forEach(function(idx){
-						var options = {};
+						const options = {};
 
 						['unique', 'name', 'background', 'dropDups'].forEach(function(n){
 							if(idx[n] !== undefined)
@@ -256,7 +256,7 @@ module.exports = function(req, res, next){
 								if(err)
 									return next(err);
 
-								var count_ = 0;
+								let count_ = 0;
 
 								cursor.each(function(err, o){
 									if(err)

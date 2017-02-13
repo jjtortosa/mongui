@@ -4,21 +4,19 @@ const ObjectId = require('mongodb').ObjectID;
 const MongoDoc = require('../modules/mongodoc');
 
 module.exports = function(req, res, next){
-	if(!ObjectId.isValid(req.params.id))
-		return next(); // not found
-
 	const col = req.collection;
 	const fields = {_id: false};
 	const field = req.params.field;
-	const id = ObjectId(req.params.id);
+	const id = ObjectId.isValid(req.params.id) ? ObjectId(req.params.id) : req.params.id;
 	const r = field.match(/^(.+)\.\d/);
 
 	fields[r ? r[1] : field] = true;
 
 	col.findOne({_id: id}, fields)
+		.then(r => r || col.findOne({_id: req.params.id}, fields))
 		.then(r => {
 			if(!r)
-				return res.send(r);
+				return next();
 
 			let ret = r;
 

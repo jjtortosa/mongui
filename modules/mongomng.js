@@ -12,32 +12,23 @@ class MongoMng extends events.EventEmitter {
 		this.db = db;
 	}
 
-	dbsInfo(cb) {
-		var self = this;
+	dbsInfo() {
+		return this.listDbs()
+			.then(databases => {
+				return Promise.all(databases.map(db =>
+					this.useDb(db.name).stats()
+						.then(stats => {
+							for (let i in stats)
+								db[i] = stats[i];
 
-		this.listDbs(function (err, databases) {
-			if (err || !databases.length)
-				return cb.call(self, err, databases);
+							['storageSize', 'dataSize', 'indexSize', ''].forEach(k => db[k] = MongoMng.human(db[k]));
 
-			var count = 0;
+							db.ok = db.ok && '✓';
 
-			databases.forEach(function (db) {
-				self.useDb(db.name).stats(function (err, stats) {
-					for (var i in stats)
-						db[i] = stats[i];
-
-					['storageSize', 'dataSize', 'indexSize', ''].forEach(function (k) {
-						db[k] = human(db[k]);
-					});
-
-					db.ok = db.ok && '✓';
-
-					if (++count === databases.length) {
-						cb.call(self, null, databases);
-					}
-				});
+							return db;
+						})
+				));
 			});
-		});
 	}
 
 	useDb(n) {
@@ -48,54 +39,42 @@ class MongoMng extends events.EventEmitter {
 		return this.db.admin();
 	}
 
-	listDbs(cb) {
-		var self = this
-			, count = 0;
+	listDbs() {
+		return this.admin()
+			.listDatabases()
+			.then(result => {
+				const promises = result.databases.map(db => {
+					db.sizeOnDisk = MongoMng.human(db.sizeOnDisk);
 
-		this.admin().listDatabases(function (err, result) {
-			if (err)
-				return cb.call(self, err);
-
-			result.databases.forEach(function (db) {
-				db.sizeOnDisk = human(db.sizeOnDisk);
-
-				self.useDb(db.name).listCollections().toArray(function (err, collections) {
-					db.collections = collections.length;
-
-					if (++count === result.databases.length)
-						cb.call(self, null, result.databases);
+					return this.useDb(db.name).listCollections().toArray()
+						.then(collections => db.collections = collections.length);
 				});
-			});
 
-			result.databases.sort(function (a, b) {
-				return a.name > b.name ? 1 : -1;
+				return Promise.all(promises)
+					.then(() => result.databases.sort((a, b) => a.name > b.name ? 1 : -1));
 			});
-		});
 	}
 
 	getCollections(db, cb) {
-		var self = this
-			, collections = [];
+		const collections = [];
 
-		this.useDb(db).collections(function (err, r) {
+		this.useDb(db).collections((err, r) => {
 			if (err)
-				return cb.call(self, err);
+				return cb.call(this, err);
 
 			if (!r.length)
-				return cb.call(self);
+				return cb.call(this);
 
-			var count = 0;
+			let count = 0;
 
-			r.forEach(function (c) {
-				c.count(function (err, t) {
+			r.forEach(c => {
+				c.count((err, t) => {
 					collections.push({name: c.collectionName, count: t});
 
 					if (++count === r.length) {
-						collections.sort(function (a, b) {
-							return a.name > b.name ? 1 : -1;
-						});
+						collections.sort((a, b) => a.name > b.name ? 1 : -1);
 
-						cb.call(self, null, collections);
+						cb.call(this, null, collections);
 					}
 				});
 			});
@@ -139,29 +118,50 @@ class MongoMng extends events.EventEmitter {
 	currentOp(q) {
 		return this.db.command({currentOp: q});
 	}
+
+	static human(n){
+		const gb = 1024 * 1024 * 1024,
+			mb = 1024 * 1024,
+			kb = 1024;
+
+		if(n > gb)
+			return (n/gb).toFixed(2)+' Gb';
+
+		if(n > mb)
+			return (n/mb).toFixed(2)+' Mb';
+
+		if(n > kb)
+			return (n/kb).toFixed(2)+' Kb';
+
+		return n + ' b';
+	}
 }
 
-module.exports = function(app){
-	var conf = app.get('conf')
-	,	uri = 'mongodb://' + (conf.host || 'localhost');
+module.exports = app => {
+	const conf = app.get('conf');
+	let uri = 'mongodb://';
 
-	MongoClient.connect(uri, function(err, db){
-		if(err)
-			return console.error(err);
+	if(conf.mongouser)
+		uri += conf.mongouser + ':' + conf.mongopass + '@';
 
-		var mongoMng = new MongoMng(db);
+	uri += (conf.host || 'localhost') + '/admin';
 
-		app.set('mongoMng', mongoMng);
+	MongoClient.connect(uri)
+		.then(db => {
+			const mongoMng = new MongoMng(db);
 
-		console.info('MongoDb - Connected');
+			app.set('mongoMng', mongoMng);
 
-		app.emit('dbconnected');
-	});
+			console.info('MongoDb - Connected');
 
-	return function(req, res, next){
+			app.emit('dbconnected');
+		})
+		.catch(console.error.bind(console));
+
+	return (req, res, next) => {
 		req.mongoMng = app.get('mongoMng');
 
-		var match = decodeURI(req.path).match(/^\/(db|import)\/([^\/]+)\/?([^\/]*)/);
+		const match = decodeURI(req.path).match(/^\/(db|import)\/([^\/]+)\/?([^\/]*)/);
 
 		if(match){
 			if(match && match[2]){
@@ -181,30 +181,9 @@ module.exports = function(app){
 		if(req.path === 'login' || (req.method === 'post' && req.path.indexOf('import') !== 1))
 			return next();
 
-		req.mongoMng.listDbs(function(err, dbs){
-			if(err)
-				return next(err);
-
-			res.locals.dbs = dbs;
-
-			next(err);
-		});
+		req.mongoMng.listDbs()
+			.then(dbs => res.locals.dbs = dbs)
+			.then(() => next())
+			.catch(next);
 	};
 };
-
-function human(n){
-	var gb = 1024*1024*1024,
-		mb = 1024*1024,
-		kb = 1024;
-
-	if(n > gb)
-		return (n/gb).toFixed(2)+' Gb';
-
-	if(n > mb)
-		return (n/mb).toFixed(2)+' Mb';
-
-	if(n > kb)
-		return (n/kb).toFixed(2)+' Kb';
-
-	return n + ' b';
-}

@@ -1,12 +1,7 @@
-/* global module */
-
 "use strict";
 
-module.exports = function(req, res, next){
-	req.mongoMng.dbsInfo(function(err, dbs){
-		if(err)
-			return next(err);
-		
-		res.render('dbs', {databases: dbs});
-	});
+module.exports = (req, res, next) => {
+	req.mongoMng.dbsInfo()
+		.then(dbs => res.render('dbs', {databases: dbs}))
+		.catch(next);
 };

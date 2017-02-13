@@ -1,21 +1,18 @@
 #!/usr/bin/env node
 
-/* global process */
+"use strict";
 
 /**
  * Module dependencies.
  */
-
-var app = require('../app')
-,	fs = require('fs')
-,	debug = require('debug')('mongui:server');
+const app = require('../app'), fs = require('fs');
+let debug = require('debug')('mongui:server');
 
 
 /**
  * Get port from environment and store in Express and process.env.
  */
-
-var conf = app.get('conf');
+const conf = app.get('conf');
 
 process.env.PORT = parseInt(process.env.PORT, 10) || process.argv[2] || conf.port;
 
@@ -24,17 +21,15 @@ app.set('port', process.env.PORT);
 /**
  * Create HTTP server.
  */
-
-var server;
+let server;
 
 if(conf.ssl){
 	/**
-	* Create HTTPS server.
-	*/
+	 * Create HTTPS server.
+	 */
+	const ssl = {};
 
-   var ssl = {};
-
-   for(var k in conf.ssl){
+   for(let k in conf.ssl){
 	   if(k === 'ca'){
 			ssl[k] = [];
 			conf.ssl[k].forEach(function(f){
@@ -44,11 +39,11 @@ if(conf.ssl){
 		   ssl[k] = fs.readFileSync(conf.ssl[k]);
    }
    
-	var https = require('https');
+	const https = require('https');
 	
 	server = https.createServer(ssl, app);
 } else {
-	var http = require('http');
+	const http = require('http');
 	server = http.createServer(app);
 }
 
@@ -61,7 +56,11 @@ app.on('dbconnected', function(){
 });
 
 server.on('error', onError);
-server.on('listening', onListening);
+
+/**
+ * Event listener for HTTP server "listening" event.
+ */
+server.on('listening', () => console.info('Listening on port ' + server.address().port));
 
 /**
  * Event listener for HTTP server "error" event.
@@ -86,12 +85,4 @@ function onError(error) {
     default:
       throw error;
   }
-}
-
-/**
- * Event listener for HTTP server "listening" event.
- */
-
-function onListening() {
-  console.info('Listening on port ' + server.address().port);
 }

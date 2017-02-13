@@ -1,9 +1,9 @@
-/* global module, process, __dirname, require */
+"use strict";
 
-var path = require('path')
-,	fs = require('fs')
-,	dir = path.dirname(__dirname)
-,	confLocations = [
+const path = require('path');
+const fs = require('fs');
+const dir = path.dirname(__dirname);
+const confLocations = [
 	'/etc/mongui',
 	'/usr/local/etc/mongui',
 	path.join(process.env.HOME, '.mongui'),
@@ -11,7 +11,7 @@ var path = require('path')
 ];
 
 module.exports = function(){
-	var file;
+	let file;
 
 	confLocations.some(function(loc){
 		loc += '/config.json';
@@ -29,7 +29,7 @@ module.exports = function(){
 	
 	console.info('Config file "%s" loaded', file);
 	
-	var ret = require(file);
+	const ret = require(file);
 	
 	//compat
 	if(!ret.useMobile)

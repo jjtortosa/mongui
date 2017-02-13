@@ -8,6 +8,17 @@ module.exports = function(req, res, next){
 	
 	req.mongoMng
 		.serverInfo()
-		.then(info => res.render('serverinfo', info))
+		.then(info => {
+			Object.keys(info.info).forEach(k => {
+				if(typeof info.info[k] === 'object') {
+					if (Array.isArray(info.info[k]))
+						info.info[k] = info.info[k].join(', ');
+					else
+						info.info[k] = JSON.stringify(info.info[k], null, '\t');
+				}
+			});
+
+			res.render('serverinfo', info);
+		})
 		.catch(next);
 };
