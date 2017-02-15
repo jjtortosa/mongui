@@ -1,13 +1,13 @@
-/* global module, require */
+"use strict";
 
-var fs = require('fs')
-,	path = require("path");
+const fs = require('fs');
+const path = require("path");
 
 module.exports = function rmdir(dir) {
-	var list = fs.readdirSync(dir);
-	for(var i = 0; i < list.length; i++) {
-		var filename = path.join(dir, list[i]);
-		var stat = fs.statSync(filename);
+	const list = fs.readdirSync(dir);
+	for(let i = 0; i < list.length; i++) {
+		const filename = path.join(dir, list[i]);
+		const stat = fs.statSync(filename);
 		
 		if(filename === "." || filename === "..") {
 			// pass these files

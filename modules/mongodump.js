@@ -3,12 +3,12 @@
 const spawn = require('child_process').spawn;
 const fs = require('mz/fs');
 const rmdir = require("./rmdir");
-const out = '/tmp/dump';
 const tgz = require('./targz');
+const out = '/tmp/dump';
 
 /**
  * @todo error handling
- * @param {array} args
+ * @param {Array} args
  * @returns {Promise}
  */
 const dump = args => {
