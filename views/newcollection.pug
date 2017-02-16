@@ -4,9 +4,8 @@ block dbbody
 	form(method="post",action=path)
 		br
 		label Nombre: 
-			input(name="colname")
+			input(name="colname" required)
 		br
 		br
 		input(type="hidden",name="op",value="createCollection")
-		input(type="hidden",name="db",value=db)
 		input(type="submit")

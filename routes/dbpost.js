@@ -3,8 +3,6 @@
 const mongodump = require('../modules/mongodump');
 
 module.exports = function(req, res, next){
-	var dbpath = '/db/' + req.mongoMng.db.databaseName;
-	
 	switch(req.body.op){
 		case 'dropdb':
 			req.db.dropDatabase(() => req.res.redirect('/'));
@@ -19,9 +17,11 @@ module.exports = function(req, res, next){
 			break;
 			
 		case 'createCollection':
+			const dbpath = '/db/' + res.locals.dbname;
+
 			if(!req.body.colname)
 				return res.redirect(dbpath + '?op=newcollection');
-			
+
 			req.db.createCollection(req.body.colname, function(){
 				res.redirect(dbpath + '/' + req.body.colname);
 			});
@@ -34,7 +34,7 @@ module.exports = function(req, res, next){
 			break;
 		
 		case 'adduser':
-			var roles = req.body.roles;
+			let roles = req.body.roles;
 			
 			if(typeof roles === 'string')
 				roles = [roles];

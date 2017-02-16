@@ -55,30 +55,10 @@ class MongoMng extends events.EventEmitter {
 			});
 	}
 
-	getCollections(db, cb) {
-		const collections = [];
-
-		this.useDb(db).collections((err, r) => {
-			if (err)
-				return cb.call(this, err);
-
-			if (!r.length)
-				return cb.call(this);
-
-			let count = 0;
-
-			r.forEach(c => {
-				c.count((err, t) => {
-					collections.push({name: c.collectionName, count: t});
-
-					if (++count === r.length) {
-						collections.sort((a, b) => a.name > b.name ? 1 : -1);
-
-						cb.call(this, null, collections);
-					}
-				});
-			});
-		});
+	getCollections(db) {
+		return this.useDb(db).collections()
+			.then(r => Promise.all(r.map(c => c.count().then(t => ({name: c.collectionName, count: t})))))
+			.then(collections => collections.sort((a, b) => a.name > b.name ? 1 : -1));
 	}
 
 	serverInfo() {

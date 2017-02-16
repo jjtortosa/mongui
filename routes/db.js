@@ -37,7 +37,7 @@ class EMongo {
 		this.db = req.db;
 	}
 
-	process(next) {
+	process() {
 		const req = this.req;
 
 		switch (this.locals.action) {
@@ -47,74 +47,63 @@ class EMongo {
 				if (!query)
 					return req.res.json({error: 'Invalid query'});
 
-				this.collection.find(query).explain(function (err, r) {
-					req.res.json(err || r);
-				});
-				break;
+				return this.collection.find(query).explain();
 			case 'remove':
 				if (req.query.criteria) {
-					query = this.getQuery();
+					let query = this.getQuery();
 					this.locals.criteria = req.query.criteria;
 
 					if (!query)
-						return next.call(this, new Error('Invalid query'));
+						throw new Error('Invalid query');
 
-					this.getCollections(() => {
-						this.collection.remove(query, (err, r) => {
-							if (err)
-								return next.call(this, err);
-
-							this.locals.message = r.n + ' records affected';
-
-							next.call(this);
+					return this.getCollections()
+						.then(() => this.collection.remove(query))
+						.then(r => {
+							this.locals.message = r.result.n + ' records affected'
 						});
-					});
 				}
 				break;
 
 			case 'update':
-				this.getCollections(function () {
-					this.doUpdate(next);
-				});
-				break;
+				return this.getCollections()
+					.then(this.doUpdate.bind(this));
 
 			case 'distinct':
-				this.getCollections(function () {
-					this.distinct(next);
-				});
-				break;
+				return this.getCollections()
+					.then(this.distinct.bind(this));
 
 			case 'findById':
 			case 'find':
 			default:
-				this.getCollections(() => {
-					if (!this.locals.collection) {
-						if (!this.useMobile)
-							return this.dbStats(next);
+				return this.getCollections()
+					.then(() => {
+						if (!this.locals.collection) {
+							if (!this.useMobile)
+								return this.dbStats();
 
-						this.view = 'collections';
+							this.view = 'collections';
 
-						return next.call(this);
-					}
+							return;
+						}
 
-					if (this.locals.op)
-						return this.colStats(next);
+						if (this.locals.op)
+							return this.colStats();
 
-					this.processCollection(next);
-				});
+						return this.processCollection();
+					});
 		}
 	}
 
-	distinct(next) {
+	distinct() {
 		const distinct = this.locals.distinct.trim();
 
 		if (!distinct)
-			return next.call(this);
+			return;
 
 		const $match = {$match: this.getQuery()};
 		const $group = {$group: {_id: "$" + distinct, count: {$sum: 1}}};
 
-		this.collection.aggregate([$match, $group])
+		return this.collection.aggregate([$match, $group])
 			.toArray()
 			.then(r => {
 				if (!r.length)
@@ -133,169 +122,138 @@ class EMongo {
 					this.locals.count = r.length;
 					this.locals.message = this.locals.ml.results.replace('%d', r.length);
 				}
-
-				next.call(this);
-			})
-			.catch(next);
+			});
 	}
 
-	dbStats(next) {
+	dbStats() {
 		const req = this.req;
 
 		switch (this.locals.op) {
 			case 'stats':
 				this.view = 'dbstats';
 
-				this.db.stats((err, stats) => {
-					if(stats.ok === 1)
-						stats.ok = "✓";
+				return this.db.stats()
+					.then(stats => {
+						if(stats.ok === 1)
+							stats.ok = "✓";
 
-					this.locals.dbStats = sanitize.obj(stats);
-
-					next.call(this);
-				});
+						this.locals.dbStats = sanitize.plainObj(stats);
+					});
 				break;
 
 			case 'processlist':
 				this.view = 'processlistdb';
 
-				req.mongoMng.currentOp({ns: new RegExp('^' + this.locals.dbname + '.')})
-					.then(data => {
-						this.locals.processlist = data.inprog;
-
-						next.call(this);
-					})
-					.catch(err => next.call(this, err));
+				return req.mongoMng.currentOp({ns: new RegExp('^' + this.locals.dbname + '.')})
+					.then(data => this.locals.processlist = data.inprog);
 				break;
 
 			case 'newcollection':
 				this.view = 'newcollection';
-				next.call(this);
 				break;
 
 			case 'command':
 				this.view = 'dbcommand';
-				next.call(this);
 				break;
 
 			case 'export':
 				this.view = 'export';
 				this.locals.selected = req.query.collections;
 				this.locals.scripts.push('/js/export.js');
-				next.call(this);
 				break;
 
 			case 'import':
 				this.view = 'import';
 				this.locals.msg = req.query.msg;
-				next.call(this);
 				break;
 
 			case 'repair':
 				this.view = 'repair';
-				next.call(this);
 				break;
 
 			case 'auth':
 				this.view = 'dbauth';
+				this.locals.users = [];
 				this.locals.scripts.push('/js/auth.js');
 
 				//admin db
-				req.mongoMng.db.collection('system.users').find({db: this.locals.dbname}, (err, users) => {
-					if (err)
-						return next.call(this, err);
+				return new Promise((ok, ko) => {
+					req.mongoMng.db.collection('system.users')
+						.find({db: this.locals.dbname}, (err, users) => {
+							if(err)
+								return ko(err);
 
-					this.locals.users = [];
-
-					users.each((err, user) => {
-						if (err || !user)
-							return next.call(this);
-
-						this.locals.users.push(user);
-					});
+							users.each((err, user) => {
+								if (err || !user) {
+									return ok();
+								}
+								this.locals.users.push(user);
+							});
+						});
 				});
-				break;
 
 			case 'add-user':
 				this.view = 'adduser';
 				this.locals.err = req.query.err;
 				this.locals.username = req.query.username;
 
-				next.call(this);
 				break;
 
 			case 'dup':
 				this.view = 'dupdb';
 				this.locals.err = req.query.err;
 				this.locals.name = req.query.name;
-				next.call(this);
 				break;
 
 			default:
-				req.res.status(404).send('op ' + this.locals.op + ' not defined');
+				return EMongo.notFound(this.locals.op);
 		}
 	}
 
-	colStats(next) {
+	colStats() {
 		const req = this.req;
 
 		switch (this.locals.op) {
 			case 'stats':
 				this.view = 'colstats';
-				this.collection.stats((err, stats) => {
-					this.locals.stats = stats;
+				return this.collection.stats()
+					.then(stats => {
+						this.locals.stats = stats;
 
-					this.mng.admin().command({top: 1}, (err, top) => {
-						if (err)
-							return next.call(this, err);
-
+						return this.mng.admin().command({top: 1});
+					})
+					.then(top => {
 						this.locals.top = top.totals[this.db.databaseName + '.' + this.collection.collectionName];
-
-						next.call(this);
 					});
-				});
 				break;
 			case 'validate':
 				this.view = 'validate';
-				this.db.command({validate: this.collection.collectionName, full: true}, (err, validate) => {
-					if (err)
-						return next.call(this, err);
-
-					this.locals.validate = validate;
-					next.call(this);
-				});
-				break;
+				return this.db.command({validate: this.collection.collectionName, full: true})
+					.then(validate => {
+						this.locals.validate = validate;
+					});
 			case 'indexes':
 				this.view = 'indexes';
 
-				this.collection.indexes((err, r) => {
-					if (err)
-						return next.call(this, err);
+				return this.collection.indexes()
+					.then(r => {
+						this.locals.indexes = r;
 
-					this.locals.indexes = r;
+						if (!this.locals.scripts)
+							this.locals.scripts = [];
 
-					if (!this.locals.scripts)
-						this.locals.scripts = [];
-
-					this.locals.scripts.push('/js/indexes.js');
-
-					next.call(this);
-				});
-
-				break;
+						this.locals.scripts.push('/js/indexes.js');
+					});
 			case 'create-index':
 				this.view = 'create-index';
 				this.locals.scripts.push('/js/create-index.js');
-				next.call(this);
 				break;
 			case 'rename':
 				this.view = 'rename';
-				next.call(this);
 				break;
 			case 'dup':
 				this.view = 'dupcollection';
 				this.locals.err = req.query.err;
-				next.call(this);
 				break;
 			case 'insert':
 				this.view = 'insert';
@@ -313,35 +271,22 @@ class EMongo {
 					default:
 						this.locals.msg = msg;
 				}
-
-				next.call(this);
 				break;
 			case 'import':
 				this.view = 'import';
-				next.call(this);
 				break;
 			case 'error':
 				this.view = 'collerror';
 				this.locals.message = req.params.msg;
-				next.call(this);
 				break;
-			default:
-				next();
-//			req.res.status(404).send('op ' + this.locals.op + ' not defined');
 		}
 	}
 
-	getCollections(next) {
+	getCollections() {
 		this.locals.collections = [];
 
-		this.mng.getCollections(this.dbname, (err, collections) => {
-			if (err || !collections)
-				return next.call(this, err, collections);
-
-			this.locals.collections = collections;
-
-			next.call(this);
-		});
+		return this.mng.getCollections(this.dbname)
+			.then(collections => this.locals.collections = collections);
 	}
 
 	getQuery() {
@@ -359,136 +304,118 @@ class EMongo {
 			eval('query=' + this.req.query.criteria.replace(/[\t\n\r]/g, ''));
 
 			//noinspection JSUnusedAssignment
-			return query;
+			return query || new Error('Invalid query');
 		} catch (e) {
 			return e;
 		}
 	}
 
+	/**
+	 *
+	 * @returns {Promise}
+	 */
 	getUpdateOperators() {
-		this.locals.update = this.req.query.update || "{\n\t'$set': {\n\t\t\n\t}\n}";
+		return new Promise((ok, ko) => {
+			this.locals.update = this.req.query.update || "{\n\t'$set': {\n\t\t\n\t}\n}";
 
-		if (!this.req.query.update)
-			return;
+			if (!this.req.query.update)
+				return ok();
 
-		try {
-			let ret;
+			try {
+				let ret;
 
-			eval('ret=' + this.req.query.update.replace(/[\t\n\r]/g, ''));
+				eval('ret=' + this.req.query.update.replace(/[\t\n\r]/g, ''));
 
-			//noinspection JSUnresolvedVariable
-			return ret;
-		} catch (e) {
-			return e;
-		}
+				if(!ret)
+					return ko(new Error('Invalid update operators'));
+
+				ok(ret);
+			} catch (e) {
+				e.message = 'Update conditions error: ' + e.message;
+				return ko(e);
+			}
+		});
 	}
 
-	processCollection(next) {
+	processCollection() {
 		const req = this.req;
-		const fields = this.queryFields(), sort = this.sortFields();
-
-		this.getUpdateOperators();
-
-		this.locals.page = req.query.page || 1;
-
-		const query = this.getQuery();
-
-		if (query instanceof Error)
-			return next.call(this, query);
-
-		if (!query)
-			return next.call(this, new Error('Invalid query'));
-
 		const page = parseInt(req.query.page) || 1;
 
-		this.nativeFields(err => {
-			if (err)
-				return next.call(this, err);
+		return this.getUpdateOperators()
+			.then(() => {
+				const fields = this.queryFields();
 
-			const cursor = this.collection.find(query, fields);
+				this.locals.page = req.query.page || 1;
 
-			cursor.count((err, count) => {
-				if (err)
-					return next.call(this, err);
+				const query = this.getQuery();
 
-				if (!count) {
-					this.locals.message = this.locals.ml.noRecordsFound;
+				if (query instanceof Error)
+					throw query;
 
-					return next.call(this);
-				}
+				return this.nativeFields()
+					.then(() => this.collection.find(query, fields));
+			})
+			.then(cursor => cursor.count()
+				.then(count => {
+					if (!count) {
+						this.locals.message = this.locals.ml.noRecordsFound;
 
-				const pagesCount = Math.floor(count / EMongo.limit) + 1;
+						return;
+					}
 
-				this.locals.url = req.url.replace(/[?&]page=\d*/, '');
+					const pagesCount = Math.floor(count / EMongo.limit) + 1;
 
-				this.locals.paginator = {
-					page: page,
-					first: Math.max(1, page - 6),
-					last: Math.min(pagesCount, page + 6),
-					total: pagesCount,
-					url: this.locals.url + (this.locals.url.indexOf('?') !== -1 ? '&' : '?') + 'page='
-				};
+					this.locals.url = req.url.replace(/[?&]page=\d*/, '');
 
-				this.locals.count = count;
-				this.locals.result = {};
+					this.locals.paginator = {
+						page: page,
+						first: Math.max(1, page - 6),
+						last: Math.min(pagesCount, page + 6),
+						total: pagesCount,
+						url: this.locals.url + (this.locals.url.indexOf('?') !== -1 ? '&' : '?') + 'page='
+					};
 
-				if (this.locals.action !== 'findById')
-					this.locals.message = this.locals.ml.results.replace('%d', count);
+					this.locals.count = count;
+					this.locals.result = {};
 
-				cursor
-					.sort(sort)
+					if (this.locals.action !== 'findById')
+						this.locals.message = this.locals.ml.results.replace('%d', count);
+				})
+				.then(() => cursor
+					.sort(this.sortFields())
 					.limit(10)
 					.skip((page - 1) * EMongo.limit)
-					.each((err, r) => {
-						if (err)
-							return next.call(this, err);
-
-						if (r)
-							return this.locals.result[r._id] = sanitize.obj(r, '', null, true);
-
-						next.call(this);
-					});
-			});
-		});
+					.toArray()
+					.then(arr => arr.forEach(r => this.locals.result[r._id] = sanitize.obj(r, '', null, true)))
+				)
+			);
 	}
 
-	doUpdate(next) {
+	doUpdate() {
 		const req = this.req;
 
-		let query = {};
-		let update = this.getUpdateOperators();
+		return this.getUpdateOperators()
+			.then(update => {
+				let query = {};
 
-		if (update instanceof Error) {
-			update.message = 'Update conditions error: ' + update.message;
+				if (req.query.criteria) {
+					query = this.getQuery();
 
-			return next.call(this, update);
-		}
+					if (query instanceof Error)
+						throw query;
+				}
 
-		if (!update)
-			return next.call(this, new Error('Invalid update operators'));
+				return this.collection.update(query, update, {multi: true})
+					.then(r => {
+						if (r.result.ok)
+							this.locals.message = req.res.locals.ml.rowsAffected + ': ' + r.result.nModified;
 
-		if (req.query.criteria) {
-			query = this.getQuery();
+						this.queryFields();
+						this.sortFields();
 
-			if (query instanceof Error)
-				return next.call(this, query);
-
-			if (!query)
-				return next.call(this, new Error('Invalid query'));
-		}
-
-		this.collection.update(query, update, {multi: true}, (err, r) => {
-			if (err)
-				return next.call(this, err);
-
-			if (r.result.ok)
-				this.locals.message = req.res.locals.ml.rowsAffected + ': ' + r.result.nModified;
-
-			this.queryFields();
-			this.sortFields();
-
-			this.nativeFields(err => next.call(this, err));
-		});
+						return this.nativeFields();
+					});
+			});
 	}
 
 	queryFields() {
@@ -517,39 +444,40 @@ class EMongo {
 		return sort;
 	}
 
-	nativeFields(cb) {
-		this.collection.findOne((err, doc) => {
-			if (err || !doc)
-				return cb(err);
-
-			const fields = [];
-
-			Object.keys(doc).forEach(k => fields.push(k));
-
-			this.locals.nativeFields = fields;
-
-			cb(null, fields);
-		});
+	nativeFields() {
+		return this.collection.findOne()
+			.then(doc => this.locals.nativeFields = doc && Object.keys(doc));
 	}
 
-	render() {
-		let view = this.view;
+	static notFound(op){
+		const err = new Error('Not Found ' + op);
+		err.status = 404;
+
+		throw err;
+	}
+
+	servePage(){
+		return this.process()
+			.then(this.render.bind(this))
+			.catch(this.req.next.bind(this));
+	}
+
+	render(result) {
+		const res = this.req.res;
+
+		if(result)
+			return res.send(result);
 
 		if (this.useMobile)
-			view = 'mobile/' + view;
+			this.view = 'mobile/' + this.view;
 
-		this.req.res.render(view, this.locals);
+		res.render(this.view, this.locals);
 	}
 }
 
 EMongo.limit = 10;
 
-module.exports = function(req, res, next){
-	new EMongo(req).process(function(err){
-		if(err)
-			res.locals.err = err.message;
-
-		this ? this.render() : next();
-	});
+module.exports = function(req){
+	new EMongo(req).servePage();
 };
 
