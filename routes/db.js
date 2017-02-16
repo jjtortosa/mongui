@@ -145,7 +145,9 @@ class EMongo {
 				this.view = 'processlistdb';
 
 				return req.mongoMng.currentOp({ns: new RegExp('^' + this.locals.dbname + '.')})
-					.then(data => this.locals.processlist = data.inprog);
+					.then(data => {
+						this.locals.processlist = data.inprog;
+					});
 				break;
 
 			case 'newcollection':
