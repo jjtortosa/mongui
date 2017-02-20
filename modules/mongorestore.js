@@ -15,19 +15,20 @@ module.exports = function(db, file){
 	};
 
 	return tmp.dir(options)
-		.then(r => {
+		.then(r => {console.log(r);
 			const path = r.name;
 			const cleanupCallback = r.removeCallback;
 
-			return tgz.decompress({src: file, dest: path})
+			return tgz.decompress({src: file, dest: path + '/' + db})
 				.then(() => new Promise((ok, ko) => {
-					const p = spawn('mongorestore', ['--db', db, '--dir', path, '--drop']);
+					const p = spawn('mongorestore', ['--drop', '--noIndexRestore', path]);
 
 					// stderr no sólo contiene errores
 					let err = '';
-					p.stderr.on('data', function (data) {
-						err += data;
-					});
+
+					p.stderr.on('data', data => err += data);
+
+					p.stdout.on('data', debug);
 
 					p.on('exit', code => {
 						debug('exit code %s', code);
