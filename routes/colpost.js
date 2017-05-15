@@ -184,8 +184,7 @@ module.exports = function(req, res, next){
 			});
 
 			const options = {
-				background: 1,
-				safe: 1
+				background: 1
 			};
 
 			if(req.body.is_unique){
