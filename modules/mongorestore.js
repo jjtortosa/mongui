@@ -15,7 +15,7 @@ module.exports = function(db, file){
 	};
 
 	return tmp.dir(options)
-		.then(r => {console.log(r);
+		.then(r => {
 			const path = r.name;
 			const cleanupCallback = r.removeCallback;
 

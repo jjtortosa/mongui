@@ -1,6 +1,6 @@
 "use strict";
 
-const fs = require('fs');
+const fs = require('mz/fs');
 const mongorestore = require('../modules/mongorestore.js');
 
 module.exports = function(req, res, next){
@@ -8,10 +8,7 @@ module.exports = function(req, res, next){
 		return next(new Error('File not found'));
 
 	mongorestore(req.params.db, req.files.dump.path)
-		.then(() => {
-			fs.unlink(req.files.dump.path);
-
-			res.redirect('/db/' + req.params.db + '?op=import&msg=' + res.locals.ml.importSuccess);
-		})
+		.then(() => fs.unlink(req.files.dump.path))
+		.then(() => res.redirect('/db/' + req.params.db + '?op=import&msg=' + res.locals.ml.importSuccess))
 		.catch(next);
 };
