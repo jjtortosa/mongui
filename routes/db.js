@@ -414,9 +414,10 @@ class EMongo {
 
 						this.queryFields();
 						this.sortFields();
-
-						return this.nativeFields();
-					});
+					})
+					.then(this.nativeFields.bind(this))
+					// hay que retornar null para que se pinte la página
+					.then(() => null);
 			});
 	}
 

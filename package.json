@@ -1,7 +1,7 @@
 {
   "name": "mongui",
   "description": "MongoDB user interface",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "scripts": {
     "start": "node ./bin/www",
     "install": "node ./bin/install"
@@ -22,9 +22,9 @@
     "express-device": "^0.4.2",
     "html-entities": "^1.2.1",
     "merge-descriptors": "^1.0.1",
-    "mongodb": "^2.2.27",
+    "mongodb": "^2.2.29",
     "mz": "^2.6.0",
-    "pug": "^2.0.0-rc.1",
+    "pug": "^2.0.0-rc.2",
     "serve-favicon": "^2.4.3",
     "targz": "^1.0.1",
     "tmp": "0.0.31"
