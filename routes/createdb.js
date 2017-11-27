@@ -1,24 +1,23 @@
+"use strict";
 
 module.exports = function(req, res, next){
-	if(!req.body.dbname){
-		res.locals.err = req.param('err');
-		res.locals.db = req.param('db');
+	if(!req.body.db){
+		res.locals.err = req.params.err;
+		res.locals.db = req.params.db;
 		
 		return res.render('createdb');
 	}
 	
-	var db = req.mongoMng.db;
+	let db = req.mongoMng.db;
 
 	try{
-		db = db.db(req.body.dbname);
+		db = db.db(req.body.db);
 	} catch(e){
-		return res.redirect('/createdb?err=' + encodeURI(e.message + '&db=' + req.body.dbname));
+		return res.redirect('/createdb?err=' + encodeURI(e.message + '&db=' + req.body.db));
 	}
 
-	db.createCollection('__dummy', {autoIndexId: false}, function(err, col){
-		col.insert({dummy: 1}, function(err, r){
-			col.drop();
-			res.redirect('/db/' + req.body.dbname);
-		});
-	});
+	db.createCollection('mycol', {autoIndexId: false})
+		.then(col => col.insert({text: "A mongo database should have at least one document."}))
+		.then(r => res.redirect('/db/' + req.body.db))
+		.catch(next);
 };
