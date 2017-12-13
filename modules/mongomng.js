@@ -3,36 +3,35 @@
 const MongoClient = require('mongodb').MongoClient;
 const events = require('events');
 const debug = require('debug')('mongui:server');
-const assert = require('assert');
 
 class MongoMng extends events.EventEmitter {
-	constructor(db) {
+	constructor(client) {
 		super();
 
-		this.db = db;
+		this.client = client;
+		this.db = client.db('admin');
 	}
 
 	dbsInfo() {
 		return this.listDbs()
-			.then(databases => {
-				return Promise.all(databases.map(db =>
+			.then(databases =>
+				Promise.all(databases.map(db =>
 					this.useDb(db.name).stats()
 						.then(stats => {
-							for (let i in stats)
-								db[i] = stats[i];
+							Object.keys(stats).forEach(key => db[key] = stats[key]);
 
-							['storageSize', 'dataSize', 'indexSize', ''].forEach(k => db[k] = MongoMng.human(db[k]));
+							['storageSize', 'dataSize', 'indexSize', 'avgObjSize'].forEach(k => db[k] = MongoMng.human(db[k]));
 
 							db.ok = db.ok && '✓';
 
 							return db;
 						})
-				));
-			});
+				))
+			);
 	}
 
 	useDb(n) {
-		return this.db.db(n);
+		return this.client.db(n);
 	}
 
 	admin() {
@@ -65,7 +64,7 @@ class MongoMng extends events.EventEmitter {
 		const admin = this.admin();
 		const ret = {};
 
-		return admin.profilingLevel()
+		return this.db.profilingLevel()
 			.then(level => {
 				ret.level = level;
 
@@ -113,7 +112,7 @@ class MongoMng extends events.EventEmitter {
 		if(n > kb)
 			return (n/kb).toFixed(2)+' Kb';
 
-		return n + ' b';
+		return n.toFixed(2) + ' bytes';
 	}
 }
 
@@ -127,12 +126,12 @@ module.exports = app => {
 	uri += (conf.host || 'localhost') + '/admin';
 
 	MongoClient.connect(uri)
-		.then(db => {
-			const mongoMng = new MongoMng(db);
+		.then(client => {
+			const mongoMng = new MongoMng(client);
 
 			app.set('mongoMng', mongoMng);
 
-			console.info('MongoDb - Connected');
+			debug('MongoDb - Connected');
 
 			app.emit('dbconnected');
 		})

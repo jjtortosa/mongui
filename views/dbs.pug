@@ -4,7 +4,7 @@ block content
 	#db-content
 		a(href="/createdb")=ml.createdb
 
-		table.lcaption(style="max-width:800px")#dbs
+		table.lcaption#dbs
 			thead
 				tr(style="text-align:center")
 					th=ml.name
@@ -12,6 +12,7 @@ block content
 					th=ml.storage
 					th=ml.datasize
 					th=ml.indexsize
+					th=ml.avgObjSize
 					th=ml.indexes
 					th=ml.collections
 					th=ml.objects
@@ -24,6 +25,7 @@ block content
 						td=db.storageSize
 						td=db.dataSize
 						td=db.indexSize
+						td=db.avgObjSize
 						td=db.indexes
 						td=db.collections
 						td=db.objects
