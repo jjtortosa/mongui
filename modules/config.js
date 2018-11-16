@@ -10,30 +10,19 @@ const confLocations = [
 	dir
 ];
 
-module.exports = function(){
+module.exports = function () {
 	let file;
 
-	confLocations.some(function(loc){
+	confLocations.some(function (loc) {
 		loc += '/config.json';
 
 		return !!(file = fs.existsSync(loc) && loc);
 	});
 
-	if(!file){
-		file = dir + '/config.json';
-		fs.writeFileSync(file, fs.readFileSync(dir + '/config-default.json'));
-		
-		
-//		throw new Error('Config file not found');
-	}
-	
+	if (!file)
+		file = dir + '/config-default.json';
+
 	console.info('Config file "%s" loaded', file);
-	
-	const ret = require(file);
-	
-	//compat
-	if(!ret.useMobile)
-		ret.useMobile = require('../config-default').useMobile;
-	
-	return ret;
+
+	return require(file);
 };
