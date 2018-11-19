@@ -8,16 +8,16 @@ module.exports = function(req, res, next){
 		return res.render('createdb');
 	}
 	
-	let db = req.mongoMng.db;
+	let db = req.mongoMng;
 
 	try{
-		db = db.db(req.body.db);
+		db = db.useDb(req.body.db);
 	} catch(e){
 		return res.redirect('/createdb?err=' + encodeURI(e.message + '&db=' + req.body.db));
 	}
 
 	db.createCollection('mycol', {autoIndexId: false})
 		.then(col => col.insert({text: "A mongo database should have at least one document."}))
-		.then(r => res.redirect('/db/' + req.body.db))
+		.then(() => res.redirect('/db/' + req.body.db))
 		.catch(next);
 };
