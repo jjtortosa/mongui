@@ -139,7 +139,6 @@ class EMongo {
 
 						this.locals.dbStats = sanitize.plainObj(stats);
 					});
-				break;
 
 			case 'processlist':
 				this.view = 'processlistdb';
@@ -148,7 +147,6 @@ class EMongo {
 					.then(data => {
 						this.locals.processlist = data.inprog;
 					});
-				break;
 
 			case 'newcollection':
 				this.view = 'newcollection';
@@ -227,7 +225,6 @@ class EMongo {
 					.then(top => {
 						this.locals.top = top.totals[this.db.databaseName + '.' + this.collection.collectionName];
 					});
-				break;
 			case 'validate':
 				this.view = 'validate';
 				return this.db.command({validate: this.collection.collectionName, full: true})
@@ -331,6 +328,7 @@ class EMongo {
 				if(!ret)
 					return ko(new Error('Invalid update operators'));
 
+				// noinspection JSUnusedAssignment
 				ok(ret);
 			} catch (e) {
 				e.message = 'Update conditions error: ' + e.message;
@@ -440,7 +438,9 @@ class EMongo {
 		let i = 0;
 
 		for (let k in sort) {
+			// noinspection JSUnfilteredForInLoop
 			sort[k] = parseInt(sort[k]);
+			// noinspection JSUnfilteredForInLoop
 			this.locals.sortFields[i++] = {name: k, order: sort[k]};
 		}
 

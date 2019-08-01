@@ -25,9 +25,9 @@ const dump = args => {
 module.exports = function(db, collections){
 	if(typeof collections === 'string')
 		collections = [collections];
-	
+
 	const processes = [];
-	
+
 	if(!db)
 		processes.push([]);
 	else if(!collections)

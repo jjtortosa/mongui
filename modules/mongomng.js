@@ -125,7 +125,7 @@ module.exports = app => {
 
 	uri += (conf.host || 'localhost') + '/admin';
 
-	MongoClient.connect(uri)
+	MongoClient.connect(uri, { useNewUrlParser: true })
 		.then(client => {
 			const mongoMng = new MongoMng(client);
 
