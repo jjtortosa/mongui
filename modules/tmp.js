@@ -4,7 +4,7 @@
  * Promisifies tmp module
  */
 
-const promisify = require("es6-promisify");
+const promisify = require("util").promisify;
 const tmp = require('tmp');
 const tmpdir = promisify(tmp.dir, {multiArgs: true});
 

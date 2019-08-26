@@ -5,7 +5,7 @@
  */
 
 
-const promisify = require("es6-promisify");
+const promisify = require("util").promisify;
 const tgz = require('targz');
 
 module.exports = {
