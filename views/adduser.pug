@@ -6,17 +6,17 @@ block dbbody
 
 	p: a(href="http://docs.mongodb.org/manual/reference/built-in-roles/")="["+ml.doc+"]"
 
-	form(method="post",action=path)
+	form(method="post" action=path)
 		div=ml.username+":"
-		input(name="username",value=username)
+		input(name="username" value=username)
 		br
 		br
 		div=ml.password+":"
-		input(type="password",name="password")
+		input(type="password" name="password")
 		br
 		br
 		div Roles:
-		select(name="roles",multiple,size=24)
+		select(name="roles" multiple size=24)
 			optgroup(label="User")
 				option(selected) read
 				option readWrite
@@ -40,7 +40,9 @@ block dbbody
 			optgroup(label="Super User")
 				option userAdminAnyDatabase
 				option root
+			optgroup(label="Internal")
+				option __system
 		br
 		br
-		input(type="hidden",name="op",value="adduser")
-		input(type="submit",value=ml.addOrReplace)
+		input(type="hidden" name="op" value="adduser")
+		input(type="submit" value=ml.addOrReplace)
