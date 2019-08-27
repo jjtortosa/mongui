@@ -84,7 +84,7 @@ class MongoMng extends events.EventEmitter {
 					net: JSON.stringify(p.net),
 					dbPath: p.storage.dbPath,
 					log: p.systemLog.path,
-					authorization: p.replication ? p.security.authorization : 'disabled',
+					authorization: p.security ? p.security.authorization : 'disabled',
 					replication: p.replication ? p.replication.replSetName : 'false'
 				};
 
