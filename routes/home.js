@@ -5,7 +5,7 @@
 module.exports = function(req, res, next){
 	if(req.useMobile)
 		return res.render('mobile/dbs');
-	
+
 	req.mongoMng
 		.serverInfo()
 		.then(info => {
@@ -18,7 +18,7 @@ module.exports = function(req, res, next){
 				}
 			});
 
-			res.render('serverinfo', info);
+			res.render('server-info', info);
 		})
 		.catch(next);
 };
