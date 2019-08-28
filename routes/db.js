@@ -340,6 +340,7 @@ class EMongo {
 	processCollection() {
 		const req = this.req;
 		const page = parseInt(req.query.page) || 1;
+		let noIdAlt = 0;
 
 		return this.getUpdateOperators()
 			.then(() => {
@@ -386,7 +387,7 @@ class EMongo {
 					.limit(10)
 					.skip((page - 1) * EMongo.limit)
 					.toArray()
-					.then(arr => arr.forEach(r => this.locals.result[r._id] = sanitize.obj(r, '', null, true)))
+					.then(arr => arr.forEach(r => this.locals.result[r._id || noIdAlt++] = sanitize.obj(r, '', null, true)))
 				)
 			);
 	}

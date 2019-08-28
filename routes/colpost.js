@@ -84,7 +84,7 @@ module.exports = function(req, res, next){
 			}
 
 			update.$set[req.body.field] = value;
-			
+
 			col.update(query, update, function(err, r){
 				res.send({error: err && err.message, affected: r});
 			});
@@ -103,9 +103,9 @@ module.exports = function(req, res, next){
 			break;
 		case 'insert':
 			const redirect = req.path + '?op=insert&json=' + encodeURIComponent(req.body.json);
-			
+
 			try{
-				let json;
+				let json = null;
 
 				eval('json = ' + req.body.json);
 
@@ -163,7 +163,7 @@ module.exports = function(req, res, next){
 			col.update(query, {$rename: rename}, function(err, r){
 				if(err)
 					return res.json({error: err.message});
-				
+
 				res.json(r.result.n === 1 ? req.body.name : {error: 'not modified'});
 			});
 			break;
@@ -211,12 +211,12 @@ module.exports = function(req, res, next){
 			req.mongoMng.getCollections(res.locals.dbname, function(err, collections){
 				if(err)
 					return next(err);
-				
+
 				if(collections.some(function(col_){
 					return col_.name === req.body.name;
 				}))
 					return res.redirect(req.path + '?err=Collection "' + req.body.name + '" already exists');
-				
+
 				col.indexes(function(err, r){//return res.send(req.body)
 					if(err)
 						return next(err);
@@ -251,7 +251,7 @@ module.exports = function(req, res, next){
 							if(err)
 								return next(err);
 
-							cursor.count(function(err, count){
+							cursor.count().then(count => {
 								if(err)
 									return next(err);
 
@@ -279,7 +279,7 @@ module.exports = function(req, res, next){
 				});
 			});
 			break;
-			
+
 		default:
 			next();
 	}
