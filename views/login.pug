@@ -2,9 +2,9 @@ doctype html
 html
 	head
 		title="Mongui - MongoDB ui"
-		meta(name="robots",content="noindex,nofollow")
-		
-		link(rel='stylesheet', href='/css/login.css')
+		meta(name="robots" content="noindex,nofollow")
+
+		link(rel='stylesheet' href='/css/login.css')
 	body
 		form(method="post")
 			fieldset
@@ -13,13 +13,13 @@ html
 					tr
 						td User
 						td
-							input(type="text", name="user", value=user)
+							input(type="text" name="user" value=user)
 					tr
 						td Pass
 						td
-							input(type="password", name="pass")
+							input(type="password" name="pass")
 					tr
 						td#submit-cell(colspan="2")
-							input(type="submit",value=ml.login)
+							input(type="submit" value=ml.login)
 		if msg
 			#msg(style="text-align:center")=msg

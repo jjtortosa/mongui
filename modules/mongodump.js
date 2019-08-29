@@ -1,6 +1,7 @@
 "use strict";
 
-const spawn = require('child_process').spawn;
+const debug = require('debug')('mongui:server');
+const {spawn} = require('child_process');
 const fs = require('mz/fs');
 const rmdir = require("./rmdir");
 const tgz = require('./targz');
@@ -9,20 +10,37 @@ const out = '/tmp/dump';
 /**
  * @todo error handling
  * @param {Array} args
+ * @param {any} conf
  * @returns {Promise}
  */
-const dump = args => {
-	return new Promise((ok) => {
-		args.push('--out');
-		args.push(out);
+const dump = (args, conf) => {
+	return new Promise((ok, ko) => {
+		args.push('--out', out);
+
+		if(conf.mongouser)
+			args.unshift('-u', conf.mongouser, '-p', conf.mongopass, '--authenticationDatabase', 'admin');
 
 		const mongodump = spawn('mongodump', args);
+		let stderr = '';
 
-		mongodump.on('exit', ok);
+		mongodump.on('exit', (code) => {
+			debug(stderr);
+
+			if (code === 1)
+				ko(new Error(stderr));
+			else
+				ok();
+		});
+
+		mongodump.stderr.on('data', (data) => {
+			stderr += data;
+		});
+
+		mongodump.on('error', ko);
 	});
 };
 
-module.exports = function(db, collections){
+module.exports = function(db, collections, conf){
 	if(typeof collections === 'string')
 		collections = [collections];
 
@@ -40,7 +58,7 @@ module.exports = function(db, collections){
 
 	return fs.access(out, fs.constants.R_OK | fs.constants.W_OK)
 		.then(() => rmdir(out), () => {})
-		.then(() => Promise.all(processes.map(args => dump(args))))
+		.then(() => Promise.all(processes.map(args => dump(args, conf))))
 		.then(() => fs.readdir(out))
 		.then(files => {
 			if(!files.length)

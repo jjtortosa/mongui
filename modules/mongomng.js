@@ -1,6 +1,6 @@
 "use strict";
 
-const MongoClient = require('mongodb').MongoClient;
+const {MongoClient} = require('mongodb');
 const events = require('events');
 const debug = require('debug')('mongui:server');
 
@@ -127,7 +127,7 @@ module.exports = app => {
 
 	uri += (conf.host || 'localhost') + '/admin';
 
-	MongoClient.connect(uri, { useNewUrlParser: true })
+	MongoClient.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true})
 		.then(client => {
 			const mongoMng = new MongoMng(client);
 

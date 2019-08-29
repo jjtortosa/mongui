@@ -1,45 +1,43 @@
 "use strict";
 
 const spawn = require('child_process').spawn;
-const fs = require('fs');
-const tmp = require("./tmp");
+const {ObjectId} = require('mongodb');
 const tgz = require('./targz');
+const rmdir = require("./rmdir");
 const debug = require('debug')('mongui:restore');
 //noinspection JSUnusedLocalSymbols
 const l = console.log.bind(console);
 
 
-module.exports = function(db, file){
-	const options = {
-		unsafeCleanup: true	//removes the created temporary directory, even when it's not empty
-	};
+module.exports = function(db, file, conf){
+	const path = '/tmp/' + ObjectId();
 
-	return tmp.dir(options)
-		.then(r => {
-			const path = r.name;
-			const cleanupCallback = r.removeCallback;
+	return tgz.decompress({src: file, dest: path + '/' + db})
+		.then(() => new Promise((ok, ko) => {
+			const args = ['--drop', '--noIndexRestore', path];
 
-			return tgz.decompress({src: file, dest: path + '/' + db})
-				.then(() => new Promise((ok, ko) => {
-					const p = spawn('mongorestore', ['--drop', '--noIndexRestore', path]);
+			if(conf.mongouser)
+				args.unshift('-u', conf.mongouser, '-p', conf.mongopass, '--authenticationDatabase', 'admin');
 
-					// stderr no sólo contiene errores
-					let err = '';
+			const p = spawn('mongorestore', args);
 
-					p.stderr.on('data', data => err += data);
+			// stderr no sólo contiene errores
+			let err = '';
 
-					p.stdout.on('data', debug);
+			p.stderr.on('data', data => err += data);
 
-					p.on('exit', code => {
-						debug('exit code %s', code);
-						debug(err);
-						cleanupCallback();
+			p.stdout.on('data', debug);
 
-						if(code === 1)
-							ko(new Error(err));
-						else
-							ok(code);
-					});
-				}));
-		});
+			p.on('exit', code => {
+				debug('exit code %s', code);
+				debug(err);
+				rmdir(path);
+
+				if(code === 1)
+					ko(new Error(err));
+				else
+					ok(code);
+			});
+		}))
+		.catch(err => console.error(err));
 };
