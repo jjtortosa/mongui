@@ -3,6 +3,7 @@
 const {MongoClient} = require('mongodb');
 const events = require('events');
 const debug = require('debug')('mongui:server');
+require('events').EventEmitter.defaultMaxListeners = 25;
 
 class MongoMng extends events.EventEmitter {
 	constructor(client) {
@@ -54,10 +55,11 @@ class MongoMng extends events.EventEmitter {
 			});
 	}
 
-	getCollections(db) {
-		return this.useDb(db).collections()
-			.then(r => Promise.all(r.map(c => c.countDocuments().then(t => ({name: c.collectionName, count: t})))))
-			.then(collections => collections.sort((a, b) => a.name > b.name ? 1 : -1));
+	async getCollections(db) {
+		const r = await this.useDb(db).collections();
+		const collections = await Promise.all(r.map(c => c.estimatedDocumentCount().then(t => ({name: c.collectionName, count: t}))));
+
+		return collections.sort((a, b) => a.name > b.name ? 1 : -1);
 	}
 
 	serverInfo() {

@@ -7,34 +7,34 @@ block collection-content
 				td#query-box
 					#query-operators
 						a(href="http://docs.mongodb.org/manual/tutorial/query-documents/", target="_blank")=ml.queryConditions
-						| : 
+						| :
 						br
 						textarea#criteria(name="criteria",rows="5",cols="50")=criteria
 						br
 					#update-operators
 						a(href="http://docs.mongodb.org/manual/tutorial/modify-documents/", target="_blank")=ml.updateOperators
-						| : 
+						| :
 						br
 						textarea(name="update",rows="5",cols="50")=update
 						br
 					#by-id
-						label Id: 
+						label Id:
 							input(name="byid",value=byid,size=30,style={"font-size":"1.1em"})
 					#distinct-field
-						label Distinct Field: 
+						label Distinct Field:
 							input(name="distinct",value=distinct)
 					input(type="submit")
-					|  | 
+					|  |
 					input#explain(type="button",value=ml.explain)
-					|  | 
+					|  |
 					label(for="actsel")=ml.action+": "
 					select#actsel(name="action")
-						option(selected=action=="find") find
-						option(selected=action=="findById") findById
-						option(selected=action=="distinct") distinct
-						option(selected=action=="remove") remove
-						option(selected=action=="update") update
-		
+						option(selected=action==="find") find
+						option(selected=action==="findById") findById
+						option(selected=action==="distinct") distinct
+						option(selected=action==="remove") remove
+						option(selected=action==="update") update
+
 				if sortFields
 					td#sort-order-td=ml.sort+':'
 						#sort-order
@@ -51,7 +51,7 @@ block collection-content
 								li: label
 									input(type="checkbox" name="fields" value=field checked=fields.indexOf(field)!==-1)
 									=field
-	
+
 	if result
 		.paginator
 			if(count>10)
@@ -63,15 +63,15 @@ block collection-content
 				- var n = paginator.first
 
 				while n<= paginator.last
-					|  &nbsp; 
-					a(href=paginator.url+n,class={active:n===paginator.page})=n++
+					|  &nbsp;
+					a(href=paginator.url+n class={active:n===paginator.page})=n++
 
-				|  &nbsp; 
+				|  &nbsp;
 				if paginator.last===paginator.page
 					a(disabled) »
 				else
 					a(href=paginator.url+paginator.total) »
-				|  &nbsp; 
+				|  &nbsp;
 
 			if count
 				span=message
@@ -80,15 +80,15 @@ block collection-content
 			each r,id in result
 				.result-box(id=id)
 					.actions
-						a(href="#delete-row", data-action="delete-row")=ml.remove
-						|  | 
-						a(href="#", data-action="new-field")=ml.newField
-						|  | 
-						a(href="#", data-action="duplicate")=ml.duplicate
-						|  | 
-						a(href="", data-action="refresh")=ml.refresh
-						|  | 
-						a(href="", class="exp")=ml.expand
+						a(href="#delete-row" data-action="delete-row")=ml.remove
+						|  |
+						a(href="#" data-action="new-field")=ml.newField
+						|  |
+						a(href="#" data-action="duplicate")=ml.duplicate
+						|  |
+						a(href="" data-action="refresh")=ml.refresh
+						|  |
+						a(href="" class="exp")=ml.expand
 					.result!=r
 
 		#field_menu

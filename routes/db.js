@@ -337,59 +337,55 @@ class EMongo {
 		});
 	}
 
-	processCollection() {
+	async processCollection() {
 		const req = this.req;
 		const page = parseInt(req.query.page) || 1;
 		let noIdAlt = 0;
 
-		return this.getUpdateOperators()
-			.then(() => {
-				const fields = this.queryFields();
+		await this.getUpdateOperators();
 
-				this.locals.page = req.query.page || 1;
+		const fields = this.queryFields();
 
-				const query = this.getQuery();
+		this.locals.page = req.query.page || 1;
 
-				if (query instanceof Error)
-					throw query;
+		const query = this.getQuery();
 
-				return this.nativeFields()
-					.then(() => this.collection.find(query, fields));
-			})
-			.then(cursor => cursor.count()
-				.then(count => {
-					if (!count) {
-						this.locals.message = this.locals.ml.noRecordsFound;
+		if (query instanceof Error)
+			throw query;
 
-						return;
-					}
+		await this.nativeFields();
+		const cursor = await this.collection.find(query, fields);
+		const count = await cursor.count();
 
-					const pagesCount = Math.floor(count / EMongo.limit) + 1;
+		if (!count) {
+			this.locals.message = this.locals.ml.noRecordsFound;
+		} else {
+			const pagesCount = Math.floor(count / EMongo.limit) + 1;
 
-					this.locals.url = req.url.replace(/[?&]page=\d*/, '');
+			this.locals.url = req.url.replace(/[?&]page=\d*/, '');
 
-					this.locals.paginator = {
-						page: page,
-						first: Math.max(1, page - 6),
-						last: Math.min(pagesCount, page + 6),
-						total: pagesCount,
-						url: this.locals.url + (this.locals.url.indexOf('?') !== -1 ? '&' : '?') + 'page='
-					};
+			this.locals.paginator = {
+				page: page,
+				first: Math.max(1, page - 6),
+				last: Math.min(pagesCount, page + 6),
+				total: pagesCount,
+				url: this.locals.url + (this.locals.url.indexOf('?') !== -1 ? '&' : '?') + 'page='
+			};
 
-					this.locals.count = count;
-					this.locals.result = {};
+			this.locals.count = count;
+			this.locals.result = {};
 
-					if (this.locals.action !== 'findById')
-						this.locals.message = this.locals.ml.results.replace('%d', count);
-				})
-				.then(() => cursor
-					.sort(this.sortFields())
-					.limit(10)
-					.skip((page - 1) * EMongo.limit)
-					.toArray()
-					.then(arr => arr.forEach(r => this.locals.result[r._id || noIdAlt++] = sanitize.obj(r, '', null, true)))
-				)
-			);
+			if (this.locals.action !== 'findById')
+				this.locals.message = this.locals.ml.results.replace('%d', count);
+		}
+
+		const arr = await cursor
+			.sort(this.sortFields())
+			.limit(10)
+			.skip((page - 1) * EMongo.limit)
+			.toArray();
+
+		arr.forEach(r => this.locals.result[r._id || noIdAlt++] = sanitize.obj(r, '', null, true));
 	}
 
 	doUpdate() {
