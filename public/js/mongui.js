@@ -167,7 +167,7 @@ $(function(){
 			}
 		}
 	});
-	
+
 	var fields;
 
 	var fieldMethods = {
@@ -265,7 +265,7 @@ $(function(){
 
 			var base = o.field.substr(0, p)
 			,	value = base + name;
-			
+
 			$.ajax({
 				url: '/db/' + db + '/' + collection,
 				data: {
@@ -321,30 +321,30 @@ $(function(){
 		},
 		fieldHide: function(o){
 			fieldMethods.getFields();
-			
+
 			if(fields.indexOf(o.field) === -1)
 				return;
-			
+
 			location.search = location.search.replace(new RegExp('[\\?&]fields=' + o.field), '');
 		},
 		fieldShow: function(o){
 			fieldMethods.getFields();
-			
+
 			if(fields.indexOf(o.field) !== -1)
 				return;
-			
+
 			location.search += (location.search ? '&' : '?' ) + 'fields=' + o.field;
 		},
 		getFields: function(){
 			if(fields)
 				return fields;
-			
+
 			fields = location.search.match(/fields=[^&]+/g) || [];
-			
+
 			fields.forEach(function(field, i){
 				fields[i] = field.replace(/fields=/, '');
 			});
-			
+
 			return fields;
 		},
 		doUpdate: function(cb){
@@ -362,10 +362,10 @@ $(function(){
 
 			if(!data.field)
 				return $.alert('No name');
-			
+
 			if(data.type === 'number' && !data.value)
 				data.value = 0;
-			
+
 			$.ajax({
 				url: '/db/' + db + '/' + collection,
 				data: data,
@@ -376,8 +376,6 @@ $(function(){
 			}).done(function(d){
 				if(d.error)
 					return $.alert(d.error);
-				
-				console.log(d);
 
 				if(!$target){//es un nuevo campo
 					var $last = $('#' + data.id + '>.result>span:last');
@@ -525,7 +523,7 @@ $(function(){
 
 		$('#command').submit();
 	});
-	
+
 	if($formCommand.size() && location.hash)
 		$commandExamples.find('a[href="' + location.hash + '"]').click();
 
