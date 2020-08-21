@@ -300,7 +300,7 @@ class EMongo {
 			return {};
 
 		try {
-			eval('query=' + this.req.query.criteria.replace(/[\t\n\r]/g, ''));
+			query = this.req.query.criteria.replace(/[\t\n\r]/g, '');
 
 			//noinspection JSUnusedAssignment
 			return query || new Error('Invalid query');
@@ -323,7 +323,7 @@ class EMongo {
 			try {
 				let ret;
 
-				eval('ret=' + this.req.query.update.replace(/[\t\n\r]/g, ''));
+				ret = this.req.query.update.replace(/[\t\n\r]/g, '');
 
 				if(!ret)
 					return ko(new Error('Invalid update operators'));
