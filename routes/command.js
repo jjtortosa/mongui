@@ -6,7 +6,7 @@ module.exports = function(req, res){
 	
 	var command;
 	
-	eval('command=' + req.body.command);
+	command = req.body.command;
 
 	var db = req.body.db ? req.mongoMng.useDb(req.body.db) : req.mongoMng.db;
 	

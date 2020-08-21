@@ -74,7 +74,7 @@ module.exports = function(req, res, next){
 				case 'boolean':
 				case 'mixed':
 					try {
-						eval('value=' + req.body.value);
+						value = req.body.value;
 					} catch(err){
 						res.send({error: err.message});
 					}
@@ -95,7 +95,7 @@ module.exports = function(req, res, next){
 			});
 			break;
 		case 'deleteField':
-			eval('update = {$unset: {"' + req.body.key + '": ""}}');
+			update = {$unset: JSON.parse('{"' + req.body.key + '": ""}') };
 
 			col.update(query, update, function(err, r){
 				res.send({error: err && err.message, affected: r});
@@ -107,7 +107,7 @@ module.exports = function(req, res, next){
 			try{
 				let json = null;
 
-				eval('json = ' + req.body.json);
+				json = req.body.json;
 
 				if(!Object.keys(json).length)
 					return req.res.redirect(req.path);
